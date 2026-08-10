@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ScrollScrub } from "@/components/scroll-scrub/scroll-scrub";
+import { ContactSection } from "@/components/site/contact-section";
+import { SiteFooter } from "@/components/site/footer";
+import { SiteNav } from "@/components/site/nav";
+import { ProcessSection } from "@/components/site/process-section";
+import { ResourcesSection } from "@/components/site/resources-section";
+import { ResultsSection } from "@/components/site/results-section";
+import { ServicesSection } from "@/components/site/services-section";
 import { scrollScrubScenes, scrollScrubTheme } from "@/scroll-scrub-scenes";
 
 export const Route = createFileRoute("/")({
@@ -12,13 +19,20 @@ export const Route = createFileRoute("/")({
 });
 
 // The whole page IS the journey: the scrub controller owns media time, while
-// every chapter stays server-rendered in ordinary semantic flow. Compose the
-// site's own nav and bespoke CTAs around <ScrollScrub />; the engine
-// deliberately ships no header, no shared button system, and no scroll hint.
+// every chapter stays server-rendered in ordinary semantic flow. The site's
+// own nav sits fixed above it; the content sections that follow continue the
+// "instrument panel" concept spine after the film resolves.
 function Index() {
   return (
     <main>
+      <SiteNav />
       <ScrollScrub scenes={scrollScrubScenes} theme={scrollScrubTheme} />
+      <ServicesSection />
+      <ProcessSection />
+      <ResultsSection />
+      <ResourcesSection />
+      <ContactSection />
+      <SiteFooter />
     </main>
   );
 }

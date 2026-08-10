@@ -1,7 +1,7 @@
 {
   "name": "Acelera tu Negocio",
   "short_name": "Acelera",
-  "description": "Direccion y consultoria estrategica para empresas que quieren crecer con control.",
+  "description": "Dirección y consultoría estratégica para empresas que quieren crecer con control.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0b0c",

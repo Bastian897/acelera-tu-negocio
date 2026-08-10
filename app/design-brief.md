@@ -43,30 +43,36 @@ kickers, form field labels) — the exact Mercury/Ramp-adjacent pairing the
 client named as reference. Mono is used structurally, as instrument-readout
 typography (metrics, proof tags, chapter numbers), never decoratively.
 
-## Animation mode: animated-website
-Locked at intake — user chose "Animado (recomendado)".
+## Animation mode
+
+Animation mode: animated-website
+
+Locked at intake, user chose "Animado (recomendado)".
 
 ### Journey shape: single-shot
 ONE continuous ~15s film, scrubbed end to end. The brand's story ("we read
 your business like an instrument, then execute") is one subject seen ever
 more closely — no reason to travel between separate worlds.
 
-### Journey (chapters mapped to moments of the one film)
-1. **`hero`** — "Apertura". Camera floats in near-total darkness; a brushed
-   titanium instrument dial emerges from shadow, lit from one direction.
-   Headline: brand promise. No proof tags (hero stays minimal per hero
-   discipline).
-2. **`direccion`** — "Enfoque". Camera pushes into the dial's mechanism —
-   gear teeth, a calibrated bezel, a needle at rest — sharp macro detail.
-   Headline: strategic direction (financial planning, cost reduction,
-   commercial opportunity).
-3. **`consultoria`** — "Lectura". The needle sweeps and traces a rising
-   line engraved into the metal face; light shifts from cold to a touch
-   warmer as the mechanism "activates". Headline: executive consulting /
-   execution with KPI tracking.
-4. **`resultado`** — "Resolución". The instrument settles, fully lit,
-   needle steady in the optimal zone, glass reflecting a clean highlight.
-   Headline: the outcome + primary CTA (agendar llamada).
+### Journey (one scene, one chapter of copy, four beats directed into the footage)
+The `scrollScrubScenes` array ships exactly ONE entry (`hero`) per the
+single-shot contract. Its `scroll` weight (320vh) gives the pinned film room
+to play the four beats below while ONE persistent headline and body read
+over it:
+1. "Apertura". Camera floats in near-total darkness; a brushed titanium
+   instrument dial emerges from shadow, lit from one direction.
+2. "Enfoque". Camera pushes into the dial's mechanism, gear teeth, a
+   calibrated bezel, a needle at rest, sharp macro detail.
+3. "Lectura". The needle sweeps and traces a rising line engraved into the
+   metal face.
+4. "Resolucion". The instrument settles, fully lit, needle steady in the
+   optimal zone, glass reflecting a clean highlight.
+
+Headline: brand promise (dirección + consultoría, read like an instrument).
+No proof tags (hero stays minimal per hero discipline). The page sections
+below the film (Servicios, Como trabajamos, A quien ayudamos, Contacto)
+carry the direccion/consultoria/resultado story beats as ordinary content,
+not as additional scroll-scrub chapters.
 
 ### World grammar
 Brushed titanium/steel instrument (chronometer/altimeter family), single

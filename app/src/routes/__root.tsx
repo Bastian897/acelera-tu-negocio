@@ -10,15 +10,16 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { BRAND_BG_HEX } from "../lib/brand";
 import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
 // Page metadata (browser <title>/favicon + social og: tags), read at build time.
 import appMetaJson from "../app-meta.json";
 
 declare const __HF_DESIGN_INSPECTOR__: boolean;
 
-const DEFAULT_TITLE = "Acelera tu Negocio | Direccion y consultoria estrategica";
+const DEFAULT_TITLE = "Acelera tu Negocio | Dirección y consultoría estratégica";
 const DEFAULT_DESCRIPTION =
-  "Direccion estrategica y consultoria ejecutiva para empresas chilenas que quieren crecer con control.";
+  "Dirección estratégica y consultoría ejecutiva para empresas chilenas que quieren crecer con control.";
 
 type AppMeta = {
   og_title?: string | null;
@@ -61,7 +62,7 @@ function buildHead(meta: AppMeta) {
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title },
       { name: "description", content: description },
-      { name: "theme-color", content: "#0a0b0c" },
+      { name: "theme-color", content: BRAND_BG_HEX },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
@@ -88,20 +89,20 @@ function buildHead(meta: AppMeta) {
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-[var(--brand-bg)] px-4">
+    <div className="bg-brand flex min-h-dvh items-center justify-center px-4">
       <div className="text-center">
-        <p className="font-mono text-sm uppercase tracking-[0.2em] text-[var(--brand-muted)]">
+        <p className="text-brand-muted font-mono text-sm uppercase tracking-[0.2em]">
           Error 404
         </p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tighter text-[var(--brand-ink)]">
-          Esta pagina no existe.
+        <h1 className="text-brand-ink mt-3 text-4xl font-semibold tracking-tighter">
+          Esta página no existe.
         </h1>
-        <p className="mt-3 text-[var(--brand-muted)]">
+        <p className="text-brand-muted mt-3">
           Puede que se haya movido o nunca haya existido.
         </p>
         <Link
           to="/"
-          className="mt-8 inline-flex items-center gap-2 rounded-full border border-[var(--brand-border)] px-6 py-3 text-sm font-medium text-[var(--brand-ink)] transition-transform active:scale-[0.98]"
+          className="border-brand text-brand-ink mt-8 inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium transition-transform active:scale-[0.98]"
         >
           Volver al inicio
         </Link>
@@ -118,13 +119,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <div className="flex min-h-dvh items-center justify-center bg-[var(--brand-bg)] px-4">
+    <div className="bg-brand flex min-h-dvh items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-2xl font-semibold tracking-tighter text-[var(--brand-ink)]">
-          Esta pagina no cargo bien.
+        <h1 className="text-brand-ink text-2xl font-semibold tracking-tighter">
+          Esta página no cargó bien.
         </h1>
-        <p className="mt-2 text-sm text-[var(--brand-muted)]">
-          Algo fallo de nuestro lado. Puedes intentar de nuevo o volver al inicio.
+        <p className="text-brand-muted mt-2 text-sm">
+          Algo falló de nuestro lado. Puedes intentar de nuevo o volver al inicio.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button
@@ -132,13 +133,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="rounded-full bg-[var(--brand-accent)] px-6 py-3 text-sm font-medium text-[var(--brand-accent-ink)] transition-transform active:scale-[0.98]"
+            className="bg-brand-accent text-brand-accent-ink rounded-full px-6 py-3 text-sm font-medium transition-transform active:scale-[0.98]"
           >
             Reintentar
           </button>
           <a
             href="/"
-            className="rounded-full border border-[var(--brand-border)] px-6 py-3 text-sm font-medium text-[var(--brand-ink)] transition-transform active:scale-[0.98]"
+            className="border-brand text-brand-ink rounded-full border px-6 py-3 text-sm font-medium transition-transform active:scale-[0.98]"
           >
             Ir al inicio
           </a>
