@@ -248,26 +248,12 @@
 html[data-theme="default-dark"] {
   background-color: var(--brand-bg);
   color: var(--brand-ink);
-  /* Belt-and-suspenders against sub-pixel/child overflow letting mobile
-   * browsers pan the whole page sideways (iOS Safari rubber-band drag). */
-  overflow-x: hidden;
-  /* Tell the touch gesture recognizer this page only pans vertically, so no
-   * sideways drag/swipe is possible even if some descendant briefly measures
-   * wider than the viewport. This is the actual fix for "the page slides
-   * left/right while scrolling on mobile" (overflow-x: hidden alone does
-   * not stop touch panning in every mobile browser). */
-  touch-action: pan-y;
-  overscroll-behavior-x: none;
 }
 
 body.acelera-site {
   background-color: var(--brand-bg);
   color: var(--brand-ink);
   font-family: var(--font-sans);
-  max-width: 100vw;
-  overflow-x: hidden;
-  touch-action: pan-y;
-  overscroll-behavior-x: none;
 }
 
 @keyframes acelera-reveal-up {
