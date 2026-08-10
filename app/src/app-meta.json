@@ -1,8 +1,8 @@
 {
-  "og_title": null,
-  "og_description": null,
-  "og_image_url": null,
-  "favicon_url": null,
+  "og_title": "Acelera tu Negocio | Direccion y consultoria estrategica",
+  "og_description": "Direccion estrategica y consultoria ejecutiva para empresas chilenas que quieren crecer con control, no al azar.",
+  "og_image_url": "/assets/og/cover.jpg",
+  "favicon_url": "/favicon.ico",
   "og_video_url": null,
-  "marketplace_cover_url": null
+  "marketplace_cover_url": "/assets/og/cover.jpg"
 }

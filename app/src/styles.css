@@ -182,3 +182,76 @@
     border-color: var(--hf-color-border-default);
   }
 }
+
+/* ---------------------------------------------------------------------- */
+/* Acelera tu Negocio — own brand token layer (design-brief.md, "Panel de
+ * Control"). Everything below this line is the site's own design system.
+ * Never reach for q-* utilities or --hf-* tokens outside this file. */
+/* ---------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist-mono@latest/latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist-mono@latest/latin-500-normal.woff2") format("woff2");
+}
+
+:root {
+  --brand-bg: #0a0b0c;
+  --brand-surface: #15171a;
+  --brand-border: #282b2f;
+  --brand-ink: #f3f5f6;
+  --brand-muted: #98a1a8;
+  --brand-chrome: #aab6c0;
+  --brand-accent: #4f7fa6;
+  --brand-accent-ink: #eef3f7;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+html[data-theme="default-dark"] {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+}
+
+body.acelera-site {
+  background-color: var(--brand-bg);
+  color: var(--brand-ink);
+  font-family: var(--font-sans);
+}

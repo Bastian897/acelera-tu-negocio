@@ -3,9 +3,13 @@
 -- change additive (CREATE TABLE IF NOT EXISTS / ADD COLUMN); a destructive
 -- change hits production data. Bound as env.DB (see src/lib/bindings.server.ts).
 --
--- Example:
--- CREATE TABLE IF NOT EXISTS items (
---   id INTEGER PRIMARY KEY AUTOINCREMENT,
---   title TEXT NOT NULL,
---   created_at TEXT NOT NULL DEFAULT (datetime('now'))
--- );
+CREATE TABLE IF NOT EXISTS leads (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  kind TEXT NOT NULL CHECK (kind IN ('contact', 'notify')),
+  name TEXT,
+  email TEXT NOT NULL,
+  phone TEXT,
+  industry TEXT,
+  revenue TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
