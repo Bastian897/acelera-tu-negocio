@@ -10,6 +10,7 @@ const COLUMNS = [
   {
     title: "Empresa",
     links: [
+      { href: "#fundadores", label: "Equipo" },
       { href: "#proceso", label: "Cómo trabajamos" },
       { href: "#casos", label: "A quién ayudamos" },
       { href: "#recursos", label: "Recursos" },

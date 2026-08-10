@@ -4,6 +4,7 @@ import { PrimaryCta } from "./cta";
 
 const LINKS = [
   { href: "#servicios", label: "Servicios" },
+  { href: "#fundadores", label: "Equipo" },
   { href: "#proceso", label: "Cómo trabajamos" },
   { href: "#casos", label: "Casos" },
   { href: "#recursos", label: "Recursos" },

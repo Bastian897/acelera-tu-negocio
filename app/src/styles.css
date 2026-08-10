@@ -248,12 +248,16 @@
 html[data-theme="default-dark"] {
   background-color: var(--brand-bg);
   color: var(--brand-ink);
+  /* Belt-and-suspenders against sub-pixel/child overflow letting mobile
+   * browsers pan the whole page sideways (iOS Safari rubber-band drag). */
+  overflow-x: hidden;
 }
 
 body.acelera-site {
   background-color: var(--brand-bg);
   color: var(--brand-ink);
   font-family: var(--font-sans);
+  max-width: 100vw;
 }
 
 @keyframes acelera-reveal-up {
