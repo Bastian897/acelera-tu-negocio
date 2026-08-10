@@ -32,29 +32,11 @@ type AppMeta = {
 
 const appMeta = appMetaJson as AppMeta;
 
-const APP_HOST_ZONES = ["higgsfield.app", "higgsfield-dev.app"];
-
-function toOwnAssetUrl(value: string | null | undefined): string | null {
-  if (!value) return null;
-  if (value.startsWith("/")) return value;
-  try {
-    const u = new URL(value);
-    const isAppHost = APP_HOST_ZONES.some(
-      (zone) => u.hostname === zone || u.hostname.endsWith(`.${zone}`)
-    );
-    if (isAppHost) return u.pathname + u.search;
-    return value;
-  } catch {
-    return value;
-  }
-}
-
 function buildHead(meta: AppMeta) {
   const title = meta.og_title ?? DEFAULT_TITLE;
   const description = meta.og_description ?? DEFAULT_DESCRIPTION;
-  const ogImage = toOwnAssetUrl(meta.og_image_url);
-  const favicon = toOwnAssetUrl(meta.favicon_url);
-  const ogVideo = toOwnAssetUrl(meta.og_video_url);
+  const ogImage = meta.og_image_url ?? null;
+  const ogVideo = meta.og_video_url ?? null;
 
   return {
     meta: [
@@ -78,11 +60,10 @@ function buildHead(meta: AppMeta) {
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      ...(favicon ? [{ rel: "icon", href: favicon }] : []),
-      { rel: "icon", href: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { rel: "icon", href: "/favicon-16.png", sizes: "16x16", type: "image/png" },
-      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
-      { rel: "manifest", href: "/site.webmanifest" },
+      { rel: "icon", href: "favicon-32.png", sizes: "32x32", type: "image/png" },
+      { rel: "icon", href: "favicon-16.png", sizes: "16x16", type: "image/png" },
+      { rel: "apple-touch-icon", href: "apple-touch-icon.png" },
+      { rel: "manifest", href: "site.webmanifest" },
     ],
   };
 }

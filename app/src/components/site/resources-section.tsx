@@ -1,29 +1,26 @@
 import { useState, type FormEvent } from "react";
 
-import { submitNotify } from "@/lib/api/leads.functions";
-
 import { NotifyCta } from "./cta";
 
 const CATEGORIES = [
-  { icon: "/assets/icons/icon-recursos.png", title: "Guías" },
-  { icon: "/assets/icons/icon-direccion.png", title: "Plantillas" },
-  { icon: "/assets/icons/icon-industria.png", title: "Casos de estudio" },
+  { icon: "assets/icons/icon-recursos.png", title: "Guías" },
+  { icon: "assets/icons/icon-direccion.png", title: "Plantillas" },
+  { icon: "assets/icons/icon-industria.png", title: "Casos de estudio" },
 ];
+
+const CONTACT_EMAIL = "contacto@aceleratunegocio.cl";
 
 export function ResourcesSection() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "done">("idle");
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("loading");
-    try {
-      await submitNotify({ data: { email } });
-      setStatus("done");
-      setEmail("");
-    } catch {
-      setStatus("error");
-    }
+    const subject = "Avisenme cuando publiquen recursos";
+    const body = `Correo: ${email}`;
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus("done");
+    setEmail("");
   }
 
   return (
@@ -54,7 +51,8 @@ export function ResourcesSection() {
 
         {status === "done" ? (
           <p className="mx-auto mt-10 max-w-sm text-sm text-[var(--brand-ink)]">
-            Listo. Te avisamos apenas publiquemos los primeros recursos.
+            Se abrió tu cliente de correo. Envíalo y te avisamos apenas publiquemos los
+            primeros recursos.
           </p>
         ) : (
           <form
@@ -73,14 +71,9 @@ export function ResourcesSection() {
               placeholder="tu@empresa.cl"
               className="h-11 w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)] focus-visible:border-[var(--brand-accent)]"
             />
-            <NotifyCta loading={status === "loading"} />
+            <NotifyCta />
           </form>
         )}
-        {status === "error" ? (
-          <p className="mt-3 text-sm text-[var(--brand-ink)]">
-            No pudimos guardar tu correo. Intenta de nuevo.
-          </p>
-        ) : null}
       </div>
     </section>
   );

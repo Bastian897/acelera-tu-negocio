@@ -1,7 +1,5 @@
 import { useState, type FormEvent } from "react";
 
-import { submitContact } from "@/lib/api/leads.functions";
-
 import { SubmitCta } from "./cta";
 
 const FIELD_CLASS =
@@ -24,28 +22,31 @@ const REVENUE_OPTIONS = [
   "Sobre $10M CLP",
 ];
 
-export function ContactSection() {
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+const CONTACT_EMAIL = "contacto@aceleratunegocio.cl";
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+export function ContactSection() {
+  const [status, setStatus] = useState<"idle" | "done">("idle");
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setStatus("loading");
     const form = new FormData(event.currentTarget);
-    try {
-      await submitContact({
-        data: {
-          email: String(form.get("email") ?? ""),
-          industry: String(form.get("industry") ?? ""),
-          name: String(form.get("name") ?? ""),
-          phone: String(form.get("phone") ?? ""),
-          revenue: String(form.get("revenue") ?? ""),
-        },
-      });
-      setStatus("done");
-      event.currentTarget.reset();
-    } catch {
-      setStatus("error");
-    }
+    const name = String(form.get("name") ?? "");
+    const email = String(form.get("email") ?? "");
+    const phone = String(form.get("phone") ?? "");
+    const industry = String(form.get("industry") ?? "");
+    const revenue = String(form.get("revenue") ?? "");
+
+    const subject = `Consulta de ${name || "un visitante"}, ${industry}`;
+    const body = [
+      `Nombre: ${name}`,
+      `Email: ${email}`,
+      `Telefono: ${phone}`,
+      `Industria: ${industry}`,
+      `Facturacion mensual: ${revenue}`,
+    ].join("\n");
+
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus("done");
   }
 
   return (
@@ -65,7 +66,8 @@ export function ContactSection() {
 
           {status === "done" ? (
             <p className="mt-10 max-w-sm text-base text-[var(--brand-ink)]">
-              Recibimos tus datos. Te contactamos dentro de las próximas 24 horas hábiles.
+              Se abrió tu cliente de correo con tus datos. Envíalo y te contactamos dentro de
+              las próximas 24 horas hábiles.
             </p>
           ) : (
             <form onSubmit={handleSubmit} className="mt-10 flex max-w-sm flex-col gap-5">
@@ -77,14 +79,14 @@ export function ContactSection() {
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className={LABEL_CLASS + " flex items-center gap-1.5"}>
-                  <img src="/assets/icons/icon-email.png" alt="" className="h-3.5 w-3.5 opacity-70" width={14} height={14} />
+                  <img src="assets/icons/icon-email.png" alt="" className="h-3.5 w-3.5 opacity-70" width={14} height={14} />
                   Email
                 </label>
                 <input id="email" name="email" type="email" required className={FIELD_CLASS} />
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="phone" className={LABEL_CLASS + " flex items-center gap-1.5"}>
-                  <img src="/assets/icons/icon-telefono.png" alt="" className="h-3.5 w-3.5 opacity-70" width={14} height={14} />
+                  <img src="assets/icons/icon-telefono.png" alt="" className="h-3.5 w-3.5 opacity-70" width={14} height={14} />
                   Teléfono
                 </label>
                 <input id="phone" name="phone" type="tel" required className={FIELD_CLASS} />
@@ -116,22 +118,14 @@ export function ContactSection() {
                 </select>
               </div>
 
-              <SubmitCta loading={status === "loading"} className="mt-2">
-                Enviar
-              </SubmitCta>
-
-              {status === "error" ? (
-                <p className="text-sm text-[var(--brand-ink)]">
-                  No pudimos enviar el formulario. Intenta de nuevo.
-                </p>
-              ) : null}
+              <SubmitCta className="mt-2">Enviar</SubmitCta>
             </form>
           )}
         </div>
 
         <div className="relative min-h-[20rem] overflow-hidden rounded-2xl border border-[var(--brand-border)] md:min-h-[32rem]">
           <img
-            src="/assets/plates/contacto-dial.jpg"
+            src="assets/plates/contacto-dial.jpg"
             alt="Macro fotografía de un cronómetro de titanio cepillado"
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

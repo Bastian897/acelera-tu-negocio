@@ -16,7 +16,7 @@ export function ResultsSection() {
 
         <div className="relative mt-8 overflow-hidden rounded-2xl border border-[var(--brand-border)]">
           <img
-            src="/assets/plates/casos-atmosphere.jpg"
+            src="assets/plates/casos-atmosphere.jpg"
             alt="Instrumentos de precisión sobre una mesa de trabajo en un taller oscuro"
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

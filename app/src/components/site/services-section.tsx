@@ -1,16 +1,16 @@
 const SERVICES = [
   {
-    icon: "/assets/icons/icon-direccion.png",
+    icon: "assets/icons/icon-direccion.png",
     title: "Dirección estratégica",
     body: "Planificación financiera, reducción de costos y generación de oportunidades comerciales para fortalecer tu estrategia de marketing.",
   },
   {
-    icon: "/assets/icons/icon-consultoria.png",
+    icon: "assets/icons/icon-consultoria.png",
     title: "Consultoría ejecutiva",
     body: "Diseño e implementación de proyectos en ventas, marketing, finanzas y operaciones, con seguimiento de KPIs.",
   },
   {
-    icon: "/assets/icons/icon-produccion-video.png",
+    icon: "assets/icons/icon-produccion-video.png",
     title: "Producción de video",
     body: "Reels para retail, contenido UGC y videos promocionales para restaurantes y gastronomía.",
   },
@@ -30,7 +30,7 @@ export function ServicesSection() {
         <div className="mt-12 grid gap-4 md:grid-cols-[1.3fr_1fr] md:items-stretch">
           <figure className="relative min-h-[22rem] overflow-hidden rounded-2xl border border-[var(--brand-border)]">
             <img
-              src="/assets/plates/servicios-texture.jpg"
+              src="assets/plates/servicios-texture.jpg"
               alt="Detalle macro de un instrumento de precisión de acero cepillado"
               className="absolute inset-0 h-full w-full object-cover"
               loading="lazy"

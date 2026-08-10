@@ -1,8 +1,8 @@
 {
   "og_title": "Acelera tu Negocio | Dirección y consultoría estratégica",
   "og_description": "Dirección estratégica y consultoría ejecutiva para empresas chilenas que quieren crecer con control, no al azar.",
-  "og_image_url": "/assets/og/cover.jpg",
-  "favicon_url": "/favicon.ico",
+  "og_image_url": "assets/og/cover.jpg",
+  "favicon_url": "favicon.ico",
   "og_video_url": null,
-  "marketplace_cover_url": "/assets/og/cover.jpg"
+  "marketplace_cover_url": null
 }

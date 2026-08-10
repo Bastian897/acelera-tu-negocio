@@ -46,7 +46,7 @@ export function ProcessSection() {
 
         <div className="relative min-h-[20rem] overflow-hidden rounded-2xl border border-[var(--brand-border)] md:min-h-[28rem]">
           <img
-            src="/assets/plates/proceso-detail.jpg"
+            src="assets/plates/proceso-detail.jpg"
             alt="Macro fotografía de engranajes de acero cepillado interconectados"
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

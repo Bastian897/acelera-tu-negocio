@@ -10,6 +10,8 @@ export const getRouter = () => {
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
+    // Matches vite.config.ts's `base` (the GitHub Pages project subpath).
+    basepath: import.meta.env.BASE_URL,
   });
 
   return router;

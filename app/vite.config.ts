@@ -22,6 +22,12 @@ export default defineConfig(({ command, mode }) => {
   const designInspectorEnabled = process.env.HF_DESIGN_INSPECTOR === "1" || mode === "design";
 
   return {
+    // Static export for GitHub Pages: the repo is served from a project
+    // subpath (username.github.io/repo/) until a custom domain is wired up.
+    // SITE_BASE_PATH is set in .github/workflows/deploy-pages.yml; local
+    // commands default to root. TanStack Router reads the same value via
+    // import.meta.env.BASE_URL (see src/router.tsx).
+    base: process.env.SITE_BASE_PATH ?? "/",
     // fsevents can miss edits under some setups (bun-launched dev, synced/virtual
     // dirs), leaving HMR dead so changes only appear after a manual restart.
     // Polling the watcher makes file changes reliably trigger HMR / SSR reload.
@@ -99,6 +105,13 @@ export default defineConfig(({ command, mode }) => {
       // inside effects/handlers, or guarded with `typeof window !== "undefined"`.
       tanstackStart({
         server: { entry: "server" },
+        // Static export: prerender the (only) route to real HTML at build
+        // time so the deploy target is a plain folder of files (GitHub
+        // Pages) with no server/Worker runtime required.
+        prerender: {
+          enabled: true,
+          crawlLinks: true,
+        },
       }),
       higgsfieldDesignInspectorVitePlugin(designInspectorEnabled),
       react({

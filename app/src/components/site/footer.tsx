@@ -20,12 +20,12 @@ const COLUMNS = [
     links: [
       {
         href: "#contacto",
-        icon: "/assets/icons/icon-agendar.png",
+        icon: "assets/icons/icon-agendar.png",
         label: "Agendar llamada",
       },
       {
         href: "mailto:contacto@aceleratunegocio.cl",
-        icon: "/assets/icons/icon-email.png",
+        icon: "assets/icons/icon-email.png",
         label: "contacto@aceleratunegocio.cl",
       },
     ],
@@ -41,7 +41,7 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <img
-              src="/assets/brand/acelera-logo.svg"
+              src="assets/brand/acelera-logo.svg"
               alt="Acelera tu Negocio"
               className="h-9 w-auto"
             />

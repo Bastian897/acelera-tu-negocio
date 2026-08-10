@@ -17,7 +17,7 @@ export function SiteNav() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <a href="#" className="flex items-center gap-2" aria-label="Acelera tu Negocio">
           <img
-            src="/assets/brand/acelera-icon.svg"
+            src="assets/brand/acelera-icon.svg"
             alt=""
             className="h-7 w-7"
             width={28}
