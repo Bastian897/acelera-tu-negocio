@@ -16,12 +16,13 @@ import type {
 } from "@/components/scroll-scrub/scroll-scrub";
 import { PrimaryCta, TickLink } from "@/components/site/cta";
 
-/** Brand tokens for the journey layer, from app/design-brief.md ("Panel de Control"). */
+/** Brand tokens for the journey layer: the client design system's dark-impact
+ * palette (surface-dark + brand-primary blue), same as the footer/results band. */
 export const scrollScrubTheme: ScrollScrubTheme = {
-  accent: "#4f7fa6",
-  background: "#0a0b0c",
-  ink: "#f3f5f6",
-  muted: "#98a1a8",
+  accent: "#010bf8",
+  background: "#080808",
+  ink: "#ffffff",
+  muted: "#a7afc4",
 };
 
 export const scrollScrubScenes: ScrollScrubScene[] = [

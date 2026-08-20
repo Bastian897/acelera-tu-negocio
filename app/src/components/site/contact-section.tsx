@@ -1,11 +1,11 @@
 import { useState, type FormEvent } from "react";
 
 import { SubmitCta } from "./cta";
+import { BrandIcon } from "./icon";
 
 const FIELD_CLASS =
-  "h-11 w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)]/70 focus-visible:border-[var(--brand-accent)]";
-const LABEL_CLASS =
-  "font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--brand-muted)]";
+  "w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)]/70 focus-visible:border-[var(--brand-accent)]";
+const LABEL_CLASS = "text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-muted)]";
 
 const INDUSTRY_OPTIONS = [
   "Marketing",
@@ -35,6 +35,7 @@ export function ContactSection() {
     const phone = String(form.get("phone") ?? "");
     const industry = String(form.get("industry") ?? "");
     const revenue = String(form.get("revenue") ?? "");
+    const description = String(form.get("description") ?? "");
 
     const subject = `Consulta de ${name || "un visitante"}, ${industry}`;
     const body = [
@@ -43,6 +44,7 @@ export function ContactSection() {
       `Telefono: ${phone}`,
       `Industria: ${industry}`,
       `Facturacion mensual: ${revenue}`,
+      `Sobre el negocio: ${description}`,
     ].join("\n");
 
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -53,7 +55,7 @@ export function ContactSection() {
     <section id="contacto" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2 md:items-center">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--brand-muted)]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
             Contacto
           </p>
           <h2 className="reveal-up mt-4 max-w-md text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
@@ -75,27 +77,27 @@ export function ContactSection() {
                 <label htmlFor="name" className={LABEL_CLASS}>
                   Nombre
                 </label>
-                <input id="name" name="name" type="text" required className={FIELD_CLASS} />
+                <input id="name" name="name" type="text" required className={FIELD_CLASS + " h-11"} />
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className={LABEL_CLASS + " flex items-center gap-1.5"}>
-                  <img src="assets/icons/icon-email.png" alt="" className="h-3.5 w-3.5 opacity-70" width={14} height={14} />
+                  <BrandIcon src="assets/icons/icon-email.png" color="var(--brand-muted)" size={14} />
                   Email
                 </label>
-                <input id="email" name="email" type="email" required className={FIELD_CLASS} />
+                <input id="email" name="email" type="email" required className={FIELD_CLASS + " h-11"} />
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="phone" className={LABEL_CLASS + " flex items-center gap-1.5"}>
-                  <img src="assets/icons/icon-telefono.png" alt="" className="h-3.5 w-3.5 opacity-70" width={14} height={14} />
+                  <BrandIcon src="assets/icons/icon-telefono.png" color="var(--brand-muted)" size={14} />
                   Teléfono
                 </label>
-                <input id="phone" name="phone" type="tel" required className={FIELD_CLASS} />
+                <input id="phone" name="phone" type="tel" required className={FIELD_CLASS + " h-11"} />
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="industry" className={LABEL_CLASS}>
                   Industria
                 </label>
-                <select id="industry" name="industry" required className={FIELD_CLASS}>
+                <select id="industry" name="industry" required className={FIELD_CLASS + " h-11"}>
                   <option value="">Selecciona una opción</option>
                   {INDUSTRY_OPTIONS.map((option) => (
                     <option key={option} value={option}>
@@ -108,7 +110,7 @@ export function ContactSection() {
                 <label htmlFor="revenue" className={LABEL_CLASS}>
                   Facturación mensual
                 </label>
-                <select id="revenue" name="revenue" required className={FIELD_CLASS}>
+                <select id="revenue" name="revenue" required className={FIELD_CLASS + " h-11"}>
                   <option value="">Selecciona una opción</option>
                   {REVENUE_OPTIONS.map((option) => (
                     <option key={option} value={option}>
@@ -116,6 +118,18 @@ export function ContactSection() {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="description" className={LABEL_CLASS}>
+                  Cuéntanos de tu negocio
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  rows={3}
+                  placeholder="A que se dedica tu empresa, que quieres lograr..."
+                  className={FIELD_CLASS + " resize-none py-3"}
+                />
               </div>
 
               <SubmitCta className="mt-2">Enviar</SubmitCta>
@@ -130,8 +144,8 @@ export function ContactSection() {
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--brand-bg)] via-transparent to-transparent" />
-          <p className="absolute bottom-6 left-6 right-6 font-mono text-xs uppercase tracking-[0.15em] text-[var(--brand-muted)]">
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark-bg)] via-transparent to-transparent" />
+          <p className="absolute bottom-6 left-6 right-6 text-xs font-semibold uppercase tracking-[0.15em] text-[var(--dark-muted)]">
             Herramientas de precisión. Decisiones claras.
           </p>
         </div>

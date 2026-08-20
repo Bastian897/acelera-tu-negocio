@@ -1,3 +1,5 @@
+import { BrandIcon } from "./icon";
+
 const SERVICES = [
   {
     icon: "assets/icons/icon-direccion.png",
@@ -20,7 +22,7 @@ export function ServicesSection() {
   return (
     <section id="servicios" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto max-w-7xl">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--brand-muted)]">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
           Servicios
         </p>
         <h2 className="reveal-up mt-4 max-w-2xl text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
@@ -35,9 +37,9 @@ export function ServicesSection() {
               className="absolute inset-0 h-full w-full object-cover"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--brand-bg)] via-[var(--brand-bg)]/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark-bg)] via-[var(--dark-bg)]/20 to-transparent" />
             <figcaption className="relative flex h-full items-end p-8">
-              <p className="max-w-xs text-xl font-medium leading-snug tracking-tight text-[var(--brand-ink)]">
+              <p className="max-w-xs text-xl font-medium leading-snug tracking-tight text-[var(--dark-ink)]">
                 Cada servicio calibrado a la etapa real de tu negocio.
               </p>
             </figcaption>
@@ -47,9 +49,9 @@ export function ServicesSection() {
             {SERVICES.map((service) => (
               <div
                 key={service.title}
-                className="flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6"
+                className="flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-[var(--shadow-elevation)]"
               >
-                <img src={service.icon} alt="" className="h-8 w-8" width={32} height={32} />
+                <BrandIcon src={service.icon} />
                 <div>
                   <h3 className="text-lg font-medium tracking-tight text-[var(--brand-ink)]">
                     {service.title}

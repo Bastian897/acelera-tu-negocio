@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 
 import { NotifyCta } from "./cta";
+import { BrandIcon } from "./icon";
 
 const CATEGORIES = [
   { icon: "assets/icons/icon-recursos.png", title: "Guías" },
@@ -38,11 +39,11 @@ export function ResourcesSection() {
           {CATEGORIES.map((category) => (
             <div
               key={category.title}
-              className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[var(--brand-border)] bg-[var(--brand-surface)]/40 px-6 py-10"
+              className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[var(--brand-border)] bg-[var(--surface-soft)] px-6 py-10"
             >
-              <img src={category.icon} alt="" className="h-7 w-7 opacity-70" width={28} height={28} />
+              <BrandIcon src={category.icon} color="var(--brand-secondary)" size={28} className="opacity-70" />
               <span className="text-sm font-medium text-[var(--brand-ink)]">{category.title}</span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--brand-muted)]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                 Próximamente
               </span>
             </div>

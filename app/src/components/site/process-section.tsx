@@ -28,7 +28,7 @@ export function ProcessSection() {
           <ol className="mt-10 divide-y divide-[var(--brand-border)] border-t border-[var(--brand-border)]">
             {STEPS.map((step) => (
               <li key={step.number} className="flex gap-6 py-8">
-                <span className="font-mono text-4xl font-semibold leading-none tracking-tighter text-[var(--brand-chrome)] md:text-6xl">
+                <span className="font-[var(--font-display)] text-4xl font-bold leading-none tracking-tighter text-[var(--brand-accent)] md:text-6xl">
                   {step.number}
                 </span>
                 <div>

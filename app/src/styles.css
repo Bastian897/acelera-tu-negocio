@@ -184,76 +184,149 @@
 }
 
 /* ---------------------------------------------------------------------- */
-/* Acelera tu Negocio — own brand token layer (design-brief.md, "Panel de
- * Control"). Everything below this line is the site's own design system.
- * Never reach for q-* utilities or --hf-* tokens outside this file. */
+/* Acelera tu Negocio — real brand token layer (client design system,
+ * "Acelera Tu Negocio Design System", Aug 2026). Everything below this line
+ * is the site's own design system. Never reach for q-* utilities or --hf-*
+ * tokens outside this file. */
 /* ---------------------------------------------------------------------- */
 
 @font-face {
-  font-family: "Geist";
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-400-normal.woff2") format("woff2");
-}
-@font-face {
-  font-family: "Geist";
+  font-family: "Sora";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-500-normal.woff2") format("woff2");
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/sora@latest/latin-500-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Geist";
+  font-family: "Sora";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-600-normal.woff2") format("woff2");
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/sora@latest/latin-600-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Geist";
+  font-family: "Sora";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist@latest/latin-700-normal.woff2") format("woff2");
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/sora@latest/latin-700-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Geist Mono";
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/sora@latest/latin-800-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist-mono@latest/latin-400-normal.woff2") format("woff2");
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.woff2") format("woff2");
 }
 @font-face {
-  font-family: "Geist Mono";
+  font-family: "Inter";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist-mono@latest/latin-500-normal.woff2") format("woff2");
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.woff2") format("woff2");
 }
 
 :root {
-  --brand-bg: #0a0b0c;
-  --brand-surface: #15171a;
-  --brand-border: #282b2f;
-  --brand-ink: #f3f5f6;
-  --brand-muted: #98a1a8;
-  --brand-chrome: #aab6c0;
-  --brand-accent: #4f7fa6;
-  --brand-accent-ink: #eef3f7;
-  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", monospace;
+  /* Client tokens, verbatim names/values from the design system export. */
+  --ac-ink: #010c28;
+  --ac-ink-2: #0b1220;
+  --ac-dark: #080808;
+  --ac-black: #000000;
+  --ac-white: #ffffff;
+  --ac-graybg: #e6eaed;
+  --ac-gray: #5b6470;
+  --ac-line-c: #d4dae0;
+  --ac-blue-soft: #e8e9ff;
+  --ac-cyan-soft: #e1f4fd;
+  --ac-good-soft: #e4f6ec;
+  --ac-bad-soft: #fce7e3;
+  --ac-bad: #e11900;
+  --ac-good: #0ba84a;
+  --ac-cyan: #00a7ed;
+  --ac-navy: #01209c;
+  --ac-blue: #010bf8;
+
+  --surface-page: #ffffff;
+  --surface-soft: #e6eaed;
+  --surface-dark: #080808;
+  --surface-ink: #010c28;
+  --surface-card: #ffffff;
+
+  --brand-primary: #010bf8;
+  --brand-secondary: #01209c;
+  --brand-accent: #00a7ed;
+  --border-hairline: #d4dae0;
+
+  --ac-radius-sm: 10px;
+  --ac-radius-md: 16px;
+  --ac-radius-lg: 24px;
+  --ac-radius-pill: 999px;
+  --shadow-elevation: 0 12px 32px -8px rgb(1 11 248 / 0.14), 0 2px 8px -2px rgb(1 12 40 / 0.1);
+
+  /* Semantic aliases used throughout the light-themed body sections. */
+  --brand-bg: var(--surface-page);
+  --brand-surface: var(--surface-card);
+  --brand-border: var(--border-hairline);
+  --brand-ink: var(--ac-ink);
+  --brand-muted: var(--ac-gray);
+  --brand-chrome: var(--ac-navy);
+  --brand-accent-ink: var(--ac-white);
+
+  /* Dark-impact sections only (hero film, footer, social-proof band). */
+  --dark-bg: var(--surface-dark);
+  --dark-surface: var(--ac-ink-2);
+  --dark-border: rgb(255 255 255 / 0.12);
+  --dark-ink: var(--ac-white);
+  --dark-muted: rgb(255 255 255 / 0.6);
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Inter", ui-monospace, "SFMono-Regular", monospace;
 }
 
 html[data-theme="default-dark"] {
-  background-color: var(--brand-bg);
-  color: var(--brand-ink);
+  background-color: var(--surface-page);
+  color: var(--ac-ink);
 }
 
 body.acelera-site {
-  background-color: var(--brand-bg);
-  color: var(--brand-ink);
+  background-color: var(--surface-page);
+  color: var(--ac-ink);
   font-family: var(--font-sans);
+}
+
+/* Type: Display = Sora, Body = Inter (client design system). Every headline
+ * picks up Sora automatically; body copy and UI chrome stays Inter. There is
+ * no third (mono) face in this system, so map Tailwind's font-mono to Inter
+ * too, in case anything still reaches for it. */
+.acelera-site h1,
+.acelera-site h2,
+.acelera-site h3 {
+  font-family: var(--font-display);
+}
+@theme inline {
+  --font-mono: var(--font-sans);
 }
 
 @keyframes acelera-reveal-up {
