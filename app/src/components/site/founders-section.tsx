@@ -6,6 +6,7 @@ type TeamMember = {
   handle?: string;
   followers?: string;
   href?: string;
+  aspect?: string;
 };
 
 const FOUNDERS: TeamMember[] = [
@@ -34,6 +35,7 @@ const FOUNDERS: TeamMember[] = [
     bio: "Tecnología e IA.",
     handle: "@bastian_morenog",
     href: "https://instagram.com/bastian_morenog",
+    aspect: "860 / 774",
   },
 ];
 
@@ -48,7 +50,10 @@ function TeamCard({ member }: { member: TeamMember }) {
       {...wrapperProps}
       className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)]"
     >
-      <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[var(--brand-bg)]">
+      <div
+        className="relative shrink-0 overflow-hidden bg-[var(--brand-bg)]"
+        style={{ aspectRatio: member.aspect ?? "4 / 3" }}
+      >
         <img
           src={member.photo}
           alt={member.name}
