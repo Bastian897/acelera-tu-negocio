@@ -10,7 +10,7 @@ type TeamMember = {
 
 const FOUNDERS: TeamMember[] = [
   {
-    photo: "assets/team/felipe-nancupil.png",
+    photo: "assets/team/felipe-nancupil.jpg",
     name: "Felipe Ñancupil",
     role: "Cofundador",
     bio: "El divulgador de contenido de emprendimiento más grande de Chile.",
@@ -19,7 +19,7 @@ const FOUNDERS: TeamMember[] = [
     href: "https://instagram.com/nancupil.oficial",
   },
   {
-    photo: "assets/team/ignacio-ruiz.png",
+    photo: "assets/team/ignacio-ruiz.jpg",
     name: "Ignacio Ruiz",
     role: "Cofundador",
     bio: "Fundador de +20 empresas.",
@@ -28,10 +28,12 @@ const FOUNDERS: TeamMember[] = [
     href: "https://instagram.com/ignacioruizc",
   },
   {
-    photo: "assets/team/bastian-moreno.jpg",
+    photo: "assets/team/bastian-moreno-card.jpg",
     name: "Bastián Moreno",
-    role: "Tecnología e IA",
-    bio: "Diseña e implementa los sistemas e inteligencia artificial detrás de la operación.",
+    role: "Cofundador",
+    bio: "Tecnología e IA.",
+    handle: "@bastian_morenog",
+    href: "https://instagram.com/bastian_morenog",
   },
 ];
 
