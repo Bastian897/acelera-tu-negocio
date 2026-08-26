@@ -1,4 +1,14 @@
-const FOUNDERS = [
+type TeamMember = {
+  photo: string;
+  name: string;
+  role: string;
+  bio: string;
+  handle?: string;
+  followers?: string;
+  href?: string;
+};
+
+const FOUNDERS: TeamMember[] = [
   {
     photo: "assets/team/felipe-nancupil.png",
     name: "Felipe Ñancupil",
@@ -12,12 +22,66 @@ const FOUNDERS = [
     photo: "assets/team/ignacio-ruiz.png",
     name: "Ignacio Ruiz",
     role: "Cofundador",
-    bio: "Fundador de +20 empresas y ex-millonario.",
+    bio: "Fundador de +20 empresas.",
     handle: "@ignacioruizc",
     followers: "+500K",
     href: "https://instagram.com/ignacioruizc",
   },
+  {
+    photo: "assets/team/bastian-moreno.jpg",
+    name: "Bastián Moreno",
+    role: "Tecnología e IA",
+    bio: "Diseña e implementa los sistemas e inteligencia artificial detrás de la operación.",
+  },
 ];
+
+function TeamCard({ member }: { member: TeamMember }) {
+  const Wrapper = member.href ? "a" : "div";
+  const wrapperProps = member.href
+    ? { href: member.href, target: "_blank", rel: "noreferrer" }
+    : {};
+
+  return (
+    <Wrapper
+      {...wrapperProps}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)]"
+    >
+      <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[var(--brand-bg)]">
+        <img
+          src={member.photo}
+          alt={member.name}
+          className="absolute inset-0 h-full w-full object-cover object-top grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0"
+          loading="lazy"
+        />
+      </div>
+
+      <div className="flex flex-1 flex-col gap-3 p-6">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-accent)]">
+            {member.role}
+          </p>
+          <h3 className="mt-1 text-xl font-medium tracking-tight text-[var(--brand-ink)]">
+            {member.name}
+          </h3>
+        </div>
+        <p className="text-sm leading-relaxed text-[var(--brand-muted)]">{member.bio}</p>
+        {member.handle ? (
+          <div className="mt-2 flex items-center gap-2 border-t border-[var(--brand-border)] pt-3 text-xs text-[var(--brand-muted)]">
+            <span>{member.handle}</span>
+            {member.followers ? (
+              <>
+                <span className="text-[var(--brand-border)]">/</span>
+                <span className="font-medium text-[var(--brand-ink)]">
+                  {member.followers} seguidores
+                </span>
+              </>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    </Wrapper>
+  );
+}
 
 export function FoundersSection() {
   return (
@@ -27,45 +91,12 @@ export function FoundersSection() {
           Quiénes calibran el panel.
         </h2>
         <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--brand-muted)]">
-          Dos personas con negocio propio y comunidad real detrás de cada recomendación.
+          Tres personas con negocio propio y tecnología real detrás de cada recomendación.
         </p>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2">
-          {FOUNDERS.map((founder) => (
-            <a
-              key={founder.name}
-              href={founder.href}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] sm:flex-row"
-            >
-              <div className="relative h-72 shrink-0 overflow-hidden bg-[var(--brand-bg)] sm:h-auto sm:w-56">
-                <img
-                  src={founder.photo}
-                  alt={founder.name}
-                  className="absolute inset-0 h-full w-full object-cover object-top grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--brand-surface)] via-transparent to-transparent sm:bg-gradient-to-r" />
-              </div>
-
-              <div className="flex flex-1 flex-col justify-center gap-3 p-6">
-                <div>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--brand-accent)]">
-                    {founder.role}
-                  </p>
-                  <h3 className="mt-1 text-xl font-medium tracking-tight text-[var(--brand-ink)]">
-                    {founder.name}
-                  </h3>
-                </div>
-                <p className="text-sm leading-relaxed text-[var(--brand-muted)]">{founder.bio}</p>
-                <div className="mt-2 flex items-center gap-2 border-t border-[var(--brand-border)] pt-3 text-xs text-[var(--brand-muted)]">
-                  <span>{founder.handle}</span>
-                  <span className="text-[var(--brand-border)]">/</span>
-                  <span className="font-medium text-[var(--brand-ink)]">{founder.followers} seguidores</span>
-                </div>
-              </div>
-            </a>
+        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FOUNDERS.map((member) => (
+            <TeamCard key={member.name} member={member} />
           ))}
         </div>
       </div>
