@@ -13,9 +13,9 @@ const SERVICES = [
     body: "Diseño e implementación de proyectos en ventas, marketing, finanzas y operaciones, con seguimiento de KPIs.",
   },
   {
-    icon: "assets/icons/icon-produccion-video.png",
-    title: "Producción de video",
-    body: "Reels para retail, contenido UGC y videos promocionales para restaurantes y gastronomía.",
+    icon: "assets/icons/icon-recursos.png",
+    title: "Automatización con IA",
+    body: "Sistemas y flujos con inteligencia artificial que ahorran tiempo operativo y escalan tu negocio sin sumar más personas.",
   },
 ];
 
