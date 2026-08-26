@@ -41,7 +41,7 @@ export function ResourcesSection() {
               key={category.title}
               className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[var(--brand-border)] bg-[var(--surface-soft)] px-6 py-10"
             >
-              <BrandIcon src={category.icon} color="var(--brand-secondary)" size={28} className="opacity-70" />
+              <BrandIcon src={category.icon} color="var(--brand-muted)" size={28} className="opacity-70" />
               <span className="text-sm font-medium text-[var(--brand-ink)]">{category.title}</span>
               <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
                 Próximamente

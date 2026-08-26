@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react";
 
 import { SubmitCta } from "./cta";
 import { BrandIcon } from "./icon";
+import { SectionKicker } from "./section-kicker";
 
 const FIELD_CLASS =
   "w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)]/70 focus-visible:border-[var(--brand-accent)]";
@@ -55,10 +56,8 @@ export function ContactSection() {
     <section id="contacto" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2 md:items-center">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-            Contacto
-          </p>
-          <h2 className="reveal-up mt-4 max-w-md text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
+          <SectionKicker>Contacto</SectionKicker>
+          <h2 className="reveal-up max-w-md text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
             Agenda tu llamada de calibración.
           </h2>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-[var(--brand-muted)]">

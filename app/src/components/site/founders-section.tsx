@@ -59,10 +59,10 @@ export function FoundersSection() {
                   </h3>
                 </div>
                 <p className="text-sm leading-relaxed text-[var(--brand-muted)]">{founder.bio}</p>
-                <div className="mt-2 flex items-center gap-2 border-t border-[var(--brand-border)] pt-3 font-mono text-xs text-[var(--brand-chrome)]">
+                <div className="mt-2 flex items-center gap-2 border-t border-[var(--brand-border)] pt-3 text-xs text-[var(--brand-muted)]">
                   <span>{founder.handle}</span>
                   <span className="text-[var(--brand-border)]">/</span>
-                  <span className="text-[var(--brand-ink)]">{founder.followers} seguidores</span>
+                  <span className="font-medium text-[var(--brand-ink)]">{founder.followers} seguidores</span>
                 </div>
               </div>
             </a>

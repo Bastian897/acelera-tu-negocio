@@ -13,6 +13,7 @@ export function ResultsSection() {
         <h2 className="reveal-up text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
           A quién ayudamos
         </h2>
+        <span aria-hidden="true" className="mb-8 mt-2 block h-[3px] w-10 rounded-full bg-[var(--brand-accent)] opacity-70" />
 
         {/* Dark impact block: solid dark surface, white copy, brand-blue number. */}
         <div className="relative mt-8 overflow-hidden rounded-[24px] bg-[var(--dark-bg)]">

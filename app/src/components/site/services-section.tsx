@@ -1,4 +1,5 @@
 import { BrandIcon } from "./icon";
+import { SectionKicker } from "./section-kicker";
 
 const SERVICES = [
   {
@@ -22,10 +23,8 @@ export function ServicesSection() {
   return (
     <section id="servicios" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto max-w-7xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-          Servicios
-        </p>
-        <h2 className="reveal-up mt-4 max-w-2xl text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
+        <SectionKicker>Servicios</SectionKicker>
+        <h2 className="reveal-up max-w-2xl text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
           Tres instrumentos. Un mismo panel.
         </h2>
 
