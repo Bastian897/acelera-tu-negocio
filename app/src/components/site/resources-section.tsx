@@ -1,80 +1,48 @@
-import { useState, type FormEvent } from "react";
+import { PrimaryCta } from "./cta";
 
-import { NotifyCta } from "./cta";
-import { BrandIcon } from "./icon";
-
-const CATEGORIES = [
-  { icon: "assets/icons/icon-recursos.png", title: "Guías" },
-  { icon: "assets/icons/icon-direccion.png", title: "Plantillas" },
-  { icon: "assets/icons/icon-industria.png", title: "Casos de estudio" },
+const PROOF_POINTS = [
+  {
+    label: "A partir de tus respuestas",
+    detail: "No un formulario que cae en un cajón: cada respuesta alimenta el informe.",
+  },
+  {
+    label: "3 a 4 observaciones concretas",
+    detail: "Escritas para tu negocio, con tus números y tu mercado — no una plantilla genérica.",
+  },
+  {
+    label: "Gratis, sin letra chica",
+    detail: "Así trabajamos cuando ya eres cliente: entregamos, no conversamos.",
+  },
 ];
 
-const CONTACT_EMAIL = "contacto@aceleratunegocio.cl";
-
 export function ResourcesSection() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "done">("idle");
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const subject = "Avisenme cuando publiquen recursos";
-    const body = `Correo: ${email}`;
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setStatus("done");
-    setEmail("");
-  }
-
   return (
     <section id="recursos" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
-      <div className="mx-auto max-w-7xl text-center">
-        <h2 className="reveal-up text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
-          Recursos, en calibración
+      <div className="mx-auto max-w-3xl text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
+          Diagnóstico gratis
+        </p>
+        <h2 className="reveal-up mt-4 text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
+          Tu diagnóstico, calibrado a tu negocio.
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-[var(--brand-muted)]">
-          Estamos preparando guías y plantillas reales de dirección y consultoría. Deja tu
-          correo y te avisamos apenas estén listas.
+        <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
+          Respondes unas preguntas sobre tu operación y tus números. Te devolvemos un informe
+          real, generado a partir de tus respuestas — la primera prueba de que en Acelera
+          entregamos cosas concretas, no conversación.
         </p>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-3">
-          {CATEGORIES.map((category) => (
-            <div
-              key={category.title}
-              className="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[var(--brand-border)] bg-[var(--surface-soft)] px-6 py-10"
-            >
-              <BrandIcon src={category.icon} color="var(--brand-muted)" size={28} className="opacity-70" />
-              <span className="text-sm font-medium text-[var(--brand-ink)]">{category.title}</span>
-              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-                Próximamente
-              </span>
+        <div className="mt-14 grid gap-8 text-left sm:grid-cols-3">
+          {PROOF_POINTS.map((point) => (
+            <div key={point.label} className="border-t border-[var(--brand-border)] pt-4">
+              <p className="text-sm font-medium text-[var(--brand-ink)]">{point.label}</p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-muted)]">{point.detail}</p>
             </div>
           ))}
         </div>
 
-        {status === "done" ? (
-          <p className="mx-auto mt-10 max-w-sm text-sm text-[var(--brand-ink)]">
-            Se abrió tu cliente de correo. Envíalo y te avisamos apenas publiquemos los
-            primeros recursos.
-          </p>
-        ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="mx-auto mt-10 flex max-w-sm flex-col items-center gap-3 sm:flex-row"
-          >
-            <label htmlFor="notify-email" className="sr-only">
-              Correo electrónico
-            </label>
-            <input
-              id="notify-email"
-              type="email"
-              required
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="tu@empresa.cl"
-              className="h-11 w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)] focus-visible:border-[var(--brand-accent)]"
-            />
-            <NotifyCta />
-          </form>
-        )}
+        <PrimaryCta href="#contacto" className="mt-14">
+          Quiero mi diagnóstico gratis
+        </PrimaryCta>
       </div>
     </section>
   );
