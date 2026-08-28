@@ -7,7 +7,7 @@ const LINKS = [
   { href: "#fundadores", label: "Equipo" },
   { href: "#proceso", label: "Cómo trabajamos" },
   { href: "#casos", label: "Casos" },
-  { href: "#recursos", label: "Recursos" },
+  { href: "#recursos", label: "Diagnóstico" },
 ];
 
 export function SiteNav() {
