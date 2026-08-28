@@ -1,5 +1,3 @@
-import { PrimaryCta } from "./cta";
-
 const PROOF_POINTS = [
   {
     label: "A partir de tus respuestas",
@@ -40,9 +38,14 @@ export function ResourcesSection() {
           ))}
         </div>
 
-        <PrimaryCta href="#contacto" className="mt-14">
+        {/* TODO: debe redirigir a un formulario de diagnóstico dedicado (no al form de #contacto).
+            Ese formulario todavía no existe — por ahora el botón queda sin acción. */}
+        <button
+          type="button"
+          className="mt-14 inline-flex items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[var(--ac-white)] shadow-[var(--shadow-elevation)] transition-transform duration-150 ease-out hover:brightness-110 active:scale-[0.97] motion-reduce:transition-none"
+        >
           Quiero mi diagnóstico gratis
-        </PrimaryCta>
+        </button>
       </div>
     </section>
   );
