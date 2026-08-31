@@ -20,10 +20,11 @@ const INDUSTRY_OPTIONS = [
 const REVENUE_OPTIONS = ["$3M - $5M CLP", "$5M - $10M CLP", "Sobre $10M CLP"];
 
 type Status = "idle" | "loading" | "done" | "error";
+type DiagnosticoResult = { observations: string[]; pdfBase64: string };
 
 export function DiagnosticoSection() {
   const [status, setStatus] = useState<Status>("idle");
-  const [report, setReport] = useState<string | null>(null);
+  const [result, setResult] = useState<DiagnosticoResult | null>(null);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,8 +47,8 @@ export function DiagnosticoSection() {
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("request_failed");
-      const data = (await res.json()) as { report: string };
-      setReport(data.report);
+      const data = (await res.json()) as DiagnosticoResult;
+      setResult(data);
       setStatus("done");
     } catch {
       setStatus("error");
@@ -66,12 +67,26 @@ export function DiagnosticoSection() {
           respuestas — también te lo enviamos por correo.
         </p>
 
-        {status === "done" && report ? (
+        {status === "done" && result ? (
           <div className="mt-12 rounded-[16px] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6">
             <p className={LABEL_CLASS}>Tu diagnóstico</p>
-            <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-[var(--brand-ink)]">
-              {report}
-            </p>
+            <ul className="mt-4 flex flex-col gap-3">
+              {result.observations.map((observation, i) => (
+                <li
+                  key={i}
+                  className="border-l-2 border-[var(--brand-accent)] bg-[var(--brand-bg)] py-2 pl-4 text-sm leading-relaxed text-[var(--brand-ink)]"
+                >
+                  {observation}
+                </li>
+              ))}
+            </ul>
+            <a
+              href={`data:application/pdf;base64,${result.pdfBase64}`}
+              download="diagnostico-acelera.pdf"
+              className="mt-6 inline-flex items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[var(--ac-white)] transition-transform duration-150 ease-out hover:brightness-110 active:scale-[0.97] motion-reduce:transition-none"
+            >
+              Descargar mi diagnóstico en PDF
+            </a>
             <p className="mt-6 text-sm text-[var(--brand-muted)]">
               Te lo enviamos también a tu correo. Si quieres profundizar, respóndelo y
               coordinamos una llamada.
