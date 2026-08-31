@@ -10,8 +10,10 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { CF_BEACON_TOKEN } from "../lib/analytics";
 import { BRAND_BG_HEX } from "../lib/brand";
 import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
+import { ChatWidget } from "../components/site/chat-widget";
 // Page metadata (browser <title>/favicon + social og: tags), read at build time.
 import appMetaJson from "../app-meta.json";
 
@@ -143,9 +145,17 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="es" data-theme="default-dark" style={{ colorScheme: "dark" }}>
       <head>
         <HeadContent />
+        {CF_BEACON_TOKEN ? (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={`{"token": "${CF_BEACON_TOKEN}"}`}
+          />
+        ) : null}
       </head>
       <body className="acelera-site">
         {children}
+        <ChatWidget />
         <Scripts />
       </body>
     </html>

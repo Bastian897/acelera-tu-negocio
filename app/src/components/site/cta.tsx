@@ -89,9 +89,11 @@ export function SubmitCta({
 /** "Notificarme", resources-capture intent. Garment: corner-bracket
  * viewfinder that closes around the label on hover/focus. */
 export function NotifyCta({
+  children = "Notificarme",
   loading = false,
   className = "",
 }: {
+  children?: ReactNode;
   loading?: boolean;
   className?: string;
 }) {
@@ -112,7 +114,7 @@ export function NotifyCta({
         aria-hidden="true"
         className="absolute bottom-0 right-0 h-2.5 w-2.5 border-b border-r border-[var(--brand-muted)] transition-all duration-200 ease-out group-hover:h-full group-hover:w-full group-hover:border-[var(--brand-accent)] motion-reduce:transition-none"
       />
-      <span className="relative">{loading ? "Enviando..." : "Notificarme"}</span>
+      <span className="relative">{loading ? "Enviando..." : children}</span>
     </button>
   );
 }
