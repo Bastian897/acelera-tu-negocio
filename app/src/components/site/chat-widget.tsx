@@ -77,7 +77,7 @@ export function ChatWidget() {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
-  }, [entries]);
+  }, [entries, sending]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -172,6 +172,22 @@ export function ChatWidget() {
                     </p>
                   ))
                 )}
+                {sending ? (
+                  <div className="flex w-fit items-center gap-1 rounded-[12px] bg-[var(--brand-surface)] px-3 py-2.5">
+                    <span
+                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--brand-muted)]"
+                      style={{ animationDelay: "0ms" }}
+                    />
+                    <span
+                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--brand-muted)]"
+                      style={{ animationDelay: "150ms" }}
+                    />
+                    <span
+                      className="h-1.5 w-1.5 animate-bounce rounded-full bg-[var(--brand-muted)]"
+                      style={{ animationDelay: "300ms" }}
+                    />
+                  </div>
+                ) : null}
               </div>
 
               <form onSubmit={handleSubmit} className="flex gap-2 border-t border-[var(--brand-border)] p-3">
