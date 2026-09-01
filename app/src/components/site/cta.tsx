@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { trackCtaClick } from "../../lib/analytics";
 
 /** "Agendar llamada", primary intent, reused everywhere. Garment: a solid
  * brand-primary pill that lifts on hover and depresses on press. */
@@ -6,14 +7,17 @@ export function PrimaryCta({
   children = "Agendar llamada",
   href = "#contacto",
   className = "",
+  trackingId = "agendar_llamada",
 }: {
   children?: ReactNode;
   href?: string;
   className?: string;
+  trackingId?: string | null;
 }) {
   return (
     <a
       href={href}
+      onClick={trackingId ? () => trackCtaClick(trackingId) : undefined}
       className={
         "inline-flex items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[var(--ac-white)] shadow-[var(--shadow-elevation)] transition-transform duration-150 ease-out hover:brightness-110 active:scale-[0.97] motion-reduce:transition-none " +
         className
@@ -60,15 +64,18 @@ export function SubmitCta({
   children,
   loading = false,
   className = "",
+  trackingId,
 }: {
   children: ReactNode;
   loading?: boolean;
   className?: string;
+  trackingId?: string;
 }) {
   return (
     <button
       type="submit"
       disabled={loading}
+      onClick={trackingId ? () => trackCtaClick(trackingId) : undefined}
       className={
         "group relative w-full overflow-hidden rounded-[16px] bg-[var(--brand-primary)] px-6 py-3.5 text-sm font-medium text-[var(--ac-white)] shadow-[var(--shadow-elevation)] transition-transform duration-150 active:scale-[0.99] disabled:cursor-wait motion-reduce:transition-none " +
         className
@@ -92,15 +99,18 @@ export function NotifyCta({
   children = "Notificarme",
   loading = false,
   className = "",
+  trackingId = "notificarme",
 }: {
   children?: ReactNode;
   loading?: boolean;
   className?: string;
+  trackingId?: string;
 }) {
   return (
     <button
       type="submit"
       disabled={loading}
+      onClick={trackingId ? () => trackCtaClick(trackingId) : undefined}
       className={
         "group relative inline-flex items-center px-4 py-2 text-sm font-medium text-[var(--brand-ink)] disabled:cursor-wait " +
         className

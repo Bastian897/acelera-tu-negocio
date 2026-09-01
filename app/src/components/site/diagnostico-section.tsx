@@ -158,7 +158,7 @@ export function DiagnosticoSection() {
               </p>
             ) : null}
 
-            <SubmitCta loading={status === "loading"}>Quiero mi diagnóstico gratis</SubmitCta>
+            <SubmitCta loading={status === "loading"} trackingId="diagnostico_gratis">Quiero mi diagnóstico gratis</SubmitCta>
           </form>
         )}
       </div>
