@@ -19,6 +19,13 @@ const INDUSTRY_OPTIONS = [
 
 const REVENUE_OPTIONS = ["$3M - $5M CLP", "$5M - $10M CLP", "Sobre $10M CLP"];
 
+const DIGITALIZATION_OPTIONS = [
+  "Todo manual (papel, planillas sueltas)",
+  "Algunas herramientas digitales sueltas (Excel, WhatsApp)",
+  "Sistemas conectados pero poco automatizados",
+  "Altamente digitalizado y automatizado",
+];
+
 type Status = "idle" | "loading" | "done" | "error";
 type DiagnosticoResult = { observations: string[]; pdfBase64: string };
 
@@ -37,6 +44,7 @@ export function DiagnosticoSection() {
       phone: String(form.get("phone") ?? ""),
       industry: String(form.get("industry") ?? ""),
       revenue: String(form.get("revenue") ?? ""),
+      digitalization: String(form.get("digitalization") ?? ""),
       problem: String(form.get("problem") ?? ""),
     };
 
@@ -103,7 +111,7 @@ export function DiagnosticoSection() {
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className={LABEL_CLASS}>
-                  Email
+                  Correo de la empresa
                 </label>
                 <input id="email" name="email" type="email" required className={FIELD_CLASS + " h-11"} />
               </div>
@@ -138,6 +146,20 @@ export function DiagnosticoSection() {
               <select id="revenue" name="revenue" required className={FIELD_CLASS + " h-11"}>
                 <option value="">Selecciona una opción</option>
                 {REVENUE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label htmlFor="digitalization" className={LABEL_CLASS}>
+                Nivel de digitalización
+              </label>
+              <select id="digitalization" name="digitalization" required className={FIELD_CLASS + " h-11"}>
+                <option value="">Selecciona una opción</option>
+                {DIGITALIZATION_OPTIONS.map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
