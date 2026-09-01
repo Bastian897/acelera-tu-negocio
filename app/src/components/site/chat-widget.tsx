@@ -8,6 +8,29 @@ const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
 
 type ChatEntry = { role: "user" | "assistant"; content: string };
 
+// El bot manda el link del diagnóstico como texto plano dentro de la respuesta
+// (ej. "...aquí tienes el diagnóstico: https://.../diagnostico") — sin esto se
+// veía como texto sin poder hacerle clic. Separa el texto en partes y convierte
+// las URLs en enlaces reales, recortando puntuación final (".", ",", etc.) que
+// quede pegada a la URL para que no se incluya como parte del link.
+function linkifyMessage(text: string) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g);
+  return parts.map((part, i) => {
+    if (!/^https?:\/\//.test(part)) return part;
+    const trailingMatch = part.match(/[.,;:!?)]+$/);
+    const trailing = trailingMatch ? trailingMatch[0] : "";
+    const url = trailing ? part.slice(0, -trailing.length) : part;
+    return (
+      <span key={i}>
+        <a href={url} target="_blank" rel="noopener noreferrer" className="underline">
+          {url}
+        </a>
+        {trailing}
+      </span>
+    );
+  });
+}
+
 function loadConversationId(): string | null {
   try {
     return window.localStorage.getItem(STORAGE_KEY);
@@ -168,7 +191,7 @@ export function ChatWidget() {
                           : "bg-[var(--brand-surface)] text-[var(--brand-ink)]")
                       }
                     >
-                      {entry.content}
+                      {linkifyMessage(entry.content)}
                     </p>
                   ))
                 )}
