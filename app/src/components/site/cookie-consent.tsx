@@ -33,7 +33,7 @@ export function CookieConsent() {
   if (!visible) return null;
 
   return (
-    <div className="fixed bottom-6 left-6 z-50 max-w-sm rounded-[16px] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-5 shadow-[var(--shadow-elevation)]">
+    <div className="fixed inset-x-4 bottom-4 z-50 rounded-[16px] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-5 shadow-[var(--shadow-elevation)] sm:inset-x-auto sm:bottom-6 sm:left-6 sm:max-w-sm">
       <p className="text-sm text-[var(--brand-ink)]">
         Usamos cookies para medir cómo se usa el sitio y mejorar tu experiencia. Puedes
         aceptarlas o rechazarlas cuando quieras.

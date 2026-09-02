@@ -310,6 +310,16 @@ html[data-theme="default-dark"] {
   color: var(--ac-ink);
 }
 
+/* Guarda contra desborde horizontal: el glow decorativo detrás del hero
+ * (.scroll-scrub__copy::before) usa un inset negativo que se pasa del
+ * viewport en pantallas angostas, causando scroll horizontal fantasma en
+ * móvil. En vez de tocar ese efecto puntual, se recorta a nivel global —
+ * ningún elemento decorativo debería poder generar una barra de scroll. */
+html,
+body.acelera-site {
+  overflow-x: hidden;
+}
+
 body.acelera-site {
   background-color: var(--surface-page);
   color: var(--ac-ink);
