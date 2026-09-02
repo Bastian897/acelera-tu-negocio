@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
@@ -20,18 +20,30 @@ const INDUSTRY_OPTIONS = [
   "Otro",
 ];
 
-const REVENUE_OPTIONS = [
-  "$10M - $20M CLP",
-  "$20M - $50M CLP",
-  "Sobre $50M CLP",
-];
+const DEFAULT_MIN_REVENUE_CLP = 10_000_000;
+
+type RevenueOption = { label: string; floorClp: number };
+
+// Las franjas se arman a partir del mínimo real configurado en /admin/agents
+// (vía /api/agent-config) en vez de estar copiadas a mano acá — así, si cambian
+// el mínimo para calificar, el dropdown y el filtro real de agendamiento nunca
+// quedan desincronizados.
+function buildRevenueOptions(minClp: number): RevenueOption[] {
+  const fmtM = (n: number) => `$${Math.round(n / 1_000_000)}M`;
+  return [
+    { label: `${fmtM(minClp)} - ${fmtM(minClp * 2)} CLP`, floorClp: minClp },
+    { label: `${fmtM(minClp * 2)} - ${fmtM(minClp * 5)} CLP`, floorClp: minClp * 2 },
+    { label: `Sobre ${fmtM(minClp * 5)} CLP`, floorClp: minClp * 5 },
+  ];
+}
 
 type ContactFormData = {
   name: string;
   email: string;
   phone: string;
   industry: string;
-  revenue: string;
+  monthlyRevenueClp: number;
+  revenueLabel: string;
   description: string;
 };
 
@@ -76,16 +88,33 @@ export function ContactSection() {
   const [step, setStep] = useState<Step>({ kind: "form" });
   const [formData, setFormData] = useState<ContactFormData | null>(null);
   const [phone, setPhone] = useState<string | undefined>(undefined);
+  const [minRevenueClp, setMinRevenueClp] = useState(DEFAULT_MIN_REVENUE_CLP);
+  const revenueOptions = buildRevenueOptions(minRevenueClp);
+
+  useEffect(() => {
+    fetch(`${BACKEND_URL}/api/agent-config`)
+      .then((res) => res.json())
+      .then((data: { minQualifyingRevenueClp?: number }) => {
+        if (typeof data.minQualifyingRevenueClp === "number") setMinRevenueClp(data.minQualifyingRevenueClp);
+      })
+      .catch(() => {
+        // Se queda con DEFAULT_MIN_REVENUE_CLP si el backend no responde — mejor
+        // ofrecer franjas razonables que dejar el dropdown vacío.
+      });
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const selectedFloor = Number(form.get("revenue"));
+    const selectedOption = revenueOptions.find((opt) => opt.floorClp === selectedFloor);
     const data: ContactFormData = {
       name: String(form.get("name") ?? ""),
       email: String(form.get("email") ?? ""),
       phone: phone ?? "",
       industry: String(form.get("industry") ?? ""),
-      revenue: String(form.get("revenue") ?? ""),
+      monthlyRevenueClp: selectedFloor,
+      revenueLabel: selectedOption?.label ?? "",
       description: String(form.get("description") ?? ""),
     };
     setFormData(data);
@@ -218,13 +247,13 @@ export function ContactSection() {
                   id="revenue"
                   name="revenue"
                   required
-                  defaultValue={formData?.revenue ?? ""}
+                  defaultValue={formData ? String(formData.monthlyRevenueClp) : ""}
                   className={FIELD_CLASS + " h-11"}
                 >
                   <option value="">Selecciona una opción</option>
-                  {REVENUE_OPTIONS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
+                  {revenueOptions.map((option) => (
+                    <option key={option.floorClp} value={option.floorClp}>
+                      {option.label}
                     </option>
                   ))}
                 </select>
