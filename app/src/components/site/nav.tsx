@@ -14,7 +14,7 @@ export function SiteNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-[var(--brand-border)]/60 bg-[var(--brand-bg)]/80 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-[var(--brand-border)] bg-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         <a href="#" className="flex items-center gap-2" aria-label="Acelera tu Negocio">
           <img
