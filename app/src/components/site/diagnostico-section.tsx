@@ -17,7 +17,7 @@ const INDUSTRY_OPTIONS = [
   "Otro",
 ];
 
-const REVENUE_OPTIONS = ["$3M - $5M CLP", "$5M - $10M CLP", "Sobre $10M CLP"];
+const REVENUE_OPTIONS = ["$10M - $20M CLP", "$20M - $50M CLP", "Sobre $50M CLP"];
 
 const DIGITALIZATION_OPTIONS = [
   "Todo manual (papel, planillas sueltas)",

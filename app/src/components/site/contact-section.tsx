@@ -18,9 +18,9 @@ const INDUSTRY_OPTIONS = [
 ];
 
 const REVENUE_OPTIONS = [
-  "$3M - $5M CLP",
-  "$5M - $10M CLP",
-  "Sobre $10M CLP",
+  "$10M - $20M CLP",
+  "$20M - $50M CLP",
+  "Sobre $50M CLP",
 ];
 
 const CONTACT_EMAIL = "contacto@aceleratunegocio.cl";

@@ -27,10 +27,10 @@ export function ResultsSection() {
 
           <div className="relative flex flex-col items-center gap-6 px-6 py-20 text-center md:py-28">
             <p className="font-[var(--font-display)] text-6xl font-extrabold tracking-tighter text-[var(--brand-primary)] md:text-8xl">
-              $3M+
+              $10M+
             </p>
             <p className="max-w-lg text-base leading-relaxed text-[var(--dark-muted)]">
-              Trabajamos con empresas chilenas que ya facturan sobre $3M CLP mensuales y
+              Trabajamos con empresas chilenas que ya facturan sobre $10M CLP mensuales y
               quieren ordenar su crecimiento con dirección clara, no con más ruido.
             </p>
           </div>
