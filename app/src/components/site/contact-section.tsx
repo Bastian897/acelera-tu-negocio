@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 import { BACKEND_URL } from "@/lib/backend";
 import { SubmitCta } from "./cta";
@@ -73,6 +75,7 @@ type Step =
 export function ContactSection() {
   const [step, setStep] = useState<Step>({ kind: "form" });
   const [formData, setFormData] = useState<ContactFormData | null>(null);
+  const [phone, setPhone] = useState<string | undefined>(undefined);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -80,7 +83,7 @@ export function ContactSection() {
     const data: ContactFormData = {
       name: String(form.get("name") ?? ""),
       email: String(form.get("email") ?? ""),
-      phone: String(form.get("phone") ?? ""),
+      phone: phone ?? "",
       industry: String(form.get("industry") ?? ""),
       revenue: String(form.get("revenue") ?? ""),
       description: String(form.get("description") ?? ""),
@@ -149,27 +152,55 @@ export function ContactSection() {
                 <label htmlFor="name" className={LABEL_CLASS}>
                   Nombre
                 </label>
-                <input id="name" name="name" type="text" required className={FIELD_CLASS + " h-11"} />
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  defaultValue={formData?.name}
+                  className={FIELD_CLASS + " h-11"}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="email" className={LABEL_CLASS + " flex items-center gap-1.5"}>
                   <BrandIcon src="assets/icons/icon-email.png" color="var(--brand-muted)" size={14} />
                   Email
                 </label>
-                <input id="email" name="email" type="email" required className={FIELD_CLASS + " h-11"} />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  defaultValue={formData?.email}
+                  className={FIELD_CLASS + " h-11"}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="phone" className={LABEL_CLASS + " flex items-center gap-1.5"}>
                   <BrandIcon src="assets/icons/icon-telefono.png" color="var(--brand-muted)" size={14} />
                   Teléfono
                 </label>
-                <input id="phone" name="phone" type="tel" required className={FIELD_CLASS + " h-11"} />
+                <PhoneInput
+                  id="phone"
+                  international
+                  defaultCountry="CL"
+                  value={phone}
+                  onChange={setPhone}
+                  className="acelera-phone-input"
+                  numberInputProps={{ required: true }}
+                />
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="industry" className={LABEL_CLASS}>
                   Industria
                 </label>
-                <select id="industry" name="industry" required className={FIELD_CLASS + " h-11"}>
+                <select
+                  id="industry"
+                  name="industry"
+                  required
+                  defaultValue={formData?.industry ?? ""}
+                  className={FIELD_CLASS + " h-11"}
+                >
                   <option value="">Selecciona una opción</option>
                   {INDUSTRY_OPTIONS.map((option) => (
                     <option key={option} value={option}>
@@ -182,7 +213,13 @@ export function ContactSection() {
                 <label htmlFor="revenue" className={LABEL_CLASS}>
                   Facturación mensual
                 </label>
-                <select id="revenue" name="revenue" required className={FIELD_CLASS + " h-11"}>
+                <select
+                  id="revenue"
+                  name="revenue"
+                  required
+                  defaultValue={formData?.revenue ?? ""}
+                  className={FIELD_CLASS + " h-11"}
+                >
                   <option value="">Selecciona una opción</option>
                   {REVENUE_OPTIONS.map((option) => (
                     <option key={option} value={option}>
@@ -200,6 +237,7 @@ export function ContactSection() {
                   name="description"
                   rows={3}
                   placeholder="A que se dedica tu empresa, que quieres lograr..."
+                  defaultValue={formData?.description}
                   className={FIELD_CLASS + " resize-none py-3"}
                 />
               </div>
@@ -216,7 +254,16 @@ export function ContactSection() {
 
           {step.kind === "slots" && (
             <div className="mt-10 max-w-sm">
-              <p className={LABEL_CLASS}>Elige un horario</p>
+              <div className="flex items-center justify-between">
+                <p className={LABEL_CLASS}>Elige un horario</p>
+                <button
+                  type="button"
+                  onClick={() => setStep({ kind: "form" })}
+                  className="text-xs font-semibold text-[var(--brand-accent)] underline"
+                >
+                  Volver
+                </button>
+              </div>
               <div className="mt-4 flex max-h-80 flex-col gap-4 overflow-y-auto pr-1">
                 {groupSlotsByDay(step.slots).map((group) => (
                   <div key={group.dayLabel}>
