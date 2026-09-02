@@ -252,7 +252,10 @@
   }
 
   .scroll-scrub__copy::before {
-    inset: -3rem -2rem;
+    /* Horizontal inset recortado a 1.25rem (igual al padding lateral del
+     * chapter-pin en móvil) — con -2rem se pasaba del viewport y generaba
+     * scroll horizontal fantasma en pantallas angostas. */
+    inset: -3rem -1.25rem;
     background: linear-gradient(
       to top,
       var(--ss-bg) 0%,
