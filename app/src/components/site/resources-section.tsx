@@ -1,7 +1,5 @@
 import { Link } from "@tanstack/react-router";
 
-import { GatedDownload } from "./gated-download";
-
 const PROOF_POINTS = [
   {
     label: "A partir de tus respuestas",
@@ -48,10 +46,6 @@ export function ResourcesSection() {
         >
           Quiero mi diagnóstico gratis
         </Link>
-
-        <div className="mx-auto mt-16 max-w-sm">
-          <GatedDownload resource="guia-diagnostico" label="Prefieres leer primero: guía gratuita de autodiagnóstico" />
-        </div>
       </div>
     </section>
   );
