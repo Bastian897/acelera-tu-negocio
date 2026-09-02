@@ -35,6 +35,31 @@ type ContactFormData = {
 
 type AvailabilitySlot = { iso: string; label: string };
 
+function groupSlotsByDay(slots: AvailabilitySlot[]) {
+  const groups: { dayLabel: string; slots: (AvailabilitySlot & { timeLabel: string })[] }[] = [];
+  for (const slot of slots) {
+    const date = new Date(slot.iso);
+    const dayLabel = date.toLocaleDateString("es-CL", {
+      timeZone: "America/Santiago",
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+    });
+    const timeLabel = date.toLocaleTimeString("es-CL", {
+      timeZone: "America/Santiago",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const lastGroup = groups[groups.length - 1];
+    if (lastGroup && lastGroup.dayLabel === dayLabel) {
+      lastGroup.slots.push({ ...slot, timeLabel });
+    } else {
+      groups.push({ dayLabel, slots: [{ ...slot, timeLabel }] });
+    }
+  }
+  return groups;
+}
+
 type Step =
   | { kind: "form" }
   | { kind: "loading_slots" }
@@ -192,16 +217,23 @@ export function ContactSection() {
           {step.kind === "slots" && (
             <div className="mt-10 max-w-sm">
               <p className={LABEL_CLASS}>Elige un horario</p>
-              <div className="mt-4 flex flex-col gap-2">
-                {step.slots.map((slot) => (
-                  <button
-                    key={slot.iso}
-                    type="button"
-                    onClick={() => handlePickSlot(slot)}
-                    className="rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 py-3 text-left text-sm text-[var(--brand-ink)] transition hover:border-[var(--brand-accent)]"
-                  >
-                    {slot.label}
-                  </button>
+              <div className="mt-4 flex max-h-80 flex-col gap-4 overflow-y-auto pr-1">
+                {groupSlotsByDay(step.slots).map((group) => (
+                  <div key={group.dayLabel}>
+                    <p className="text-xs font-medium capitalize text-[var(--brand-muted)]">{group.dayLabel}</p>
+                    <div className="mt-2 grid grid-cols-4 gap-2">
+                      {group.slots.map((slot) => (
+                        <button
+                          key={slot.iso}
+                          type="button"
+                          onClick={() => handlePickSlot(slot)}
+                          className="rounded-[8px] border border-[var(--brand-border)] bg-[var(--brand-surface)] py-2 text-xs font-medium text-[var(--brand-ink)] transition hover:border-[var(--brand-accent)]"
+                        >
+                          {slot.timeLabel}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
