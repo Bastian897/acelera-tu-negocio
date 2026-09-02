@@ -6,7 +6,7 @@ const COLUMNS = [
     links: [
       { href: "#servicios", label: "Dirección estratégica" },
       { href: "#servicios", label: "Consultoría ejecutiva" },
-      { href: "#servicios", label: "Producción de video" },
+      { href: "#servicios", label: "Automatización con IA" },
     ],
   },
   {
