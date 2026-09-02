@@ -10,10 +10,11 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { CF_BEACON_TOKEN, GA4_MEASUREMENT_ID } from "../lib/analytics";
+import { CF_BEACON_TOKEN } from "../lib/analytics";
 import { BRAND_BG_HEX } from "../lib/brand";
 import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
 import { ChatWidget } from "../components/site/chat-widget";
+import { CookieConsent } from "../components/site/cookie-consent";
 // Page metadata (browser <title>/favicon + social og: tags), read at build time.
 import appMetaJson from "../app-meta.json";
 
@@ -152,23 +153,11 @@ function RootShell({ children }: { children: ReactNode }) {
             data-cf-beacon={`{"token": "${CF_BEACON_TOKEN}"}`}
           />
         ) : null}
-        {GA4_MEASUREMENT_ID ? (
-          <>
-            <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`} />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${GA4_MEASUREMENT_ID}');`,
-              }}
-            />
-          </>
-        ) : null}
       </head>
       <body className="acelera-site">
         {children}
         <ChatWidget />
+        <CookieConsent />
         <Scripts />
       </body>
     </html>
