@@ -68,7 +68,7 @@ type Step =
   | { kind: "slots"; slots: AvailabilitySlot[] }
   | { kind: "booking"; slot: AvailabilitySlot }
   | { kind: "done"; whenLabel: string }
-  | { kind: "not_qualified" }
+  | { kind: "not_qualified"; minRequiredClp: number }
   | { kind: "slot_taken" }
   | { kind: "error" };
 
@@ -116,13 +116,14 @@ export function ContactSection() {
       });
       const result = (await res.json()) as
         | { ok: true; whenLabel: string }
-        | { ok: false; reason: "not_qualified" | "slot_taken" }
+        | { ok: false; reason: "not_qualified"; minRequiredClp: number }
+        | { ok: false; reason: "slot_taken" }
         | { error: string };
 
       if ("ok" in result && result.ok) {
         setStep({ kind: "done", whenLabel: result.whenLabel });
       } else if ("reason" in result && result.reason === "not_qualified") {
-        setStep({ kind: "not_qualified" });
+        setStep({ kind: "not_qualified", minRequiredClp: result.minRequiredClp });
       } else if ("reason" in result && result.reason === "slot_taken") {
         setStep({ kind: "slot_taken" });
       } else {
@@ -300,8 +301,9 @@ export function ContactSection() {
           {step.kind === "not_qualified" && (
             <p className="mt-10 max-w-sm text-sm text-[var(--brand-ink)]">
               Por ahora el acompañamiento estructurado de Acelera está pensado para negocios que ya
-              facturan desde $10.000.000 CLP mensuales. Te recomendamos revisar la asesoría personal
-              de Ignacio Ruiz, que tiene un formato más simple y accesible.
+              facturan desde ${step.minRequiredClp.toLocaleString("es-CL")} CLP mensuales. Te
+              recomendamos revisar la asesoría personal de Ignacio Ruiz, que tiene un formato más
+              simple y accesible.
             </p>
           )}
 
