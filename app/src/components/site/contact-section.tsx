@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 
+import { BACKEND_URL } from "@/lib/backend";
 import { SubmitCta } from "./cta";
 import { BrandIcon } from "./icon";
 import { SectionKicker } from "./section-kicker";
@@ -23,33 +24,85 @@ const REVENUE_OPTIONS = [
   "Sobre $50M CLP",
 ];
 
-const CONTACT_EMAIL = "contacto@aceleratunegocio.cl";
+type ContactFormData = {
+  name: string;
+  email: string;
+  phone: string;
+  industry: string;
+  revenue: string;
+  description: string;
+};
+
+type AvailabilitySlot = { iso: string; label: string };
+
+type Step =
+  | { kind: "form" }
+  | { kind: "loading_slots" }
+  | { kind: "slots"; slots: AvailabilitySlot[] }
+  | { kind: "booking"; slot: AvailabilitySlot }
+  | { kind: "done"; whenLabel: string }
+  | { kind: "not_qualified" }
+  | { kind: "slot_taken" }
+  | { kind: "error" };
 
 export function ContactSection() {
-  const [status, setStatus] = useState<"idle" | "done">("idle");
+  const [step, setStep] = useState<Step>({ kind: "form" });
+  const [formData, setFormData] = useState<ContactFormData | null>(null);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") ?? "");
-    const email = String(form.get("email") ?? "");
-    const phone = String(form.get("phone") ?? "");
-    const industry = String(form.get("industry") ?? "");
-    const revenue = String(form.get("revenue") ?? "");
-    const description = String(form.get("description") ?? "");
+    const data: ContactFormData = {
+      name: String(form.get("name") ?? ""),
+      email: String(form.get("email") ?? ""),
+      phone: String(form.get("phone") ?? ""),
+      industry: String(form.get("industry") ?? ""),
+      revenue: String(form.get("revenue") ?? ""),
+      description: String(form.get("description") ?? ""),
+    };
+    setFormData(data);
+    setStep({ kind: "loading_slots" });
 
-    const subject = `Consulta de ${name || "un visitante"}, ${industry}`;
-    const body = [
-      `Nombre: ${name}`,
-      `Email: ${email}`,
-      `Telefono: ${phone}`,
-      `Industria: ${industry}`,
-      `Facturacion mensual: ${revenue}`,
-      `Sobre el negocio: ${description}`,
-    ].join("\n");
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/availability`);
+      const result = (await res.json()) as { configured: boolean; slots: AvailabilitySlot[] };
+      if (!result.configured || result.slots.length === 0) {
+        setStep({ kind: "error" });
+        return;
+      }
+      setStep({ kind: "slots", slots: result.slots });
+    } catch {
+      setStep({ kind: "error" });
+    }
+  }
 
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setStatus("done");
+  async function handlePickSlot(slot: AvailabilitySlot) {
+    if (!formData) return;
+    setStep({ kind: "booking", slot });
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/schedule`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, startIso: slot.iso }),
+      });
+      const result = (await res.json()) as
+        | { ok: true; whenLabel: string }
+        | { ok: false; reason: "not_qualified" | "slot_taken" }
+        | { error: string };
+
+      if ("ok" in result && result.ok) {
+        setStep({ kind: "done", whenLabel: result.whenLabel });
+      } else if ("reason" in result && result.reason === "not_qualified") {
+        setStep({ kind: "not_qualified" });
+      } else if ("reason" in result && result.reason === "slot_taken") {
+        setStep({ kind: "slot_taken" });
+      } else {
+        setStep({ kind: "error" });
+      }
+    } catch {
+      setStep({ kind: "error" });
+    }
   }
 
   return (
@@ -65,12 +118,7 @@ export function ContactSection() {
             acelerar.
           </p>
 
-          {status === "done" ? (
-            <p className="mt-10 max-w-sm text-base text-[var(--brand-ink)]">
-              Se abrió tu cliente de correo con tus datos. Envíalo y te contactamos dentro de
-              las próximas 24 horas hábiles.
-            </p>
-          ) : (
+          {step.kind === "form" && (
             <form onSubmit={handleSubmit} className="mt-10 flex max-w-sm flex-col gap-5">
               <div className="flex flex-col gap-2">
                 <label htmlFor="name" className={LABEL_CLASS}>
@@ -131,8 +179,85 @@ export function ContactSection() {
                 />
               </div>
 
-              <SubmitCta className="mt-2" trackingId="contacto_enviar">Enviar</SubmitCta>
+              <SubmitCta className="mt-2" trackingId="contacto_enviar">Ver horarios disponibles</SubmitCta>
             </form>
+          )}
+
+          {step.kind === "loading_slots" && (
+            <p className="mt-10 max-w-sm text-sm text-[var(--brand-muted)]">
+              Buscando horarios disponibles...
+            </p>
+          )}
+
+          {step.kind === "slots" && (
+            <div className="mt-10 max-w-sm">
+              <p className={LABEL_CLASS}>Elige un horario</p>
+              <div className="mt-4 flex flex-col gap-2">
+                {step.slots.map((slot) => (
+                  <button
+                    key={slot.iso}
+                    type="button"
+                    onClick={() => handlePickSlot(slot)}
+                    className="rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 py-3 text-left text-sm text-[var(--brand-ink)] transition hover:border-[var(--brand-accent)]"
+                  >
+                    {slot.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {step.kind === "booking" && (
+            <p className="mt-10 max-w-sm text-sm text-[var(--brand-muted)]">Agendando tu llamada...</p>
+          )}
+
+          {step.kind === "done" && (
+            <p className="mt-10 max-w-sm text-base text-[var(--brand-ink)]">
+              Listo, quedó agendada tu llamada de calibración para el {step.whenLabel}. Te llegará
+              la confirmación a tu correo.
+            </p>
+          )}
+
+          {step.kind === "not_qualified" && (
+            <p className="mt-10 max-w-sm text-sm text-[var(--brand-ink)]">
+              Por ahora el acompañamiento estructurado de Acelera está pensado para negocios que ya
+              facturan desde $10.000.000 CLP mensuales. Te recomendamos revisar la asesoría personal
+              de Ignacio Ruiz, que tiene un formato más simple y accesible.
+            </p>
+          )}
+
+          {step.kind === "slot_taken" && (
+            <div className="mt-10 max-w-sm">
+              <p className="text-sm text-[var(--brand-ink)]">
+                Justo ese horario ya no está disponible. Elige otro:
+              </p>
+              <button
+                type="button"
+                onClick={() => setStep({ kind: "form" })}
+                className="mt-4 text-sm font-semibold text-[var(--brand-accent)] underline"
+              >
+                Ver horarios de nuevo
+              </button>
+            </div>
+          )}
+
+          {step.kind === "error" && (
+            <div className="mt-10 max-w-sm">
+              <p className="text-sm text-[var(--brand-ink)]">
+                Tuvimos un problema técnico agendando tu llamada. Escríbenos directamente a{" "}
+                <a href="mailto:contacto@aceleratunegocio.cl" className="underline">
+                  contacto@aceleratunegocio.cl
+                </a>{" "}
+                y coordinamos por ese medio.
+              </p>
+              <button
+                type="button"
+                onClick={() => setStep({ kind: "form" })}
+                className="mt-4 text-sm font-semibold text-[var(--brand-accent)] underline"
+              >
+                Intentar de nuevo
+              </button>
+            </div>
           )}
         </div>
 
