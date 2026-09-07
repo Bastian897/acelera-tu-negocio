@@ -118,25 +118,8 @@ function isFullName(value: string): boolean {
   return value.trim().split(/\s+/).filter(Boolean).length >= 2;
 }
 
-// Duración/curva de la animación del panel — reutiliza exactamente la misma
-// curva que .reveal-up en styles.css, para que el "lenguaje de movimiento"
-// del sitio sea consistente.
-const PANEL_TRANSITION_MS = 260;
-const PANEL_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
-
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
-  // Antes el panel se montaba/desmontaba junto con `open`, sin ninguna
-  // transición real (React lo insertaba/quitaba del DOM de un frame a otro,
-  // así que no había nada que animar — de ahí el "es muy brusco" reportado).
-  // `panelMounted` controla si el panel existe en el DOM; `panelVisible`
-  // controla el estado final de la transición. Al abrir, se monta primero
-  // con el estado "cerrado" y recién en el siguiente frame se pasa a
-  // "visible" (si no, no hay frame intermedio del que partir y la
-  // transición no tiene nada que interpolar). Al cerrar, se anima primero a
-  // "invisible" y el desmontaje real se retrasa hasta que termina.
-  const [panelMounted, setPanelMounted] = useState(false);
-  const [panelVisible, setPanelVisible] = useState(false);
   const [entries, setEntries] = useState<ChatEntry[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -157,17 +140,6 @@ export function ChatWidget() {
     conversationId.current = loadConversationId();
     setVisitorName(loadVisitorName());
   }, []);
-
-  useEffect(() => {
-    if (open) {
-      setPanelMounted(true);
-      const raf = requestAnimationFrame(() => setPanelVisible(true));
-      return () => cancelAnimationFrame(raf);
-    }
-    setPanelVisible(false);
-    const timeout = setTimeout(() => setPanelMounted(false), PANEL_TRANSITION_MS);
-    return () => clearTimeout(timeout);
-  }, [open]);
 
   function handleNameSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -268,14 +240,8 @@ export function ChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {panelMounted ? (
-        <div
-          className={
-            "mb-3 flex h-[520px] w-[360px] flex-col overflow-hidden rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] shadow-[var(--shadow-elevation)] transition-[opacity,transform] motion-reduce:transition-none " +
-            (panelVisible ? "translate-y-0 scale-100 opacity-100" : "translate-y-4 scale-95 opacity-0")
-          }
-          style={{ transitionDuration: `${PANEL_TRANSITION_MS}ms`, transitionTimingFunction: PANEL_EASE }}
-        >
+      {open ? (
+        <div className="chat-panel-in mb-3 flex h-[520px] w-[360px] flex-col overflow-hidden rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] shadow-[var(--shadow-elevation)]">
           <div className="flex items-center gap-3 border-b border-[var(--brand-border)] px-4 py-3">
             <span
               aria-hidden="true"

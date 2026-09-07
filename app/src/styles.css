@@ -352,6 +352,43 @@ body.acelera-site {
   }
 }
 
+/* Entrada del panel del chat-widget. Segunda vuelta sobre esto (Bastian,
+ * 2026-09-07, "la animación aún no se hace"): la primera versión usaba esto
+ * mismo pero con valores muy sutiles (0.18s, 8px, escala 0.98) — casi
+ * imperceptible, se leía como "no hay animación" aunque técnicamente corría.
+ * La segunda versión cambió a una transición manejada con dos estados de
+ * React + requestAnimationFrame para poder animar también el cierre, pero
+ * quedó rota (el navegador no llega a pintar el estado "cerrado" antes de
+ * pasar a "visible", así que ambos cambios terminan en el mismo frame y no
+ * hay nada que interpolar — se ve tan brusco como sin animación). Un
+ * @keyframes plano en el propio mount no tiene ese problema: el navegador
+ * SIEMPRE anima un elemento que llega al DOM con esta clase ya puesta, sin
+ * depender de ningún timing de JavaScript — es la forma más simple y
+ * confiable de lograr esto. A cambio, el cierre vuelve a ser instantáneo
+ * (sin animación de salida) — ese trade-off es intencional: mejor un cierre
+ * brusco que una apertura que a veces no se ve.
+ */
+@keyframes acelera-chat-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.chat-panel-in {
+  animation: acelera-chat-panel-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-panel-in {
+    animation: none;
+  }
+}
+
 /* Plain (non-arbitrary) brand utility classes for src/routes files, which
  * scripts/check-ui.mjs scans for raw hex and bg-[...]/text-[...] arbitrary
  * values. Everywhere else, prefer arbitrary values against the CSS vars
