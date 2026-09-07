@@ -389,6 +389,34 @@ body.acelera-site {
   }
 }
 
+/* Carrusel horizontal continuo de logos de clientes (patrón "logo marquee",
+ * pedido explícito de Bastian: "como lo tienen los de indies", indies.la).
+ * La pista contiene la lista de logos DUPLICADA una vez (ver
+ * clients-section.tsx) — trasladar exactamente -50% de su ancho total hace
+ * que el segundo tramo (idéntico) entre justo cuando el primero termina de
+ * salir, así el loop nunca se nota. Velocidad lenta (60s) a propósito: es
+ * prueba social de fondo, no algo en lo que la persona deba enfocar la
+ * vista para leer cada logo.
+ */
+@keyframes acelera-clients-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.clients-marquee-track {
+  animation: acelera-clients-marquee 60s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clients-marquee-track {
+    animation: none;
+  }
+}
+
 /* Plain (non-arbitrary) brand utility classes for src/routes files, which
  * scripts/check-ui.mjs scans for raw hex and bg-[...]/text-[...] arbitrary
  * values. Everywhere else, prefer arbitrary values against the CSS vars
