@@ -352,6 +352,30 @@ body.acelera-site {
   }
 }
 
+/* Entrada del panel del chat-widget — el toggle ya tiene su propia
+ * transición (escala al hover/click), esto es solo para la apertura del
+ * panel en sí, mismo patrón que .reveal-up de arriba. */
+@keyframes acelera-chat-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.chat-panel-in {
+  animation: acelera-chat-panel-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-panel-in {
+    animation: none;
+  }
+}
+
 /* Plain (non-arbitrary) brand utility classes for src/routes files, which
  * scripts/check-ui.mjs scans for raw hex and bg-[...]/text-[...] arbitrary
  * values. Everywhere else, prefer arbitrary values against the CSS vars
