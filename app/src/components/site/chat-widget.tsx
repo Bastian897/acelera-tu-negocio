@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
 import { BACKEND_URL } from "@/lib/backend";
 import { trackCtaClick } from "@/lib/analytics";
+import { BrandIcon } from "./icon";
 
 const STORAGE_KEY = "acelera_chat_conversation_id";
 const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
 
 type ChatEntry = { role: "user" | "assistant"; content: string; at: number };
+type AvailabilitySlot = { iso: string; label: string };
 
 // Preguntas de apertura sugeridas (patrón Intercom/Drift: reduce la fricción
 // de tener que escribir todo desde cero). Se muestran solo antes del primer
@@ -14,18 +16,39 @@ type ChatEntry = { role: "user" | "assistant"; content: string; at: number };
 // escrito.
 const STARTER_PROMPTS = ["Quiero agendar una llamada", "¿Qué incluye la asesoría?", "¿Cuánto cuesta?"];
 
-// Detecta menciones de día+hora concretas en la última respuesta del bot
-// (ej. "Lunes 7 a las 10:30 a. m.") para ofrecerlas como botones — evita que
-// la persona tenga que retipear el horario exacto, justo lo que el backend
-// exige carácter por carácter antes de agendar (USER_PICKED_TIME_PATTERN en
-// ai.ts). Puramente cosmético: si no matchea nada, no se muestra ningún botón
-// y el texto se ve exactamente igual que antes.
-const SLOT_SUGGESTION_PATTERN =
-  /(lunes|martes|mi[ée]rcoles|jueves|viernes|s[áa]bado|domingo)\s+\d{1,2}\s+a\s+las\s+\d{1,2}(:\d{2})?\s*(a\.?\s?m\.?|p\.?\s?m\.?)?/gi;
+// Antes esto trataba de ADIVINAR el horario ofrecido con un regex sobre el
+// texto del bot (ej. "Lunes 7 a las 10:30 a. m.") — bug real reportado en
+// vivo (Bastian, 2026-09-07): cuando el bot ofrece un RANGO en vez de
+// horarios puntuales ("martes 8... con horarios entre las 9:00 y las
+// 17:30"), el regex no matcheaba nada y no aparecía ningún botón. En vez de
+// perseguir cada forma nueva de redactar lo mismo (mismo patrón de guards en
+// el backend, ver ai.ts), ahora se detecta solo SI el mensaje habla de
+// agendar/horarios — no QUÉ horario exacto ofrece — y se consulta la
+// disponibilidad real via /api/availability para armar un selector de
+// verdad (día → hora), en vez de tratar de parsear texto libre.
+const SCHEDULING_MENTION_PATTERN =
+  /\b(lunes|martes|mi[ée]rcoles|jueves|viernes|s[áa]bado|domingo)\b|disponibilidad|horario|agendar/i;
 
-function extractSlotSuggestions(text: string): string[] {
-  const matches = text.match(SLOT_SUGGESTION_PATTERN) ?? [];
-  return Array.from(new Set(matches.map((m) => m.trim()))).slice(0, 4);
+// Bug real encontrado probando el flujo completo en vivo (2026-09-07): el
+// mensaje de confirmación final ("quedó agendada para el martes...") TAMBIÉN
+// menciona un día de la semana, así que el botón "Ver horarios disponibles"
+// volvía a aparecer después de agendar de verdad — no tiene sentido ofrecer
+// horarios cuando ya no hay nada que coordinar. Mismo patrón que
+// FAKE_BOOKING_CLAIM_PATTERN en el backend (ai.ts): "agendad[ao]"/"confirmad[ao]"
+// es la señal de que el mensaje es una confirmación, no una oferta.
+const SCHEDULING_CONFIRMED_PATTERN = /agendad[ao]|reservad[ao]|confirmad[ao]|invitaci[oó]n/i;
+
+function mentionsScheduling(text: string): boolean {
+  return SCHEDULING_MENTION_PATTERN.test(text) && !SCHEDULING_CONFIRMED_PATTERN.test(text);
+}
+
+// El label real de /api/availability es "martes, 8 de septiembre, 09:00 a.
+// m." (ver google-calendar.ts) — separa el día de la hora para agrupar el
+// selector en dos niveles.
+function splitSlotLabel(label: string): { day: string; time: string } {
+  const idx = label.lastIndexOf(",");
+  if (idx === -1) return { day: label, time: label };
+  return { day: label.slice(0, idx).trim(), time: label.slice(idx + 1).trim() };
 }
 
 function formatTime(at: number): string {
@@ -120,6 +143,13 @@ export function ChatWidget() {
   const [visitorName, setVisitorName] = useState<string | null>(null);
   const [nameDraft, setNameDraft] = useState("");
   const [nameError, setNameError] = useState(false);
+  // Selector de horarios real (día → hora), reemplaza el intento anterior de
+  // adivinar el horario ofrecido parseando el texto del bot.
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerLoading, setPickerLoading] = useState(false);
+  const [pickerError, setPickerError] = useState(false);
+  const [pickerDay, setPickerDay] = useState<string | null>(null);
+  const [availableSlots, setAvailableSlots] = useState<AvailabilitySlot[] | null>(null);
   const conversationId = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -154,9 +184,33 @@ export function ChatWidget() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [entries, sending]);
 
+  async function loadAvailability() {
+    setPickerLoading(true);
+    setPickerError(false);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/availability`);
+      if (!res.ok) throw new Error("request_failed");
+      const data = (await res.json()) as { configured: boolean; slots: AvailabilitySlot[] };
+      setAvailableSlots(data.slots ?? []);
+    } catch {
+      setPickerError(true);
+    } finally {
+      setPickerLoading(false);
+    }
+  }
+
   async function sendMessage(rawMessage: string) {
     const message = rawMessage.trim();
     if (!message || sending) return;
+
+    // El selector queda atado al último mensaje del bot (ver más abajo) — sin
+    // resetear esto acá, un selector abierto en un día ya elegido se quedaría
+    // pegado y se volvería a mostrar (con datos viejos) bajo la respuesta
+    // siguiente, que puede ser sobre un tema totalmente distinto.
+    setPickerOpen(false);
+    setPickerDay(null);
+    setAvailableSlots(null);
+    setPickerError(false);
 
     setEntries((prev) => [...prev, { role: "user", content: message, at: Date.now() }]);
     setInput("");
@@ -192,16 +246,25 @@ export function ChatWidget() {
     void sendMessage(input);
   }
 
-  // Botones de horario solo bajo el último mensaje del bot, y solo mientras
-  // siga siendo el último de verdad (no mientras se está esperando una nueva
-  // respuesta ni después de que la conversación avanzó) — evita botones
-  // "viejos" colgando debajo de un mensaje que ya quedó atrás.
+  // El botón/selector de horarios solo aparece bajo el último mensaje del
+  // bot, y solo mientras siga siendo el último de verdad (no mientras se
+  // espera una respuesta nueva ni después de que la conversación avanzó) —
+  // evita que quede colgando debajo de un mensaje que ya quedó atrás.
   const lastEntry = entries[entries.length - 1];
   const lastAssistantEntry = [...entries].reverse().find((e) => e.role === "assistant");
-  const slotSuggestions =
-    !sending && lastAssistantEntry && lastEntry === lastAssistantEntry
-      ? extractSlotSuggestions(lastAssistantEntry.content)
-      : [];
+  const showSchedulingHelper =
+    !sending && lastAssistantEntry !== undefined && lastEntry === lastAssistantEntry && mentionsScheduling(lastAssistantEntry.content);
+
+  const dayGroups = useMemo(() => {
+    if (!availableSlots) return [];
+    const map = new Map<string, (AvailabilitySlot & { time: string })[]>();
+    for (const slot of availableSlots) {
+      const { day, time } = splitSlotLabel(slot.label);
+      if (!map.has(day)) map.set(day, []);
+      map.get(day)!.push({ ...slot, time });
+    }
+    return Array.from(map.entries()).map(([day, slots]) => ({ day, slots }));
+  }, [availableSlots]);
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
@@ -216,10 +279,9 @@ export function ChatWidget() {
           <div className="flex items-center gap-3 border-b border-[var(--brand-border)] px-4 py-3">
             <span
               aria-hidden="true"
-              style={{ fontFamily: "var(--font-display)" }}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--brand-primary)] text-sm font-semibold text-[var(--ac-white)]"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[var(--brand-border)] bg-[var(--brand-bg)] p-1.5"
             >
-              A
+              <img src="/assets/brand/acelera-icon-ink.svg" alt="" className="h-full w-full" />
             </span>
             <div className="min-w-0">
               <p
@@ -303,18 +365,75 @@ export function ChatWidget() {
                         {linkifyMessage(entry.content)}
                       </p>
                       <span className="mt-1 px-1 text-[10px] text-[var(--brand-muted)]">{formatTime(entry.at)}</span>
-                      {entry === lastAssistantEntry && slotSuggestions.length > 0 ? (
-                        <div className="flex flex-wrap gap-2 pt-1">
-                          {slotSuggestions.map((slot) => (
+                      {entry === lastAssistantEntry && showSchedulingHelper ? (
+                        <div className="mt-1 w-full max-w-[90%] rounded-[12px] border border-[var(--brand-border)] p-2">
+                          {!pickerOpen ? (
                             <button
-                              key={slot}
                               type="button"
-                              onClick={() => void sendMessage(slot)}
-                              className="rounded-[var(--ac-radius-pill)] border border-[var(--brand-accent)] bg-[var(--brand-bg)] px-3 py-1.5 text-xs font-medium text-[var(--brand-accent)] transition-colors hover:bg-[var(--brand-accent)] hover:text-[var(--ac-white)]"
+                              onClick={() => {
+                                setPickerOpen(true);
+                                void loadAvailability();
+                              }}
+                              className="flex items-center gap-1.5 rounded-[var(--ac-radius-pill)] border border-[var(--brand-accent)] bg-[var(--brand-bg)] px-3 py-1.5 text-xs font-medium text-[var(--brand-accent)] transition-colors hover:bg-[var(--brand-accent)] hover:text-[var(--ac-white)]"
                             >
-                              {slot}
+                              📅 Ver horarios disponibles
                             </button>
-                          ))}
+                          ) : pickerLoading ? (
+                            <p className="px-1 py-1 text-xs text-[var(--brand-muted)]">Cargando horarios…</p>
+                          ) : pickerError ? (
+                            <p className="px-1 py-1 text-xs text-[var(--ac-bad)]">
+                              No se pudo cargar la disponibilidad. Escribe el día que prefieras.
+                            </p>
+                          ) : dayGroups.length === 0 ? (
+                            <p className="px-1 py-1 text-xs text-[var(--brand-muted)]">
+                              No hay horarios libres esta semana.
+                            </p>
+                          ) : pickerDay === null ? (
+                            <div className="flex flex-wrap gap-2">
+                              {dayGroups.map((g) => (
+                                <button
+                                  key={g.day}
+                                  type="button"
+                                  onClick={() => setPickerDay(g.day)}
+                                  className="rounded-[var(--ac-radius-pill)] border border-[var(--brand-border)] px-3 py-1.5 text-xs text-[var(--brand-ink)] transition-colors hover:border-[var(--brand-accent)] hover:text-[var(--brand-accent)]"
+                                >
+                                  {g.day}
+                                </button>
+                              ))}
+                            </div>
+                          ) : (
+                            <div className="flex flex-col gap-2">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-medium text-[var(--brand-ink)]">
+                                  {pickerDay}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => setPickerDay(null)}
+                                  className="text-[10px] text-[var(--brand-muted)] underline"
+                                >
+                                  ← otro día
+                                </button>
+                              </div>
+                              <div className="flex max-h-28 flex-wrap gap-2 overflow-y-auto">
+                                {dayGroups
+                                  .find((g) => g.day === pickerDay)
+                                  ?.slots.map((s) => (
+                                    <button
+                                      key={s.iso}
+                                      type="button"
+                                      onClick={() => {
+                                        setPickerOpen(false);
+                                        void sendMessage(s.label);
+                                      }}
+                                      className="rounded-[var(--ac-radius-pill)] border border-[var(--brand-accent)] px-3 py-1.5 text-xs font-medium text-[var(--brand-accent)] transition-colors hover:bg-[var(--brand-accent)] hover:text-[var(--ac-white)]"
+                                    >
+                                      {s.time}
+                                    </button>
+                                  ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ) : null}
                     </div>
@@ -370,14 +489,7 @@ export function ChatWidget() {
         {open ? (
           "✕"
         ) : (
-          <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
-            <path
-              d="M4 5.5C4 4.67 4.67 4 5.5 4h13c.83 0 1.5.67 1.5 1.5v10c0 .83-.67 1.5-1.5 1.5H9l-4 3.5v-3.5H5.5C4.67 17 4 16.33 4 15.5v-10Z"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <BrandIcon src="assets/brand/acelera-icon-ink.svg" color="var(--ac-white)" size={22} />
         )}
       </button>
     </div>
