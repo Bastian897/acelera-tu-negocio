@@ -3,7 +3,7 @@
     "primaryCtaText": "Agendar llamada"
   },
   "nav": {
-    "brandText": "Acelera tu Negocio TEST",
+    "brandText": "Acelera tu Negocio",
     "link1": "Servicios",
     "link2": "Equipo",
     "link3": "Cómo trabajamos",
@@ -56,7 +56,7 @@
     "industry2": "E-commerce",
     "industry3": "Gastronomía",
     "industry4": "Salud y estética",
-    "industry5": "Fotografía"
+    "industry5": "Y más"
   },
   "clients": {
     "heading": "Empresas con las que hemos trabajado"
@@ -64,11 +64,11 @@
   "resources": {
     "kicker": "Diagnóstico gratis",
     "heading": "Tu diagnóstico, calibrado a tu negocio.",
-    "paragraph": "Respondes unas preguntas sobre tu operación y tus números. Te devolvemos un informe real, generado a partir de tus respuestas — la primera prueba de que en Acelera entregamos cosas concretas, no conversación.",
+    "paragraph": "Respondes unas preguntas sobre tu operación y tus números. Te devolvemos un informe real, generado a partir de tus respuestas la primera prueba de que en Acelera entregamos cosas concretas, no conversación.",
     "point1Label": "A partir de tus respuestas",
     "point1Detail": "No un formulario que cae en un cajón: cada respuesta alimenta el informe.",
     "point2Label": "3 a 4 observaciones concretas",
-    "point2Detail": "Escritas para tu negocio, con tus números y tu mercado — no una plantilla genérica.",
+    "point2Detail": "Escritas para tu negocio, con tus números y tu mercado no una plantilla genérica.",
     "point3Label": "Gratis, sin letra chica",
     "point3Detail": "Así trabajamos cuando ya eres cliente: entregamos, no conversamos.",
     "ctaText": "Quiero mi diagnóstico gratis"

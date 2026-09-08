@@ -26,6 +26,26 @@ const DIGITALIZATION_OPTIONS = [
   "Altamente digitalizado y automatizado",
 ];
 
+const SALES_CHANNEL_OPTIONS = [
+  "Tienda física",
+  "E-commerce propio",
+  "Marketplace (Mercado Libre, etc.)",
+  "Redes sociales / WhatsApp",
+  "Venta B2B directa",
+  "Otro",
+];
+
+const GOAL_OPTIONS = [
+  "Vender más",
+  "Ordenar la operación",
+  "Reducir costos",
+  "Escalar el equipo",
+  "Automatizar procesos con IA",
+  "Otro",
+];
+
+const TEAM_SIZE_OPTIONS = ["Solo yo", "2-5 personas", "6-15 personas", "16-50 personas", "Más de 50 personas"];
+
 type Status = "idle" | "loading" | "done" | "error";
 type DiagnosticoResult = { observations: string[]; pdfBase64: string };
 
@@ -45,6 +65,10 @@ export function DiagnosticoSection() {
       industry: String(form.get("industry") ?? ""),
       revenue: String(form.get("revenue") ?? ""),
       digitalization: String(form.get("digitalization") ?? ""),
+      salesChannel: String(form.get("salesChannel") ?? ""),
+      goal: String(form.get("goal") ?? ""),
+      teamSize: String(form.get("teamSize") ?? ""),
+      triedTools: String(form.get("triedTools") ?? ""),
       problem: String(form.get("problem") ?? ""),
     };
 
@@ -153,18 +177,62 @@ export function DiagnosticoSection() {
               </select>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label htmlFor="digitalization" className={LABEL_CLASS}>
-                Nivel de digitalización
-              </label>
-              <select id="digitalization" name="digitalization" required className={FIELD_CLASS + " h-11"}>
-                <option value="">Selecciona una opción</option>
-                {DIGITALIZATION_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="digitalization" className={LABEL_CLASS}>
+                  Nivel de digitalización
+                </label>
+                <select id="digitalization" name="digitalization" required className={FIELD_CLASS + " h-11"}>
+                  <option value="">Selecciona una opción</option>
+                  {DIGITALIZATION_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="salesChannel" className={LABEL_CLASS}>
+                  Canal de venta principal
+                </label>
+                <select id="salesChannel" name="salesChannel" required className={FIELD_CLASS + " h-11"}>
+                  <option value="">Selecciona una opción</option>
+                  {SALES_CHANNEL_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="goal" className={LABEL_CLASS}>
+                  Objetivo principal (próximos 6-12 meses)
+                </label>
+                <select id="goal" name="goal" required className={FIELD_CLASS + " h-11"}>
+                  <option value="">Selecciona una opción</option>
+                  {GOAL_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="teamSize" className={LABEL_CLASS}>
+                  Tamaño del equipo
+                </label>
+                <select id="teamSize" name="teamSize" required className={FIELD_CLASS + " h-11"}>
+                  <option value="">Selecciona una opción</option>
+                  {TEAM_SIZE_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -172,6 +240,13 @@ export function DiagnosticoSection() {
                 ¿Cuál es tu principal problema u objetivo hoy?
               </label>
               <textarea id="problem" name="problem" required rows={4} className={FIELD_CLASS + " py-3"} />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label htmlFor="triedTools" className={LABEL_CLASS}>
+                ¿Qué has intentado o qué herramientas usan hoy? (opcional)
+              </label>
+              <textarea id="triedTools" name="triedTools" rows={3} className={FIELD_CLASS + " py-3"} />
             </div>
 
             {status === "error" ? (
