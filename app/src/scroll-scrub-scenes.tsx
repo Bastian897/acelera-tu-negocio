@@ -15,6 +15,7 @@ import type {
   ScrollScrubTheme,
 } from "@/components/scroll-scrub/scroll-scrub";
 import { PrimaryCta, TickLink } from "@/components/site/cta";
+import { siteContent } from "@/lib/site-content";
 
 /** Brand tokens for the journey layer: the client design system's dark-impact
  * palette (surface-dark + brand-primary blue), same as the footer/results band. */
@@ -30,19 +31,19 @@ export const scrollScrubScenes: ScrollScrubScene[] = [
     actions: (
       <>
         <PrimaryCta />
-        <TickLink href="#servicios">Ver servicios</TickLink>
+        <TickLink href="#servicios">{siteContent.hero.secondaryCtaText}</TickLink>
       </>
     ),
     align: "left",
-    body: "Dirección y consultoría estratégica para empresas que ya facturan y quieren crecer con control, no al azar.",
+    body: siteContent.hero.body,
     clip: "assets/world/scene-01.mp4",
     id: "hero",
-    label: "Apertura",
+    label: siteContent.hero.chapterLabel,
     linger: 0.1,
     mobileClip: "assets/world/scene-01-mobile.mp4",
     mobilePoster: "assets/world/scene-01-mobile-poster.png",
     poster: "assets/world/scene-01-poster.png",
     scroll: 3.2,
-    title: "Cada negocio tiene un panel de control. Nosotros lo calibramos.",
+    title: siteContent.hero.title,
   },
 ];

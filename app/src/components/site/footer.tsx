@@ -1,4 +1,5 @@
 import { BrandIcon } from "./icon";
+import { siteContent } from "../../lib/site-content";
 
 const COLUMNS = [
   {
@@ -49,8 +50,7 @@ export function SiteFooter() {
               className="h-9 w-auto"
             />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[var(--dark-muted)]">
-              Dirección y consultoría estratégica para empresas chilenas que quieren crecer
-              con control.
+              {siteContent.footer.tagline}
             </p>
           </div>
 
@@ -79,8 +79,8 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-16 flex flex-col gap-3 border-t border-[var(--dark-border)] pt-6 text-xs text-[var(--dark-muted)] sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Acelera tu Negocio. Todos los derechos reservados.</p>
-          <p>Santiago, Chile</p>
+          <p>© {year} {siteContent.nav.brandText}. Todos los derechos reservados.</p>
+          <p>{siteContent.footer.location}</p>
         </div>
       </div>
     </footer>

@@ -1,9 +1,11 @@
+import { siteContent } from "../../lib/site-content";
+
 const INDUSTRIES = [
-  "Marketing",
-  "E-commerce",
-  "Gastronomía",
-  "Salud y estética",
-  "Fotografía",
+  siteContent.results.industry1,
+  siteContent.results.industry2,
+  siteContent.results.industry3,
+  siteContent.results.industry4,
+  siteContent.results.industry5,
 ];
 
 export function ResultsSection() {
@@ -11,7 +13,7 @@ export function ResultsSection() {
     <section id="casos" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto max-w-7xl">
         <h2 className="reveal-up text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-          A quién ayudamos
+          {siteContent.results.heading}
         </h2>
         <span aria-hidden="true" className="mb-8 mt-2 block h-[3px] w-10 rounded-full bg-[var(--brand-accent)] opacity-70" />
 
@@ -27,11 +29,10 @@ export function ResultsSection() {
 
           <div className="relative flex flex-col items-center gap-6 px-6 py-20 text-center md:py-28">
             <p className="font-[var(--font-display)] text-6xl font-extrabold tracking-tighter text-[var(--brand-primary)] md:text-8xl">
-              $10M+
+              {siteContent.results.stat}
             </p>
             <p className="max-w-lg text-base leading-relaxed text-[var(--dark-muted)]">
-              Trabajamos con empresas chilenas que ya facturan sobre $10M CLP mensuales y
-              quieren ordenar su crecimiento con dirección clara, no con más ruido.
+              {siteContent.results.paragraph}
             </p>
           </div>
         </div>

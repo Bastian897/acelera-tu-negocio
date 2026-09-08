@@ -1,3 +1,5 @@
+import { siteContent } from "../../lib/site-content";
+
 type TeamMember = {
   photo: string;
   name: string;
@@ -11,27 +13,27 @@ type TeamMember = {
 const FOUNDERS: TeamMember[] = [
   {
     photo: "assets/team/felipe-nancupil.jpg",
-    name: "Felipe Ñancupil",
-    role: "Cofundador",
-    bio: "El divulgador de contenido de emprendimiento más grande de Chile.",
+    name: siteContent.founders.founder1Name,
+    role: siteContent.founders.founder1Role,
+    bio: siteContent.founders.founder1Bio,
     handle: "@nancupil.oficial",
     followers: "+900K",
     href: "https://instagram.com/nancupil.oficial",
   },
   {
     photo: "assets/team/ignacio-ruiz.jpg",
-    name: "Ignacio Ruiz",
-    role: "Cofundador",
-    bio: "Fundador de +20 empresas.",
+    name: siteContent.founders.founder2Name,
+    role: siteContent.founders.founder2Role,
+    bio: siteContent.founders.founder2Bio,
     handle: "@ignacioruizc",
     followers: "+500K",
     href: "https://instagram.com/ignacioruizc",
   },
   {
     photo: "assets/team/bastian-moreno-card.jpg",
-    name: "Bastián Moreno",
-    role: "Cofundador",
-    bio: "Tecnología e IA.",
+    name: siteContent.founders.founder3Name,
+    role: siteContent.founders.founder3Role,
+    bio: siteContent.founders.founder3Bio,
     handle: "@bastian_morenog",
     href: "https://instagram.com/bastian_morenog",
   },
@@ -90,10 +92,10 @@ export function FoundersSection() {
     <section id="fundadores" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto max-w-7xl">
         <h2 className="reveal-up max-w-xl text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
-          Quiénes calibran el panel.
+          {siteContent.founders.heading}
         </h2>
         <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--brand-muted)]">
-          Tres personas con negocio propio y tecnología real detrás de cada recomendación.
+          {siteContent.founders.subheading}
         </p>
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

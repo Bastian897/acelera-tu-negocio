@@ -1,0 +1,86 @@
+{
+  "general": {
+    "primaryCtaText": "Agendar llamada"
+  },
+  "nav": {
+    "brandText": "Acelera tu Negocio TEST",
+    "link1": "Servicios",
+    "link2": "Equipo",
+    "link3": "Cómo trabajamos",
+    "link4": "Casos",
+    "link5": "Diagnóstico"
+  },
+  "hero": {
+    "chapterLabel": "Apertura",
+    "title": "Cada negocio tiene un panel de control. Nosotros lo calibramos.",
+    "body": "Dirección y consultoría estratégica para empresas que ya facturan y quieren crecer con control, no al azar.",
+    "secondaryCtaText": "Ver servicios"
+  },
+  "services": {
+    "heading": "Tres instrumentos. Un mismo panel.",
+    "imageCaption": "Cada servicio calibrado a la etapa real de tu negocio.",
+    "service1Title": "Dirección estratégica",
+    "service1Body": "Planificación financiera, reducción de costos y generación de oportunidades comerciales para fortalecer tu estrategia de marketing.",
+    "service2Title": "Consultoría ejecutiva",
+    "service2Body": "Diseño e implementación de proyectos en ventas, marketing, finanzas y operaciones, con seguimiento de KPIs.",
+    "service3Title": "Automatización con IA",
+    "service3Body": "Sistemas y flujos con inteligencia artificial que ahorran tiempo operativo y escalan tu negocio sin sumar más personas."
+  },
+  "founders": {
+    "heading": "Quiénes calibran el panel.",
+    "subheading": "Tres personas con negocio propio y tecnología real detrás de cada recomendación.",
+    "founder1Name": "Felipe Ñancupil",
+    "founder1Role": "Cofundador",
+    "founder1Bio": "El divulgador de contenido de emprendimiento más grande de Chile.",
+    "founder2Name": "Ignacio Ruiz",
+    "founder2Role": "Cofundador",
+    "founder2Bio": "Fundador de +20 empresas.",
+    "founder3Name": "Bastián Moreno",
+    "founder3Role": "Cofundador",
+    "founder3Bio": "Tecnología e IA."
+  },
+  "process": {
+    "heading": "Cómo trabajamos",
+    "step1Title": "Diagnóstico",
+    "step1Body": "Revisamos tu operación, tus números y tu mercado para identificar dónde está la fricción real.",
+    "step2Title": "Dirección",
+    "step2Body": "Definimos un plan de acción concreto: costos, oportunidades comerciales y estrategia de marketing.",
+    "step3Title": "Ejecución",
+    "step3Body": "Implementamos junto a tu equipo y medimos resultados con KPIs que se revisan cada semana."
+  },
+  "results": {
+    "heading": "A quién ayudamos",
+    "stat": "$10M+",
+    "paragraph": "Trabajamos con empresas chilenas que ya facturan sobre $10M CLP mensuales y quieren ordenar su crecimiento con dirección clara, no con más ruido.",
+    "industry1": "Marketing",
+    "industry2": "E-commerce",
+    "industry3": "Gastronomía",
+    "industry4": "Salud y estética",
+    "industry5": "Fotografía"
+  },
+  "clients": {
+    "heading": "Empresas con las que hemos trabajado"
+  },
+  "resources": {
+    "kicker": "Diagnóstico gratis",
+    "heading": "Tu diagnóstico, calibrado a tu negocio.",
+    "paragraph": "Respondes unas preguntas sobre tu operación y tus números. Te devolvemos un informe real, generado a partir de tus respuestas — la primera prueba de que en Acelera entregamos cosas concretas, no conversación.",
+    "point1Label": "A partir de tus respuestas",
+    "point1Detail": "No un formulario que cae en un cajón: cada respuesta alimenta el informe.",
+    "point2Label": "3 a 4 observaciones concretas",
+    "point2Detail": "Escritas para tu negocio, con tus números y tu mercado — no una plantilla genérica.",
+    "point3Label": "Gratis, sin letra chica",
+    "point3Detail": "Así trabajamos cuando ya eres cliente: entregamos, no conversamos.",
+    "ctaText": "Quiero mi diagnóstico gratis"
+  },
+  "contact": {
+    "kicker": "Contacto",
+    "heading": "Agenda tu llamada de calibración.",
+    "paragraph": "30 minutos para revisar tu negocio y decirte, sin vueltas, si podemos ayudarte a acelerar.",
+    "imageCaption": "Herramientas de precisión. Decisiones claras."
+  },
+  "footer": {
+    "tagline": "Dirección y consultoría estratégica para empresas chilenas que quieren crecer con control.",
+    "location": "Santiago, Chile"
+  }
+}

@@ -3,6 +3,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
 import { BACKEND_URL } from "@/lib/backend";
+import { siteContent } from "@/lib/site-content";
 import { SubmitCta } from "./cta";
 import { BrandIcon } from "./icon";
 import { SectionKicker } from "./section-kicker";
@@ -167,13 +168,12 @@ export function ContactSection() {
     <section id="contacto" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2 md:items-center">
         <div>
-          <SectionKicker>Contacto</SectionKicker>
+          <SectionKicker>{siteContent.contact.kicker}</SectionKicker>
           <h2 className="reveal-up max-w-md text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
-            Agenda tu llamada de calibración.
+            {siteContent.contact.heading}
           </h2>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-[var(--brand-muted)]">
-            30 minutos para revisar tu negocio y decirte, sin vueltas, si podemos ayudarte a
-            acelerar.
+            {siteContent.contact.paragraph}
           </p>
 
           {step.kind === "form" && (
@@ -380,7 +380,7 @@ export function ContactSection() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark-bg)] via-transparent to-transparent" />
           <p className="absolute bottom-6 left-6 right-6 text-xs font-semibold uppercase tracking-[0.15em] text-[var(--dark-muted)]">
-            Herramientas de precisión. Decisiones claras.
+            {siteContent.contact.imageCaption}
           </p>
         </div>
       </div>

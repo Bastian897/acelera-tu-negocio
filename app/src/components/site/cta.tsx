@@ -1,10 +1,11 @@
 import { type ReactNode } from "react";
 import { trackCtaClick } from "../../lib/analytics";
+import { siteContent } from "../../lib/site-content";
 
 /** "Agendar llamada", primary intent, reused everywhere. Garment: a solid
  * brand-primary pill that lifts on hover and depresses on press. */
 export function PrimaryCta({
-  children = "Agendar llamada",
+  children = siteContent.general.primaryCtaText,
   href = "#contacto",
   className = "",
   trackingId = "agendar_llamada",

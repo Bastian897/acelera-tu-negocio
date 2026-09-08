@@ -1,21 +1,22 @@
 import { BrandIcon } from "./icon";
 import { SectionKicker } from "./section-kicker";
+import { siteContent } from "../../lib/site-content";
 
 const SERVICES = [
   {
     icon: "assets/icons/icon-direccion.png",
-    title: "Dirección estratégica",
-    body: "Planificación financiera, reducción de costos y generación de oportunidades comerciales para fortalecer tu estrategia de marketing.",
+    title: siteContent.services.service1Title,
+    body: siteContent.services.service1Body,
   },
   {
     icon: "assets/icons/icon-consultoria.png",
-    title: "Consultoría ejecutiva",
-    body: "Diseño e implementación de proyectos en ventas, marketing, finanzas y operaciones, con seguimiento de KPIs.",
+    title: siteContent.services.service2Title,
+    body: siteContent.services.service2Body,
   },
   {
     icon: "assets/icons/icon-recursos.png",
-    title: "Automatización con IA",
-    body: "Sistemas y flujos con inteligencia artificial que ahorran tiempo operativo y escalan tu negocio sin sumar más personas.",
+    title: siteContent.services.service3Title,
+    body: siteContent.services.service3Body,
   },
 ];
 
@@ -25,7 +26,7 @@ export function ServicesSection() {
       <div className="mx-auto max-w-7xl">
         <SectionKicker>Servicios</SectionKicker>
         <h2 className="reveal-up max-w-2xl text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
-          Tres instrumentos. Un mismo panel.
+          {siteContent.services.heading}
         </h2>
 
         <div className="mt-12 grid gap-4 md:grid-cols-[1.3fr_1fr] md:items-stretch">
@@ -39,7 +40,7 @@ export function ServicesSection() {
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark-bg)] via-[var(--dark-bg)]/20 to-transparent" />
             <figcaption className="relative flex h-full items-end p-8">
               <p className="max-w-xs text-xl font-medium leading-snug tracking-tight text-[var(--dark-ink)]">
-                Cada servicio calibrado a la etapa real de tu negocio.
+                {siteContent.services.imageCaption}
               </p>
             </figcaption>
           </figure>

@@ -1,13 +1,14 @@
 import { useState } from "react";
 
 import { PrimaryCta } from "./cta";
+import { siteContent } from "../../lib/site-content";
 
 const LINKS = [
-  { href: "#servicios", label: "Servicios" },
-  { href: "#fundadores", label: "Equipo" },
-  { href: "#proceso", label: "Cómo trabajamos" },
-  { href: "#casos", label: "Casos" },
-  { href: "#recursos", label: "Diagnóstico" },
+  { href: "#servicios", label: siteContent.nav.link1 },
+  { href: "#fundadores", label: siteContent.nav.link2 },
+  { href: "#proceso", label: siteContent.nav.link3 },
+  { href: "#casos", label: siteContent.nav.link4 },
+  { href: "#recursos", label: siteContent.nav.link5 },
 ];
 
 export function SiteNav() {
@@ -25,7 +26,7 @@ export function SiteNav() {
             height={28}
           />
           <span className="hidden text-sm font-semibold tracking-tight text-[var(--brand-ink)] sm:inline">
-            Acelera tu Negocio
+            {siteContent.nav.brandText}
           </span>
         </a>
 

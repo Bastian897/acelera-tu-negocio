@@ -1,3 +1,5 @@
+import { siteContent } from "../../lib/site-content";
+
 // Logos migrados desde el sitio anterior (aceleratunegocio.cl, WordPress) a
 // pedido de Bastian — mismos clientes reales, solo trasladados al sitio nuevo.
 // "viraly-32" (Hotumatur Rapanui) se sacó de la lista a pedido explícito.
@@ -45,7 +47,7 @@ export function ClientsSection() {
     <section className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-muted)]">
-          Empresas con las que hemos trabajado
+          {siteContent.clients.heading}
         </h2>
       </div>
 

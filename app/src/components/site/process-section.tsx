@@ -1,18 +1,20 @@
+import { siteContent } from "../../lib/site-content";
+
 const STEPS = [
   {
     number: "01",
-    title: "Diagnóstico",
-    body: "Revisamos tu operación, tus números y tu mercado para identificar dónde está la fricción real.",
+    title: siteContent.process.step1Title,
+    body: siteContent.process.step1Body,
   },
   {
     number: "02",
-    title: "Dirección",
-    body: "Definimos un plan de acción concreto: costos, oportunidades comerciales y estrategia de marketing.",
+    title: siteContent.process.step2Title,
+    body: siteContent.process.step2Body,
   },
   {
     number: "03",
-    title: "Ejecución",
-    body: "Implementamos junto a tu equipo y medimos resultados con KPIs que se revisan cada semana.",
+    title: siteContent.process.step3Title,
+    body: siteContent.process.step3Body,
   },
 ];
 
@@ -22,7 +24,7 @@ export function ProcessSection() {
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2 md:items-center">
         <div>
           <h2 className="reveal-up max-w-md text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
-            Cómo trabajamos
+            {siteContent.process.heading}
           </h2>
 
           <ol className="mt-10 divide-y divide-[var(--brand-border)] border-t border-[var(--brand-border)]">
