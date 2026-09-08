@@ -10,13 +10,16 @@ const BUBBLE_DISMISSED_KEY = "acelera_chat_bubble_dismissed";
 
 // Nube de bienvenida (patrón Intercom/Drift, pedido explícito de Bastian,
 // 2026-09-08) — aparece sola a los pocos segundos de cargar la página, antes
-// de que la persona haga nada. Se muestra una sola vez: si ya la cerró, si
-// ya abrió el chat (con o sin la nube), o si ya tiene una conversación
-// guardada de una visita anterior, no vuelve a aparecer — la idea es
-// invitar a una persona nueva a escribir, no perseguir a alguien que ya
-// sabe que el chat existe.
+// de que la persona haga nada, y se queda ahí (pedido explícito, 2026-09-08:
+// "debería estar todo el tiempo la nube y solo salirse si le dan a cerrar o
+// ingresan al chat" — la primera versión se autoocultaba a los 10s, ya no).
+// Solo desaparece si la cierran con la X o si abren el chat (con la nube o
+// con el ícono), y en ambos casos queda descartada para siempre — si ya
+// tiene una conversación guardada de una visita anterior tampoco se
+// muestra. La idea es invitar a una persona nueva a escribir, no perseguir
+// a alguien que ya sabe que el chat existe ni ser molesta con quien ya la
+// cerró una vez.
 const BUBBLE_SHOW_DELAY_MS = 2500;
-const BUBBLE_AUTO_HIDE_MS = 10000;
 
 type ChatEntry = { role: "user" | "assistant"; content: string; at: number };
 type AvailabilitySlot = { iso: string; label: string };
@@ -177,17 +180,12 @@ export function ChatWidget() {
 
   useEffect(() => {
     // Ya usó el chat antes (tiene conversación guardada) o ya cerró/abrió la
-    // nube alguna vez — no molestar de nuevo.
+    // nube alguna vez — no molestar de nuevo. Sin auto-ocultado: una vez que
+    // aparece, se queda hasta que la cierren o entren al chat.
     if (loadBubbleDismissed() || loadConversationId()) return;
     const showTimer = setTimeout(() => setBubbleVisible(true), BUBBLE_SHOW_DELAY_MS);
     return () => clearTimeout(showTimer);
   }, []);
-
-  useEffect(() => {
-    if (!bubbleVisible) return;
-    const hideTimer = setTimeout(dismissBubble, BUBBLE_AUTO_HIDE_MS);
-    return () => clearTimeout(hideTimer);
-  }, [bubbleVisible]);
 
   function handleNameSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -289,7 +287,7 @@ export function ChatWidget() {
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {bubbleVisible && !open ? (
-        <div className="chat-panel-in absolute bottom-[72px] right-0 w-64">
+        <div className="chat-panel-in absolute bottom-[72px] right-0 w-[calc(100vw-3rem)] max-w-64">
           <div className="relative rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-3 pr-7 shadow-[var(--shadow-elevation)]">
             <button
               type="button"
@@ -320,7 +318,16 @@ export function ChatWidget() {
       ) : null}
 
       {open ? (
-        <div className="chat-panel-in mb-3 flex h-[520px] w-[360px] flex-col overflow-hidden rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] shadow-[var(--shadow-elevation)]">
+        // Ancho/alto responsivos — bug real: con 360px fijos y el wrapper a
+        // 24px (right-6) del borde, en un iPhone de 375px de ancho el panel
+        // se salía 9px por la izquierda de la pantalla (24 + 360 = 384 >
+        // 375). calc(100vw-3rem) deja 24px de margen simétrico a cada lado
+        // (los mismos 24px del wrapper) en pantallas angostas, y max-w-[360px]
+        // lo deja fijo en 360px apenas el viewport da para eso — mismo
+        // criterio para el alto, por si el viewport es más bajo que 520px
+        // (celulares en horizontal, browsers con barra de direcciones
+        // grande).
+        <div className="chat-panel-in mb-3 flex h-[calc(100vh-7rem)] max-h-[520px] w-[calc(100vw-3rem)] max-w-[360px] flex-col overflow-hidden rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] shadow-[var(--shadow-elevation)]">
           <div className="flex items-center gap-3 border-b border-[var(--brand-border)] px-4 py-3">
             <span
               aria-hidden="true"
