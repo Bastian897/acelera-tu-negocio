@@ -379,8 +379,14 @@ body.acelera-site {
   }
 }
 
+/* Tercera vuelta (Bastian, 2026-09-08: "muy brusca/rápida"). 0.32s con la
+ * curva de arriba (deceleración muy fuerte al final, casi un frenazo) se
+ * sentía como un golpe. Más lento (0.45s) y con easeOutCubic —
+ * desaceleración pareja de principio a fin, sin ese "snap" al llegar — en
+ * vez de reutilizar la curva de .reveal-up, que está pensada para un efecto
+ * más enérgico. */
 .chat-panel-in {
-  animation: acelera-chat-panel-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: acelera-chat-panel-in 0.45s cubic-bezier(0.33, 1, 0.68, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
