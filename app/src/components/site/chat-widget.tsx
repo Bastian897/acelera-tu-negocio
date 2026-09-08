@@ -6,6 +6,17 @@ import { BrandIcon } from "./icon";
 
 const STORAGE_KEY = "acelera_chat_conversation_id";
 const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
+const BUBBLE_DISMISSED_KEY = "acelera_chat_bubble_dismissed";
+
+// Nube de bienvenida (patrón Intercom/Drift, pedido explícito de Bastian,
+// 2026-09-08) — aparece sola a los pocos segundos de cargar la página, antes
+// de que la persona haga nada. Se muestra una sola vez: si ya la cerró, si
+// ya abrió el chat (con o sin la nube), o si ya tiene una conversación
+// guardada de una visita anterior, no vuelve a aparecer — la idea es
+// invitar a una persona nueva a escribir, no perseguir a alguien que ya
+// sabe que el chat existe.
+const BUBBLE_SHOW_DELAY_MS = 2500;
+const BUBBLE_AUTO_HIDE_MS = 10000;
 
 type ChatEntry = { role: "user" | "assistant"; content: string; at: number };
 type AvailabilitySlot = { iso: string; label: string };
@@ -111,6 +122,23 @@ function saveVisitorName(name: string) {
   }
 }
 
+function loadBubbleDismissed(): boolean {
+  try {
+    return window.localStorage.getItem(BUBBLE_DISMISSED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function saveBubbleDismissed() {
+  try {
+    window.localStorage.setItem(BUBBLE_DISMISSED_KEY, "1");
+  } catch {
+    // localStorage puede fallar en modo privado — sin esto la nube podría
+    // volver a aparecer en la próxima visita, molesto pero no grave.
+  }
+}
+
 // Pide nombre y apellido (2+ palabras) — sirve para distinguir usuarios en el
 // historial de conversaciones del admin, que hasta ahora siempre mostraba la
 // columna "nombre" vacía porque nunca se pedía.
@@ -133,6 +161,7 @@ export function ChatWidget() {
   const [pickerError, setPickerError] = useState(false);
   const [pickerDay, setPickerDay] = useState<string | null>(null);
   const [availableSlots, setAvailableSlots] = useState<AvailabilitySlot[] | null>(null);
+  const [bubbleVisible, setBubbleVisible] = useState(false);
   const conversationId = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -140,6 +169,25 @@ export function ChatWidget() {
     conversationId.current = loadConversationId();
     setVisitorName(loadVisitorName());
   }, []);
+
+  function dismissBubble() {
+    setBubbleVisible(false);
+    saveBubbleDismissed();
+  }
+
+  useEffect(() => {
+    // Ya usó el chat antes (tiene conversación guardada) o ya cerró/abrió la
+    // nube alguna vez — no molestar de nuevo.
+    if (loadBubbleDismissed() || loadConversationId()) return;
+    const showTimer = setTimeout(() => setBubbleVisible(true), BUBBLE_SHOW_DELAY_MS);
+    return () => clearTimeout(showTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!bubbleVisible) return;
+    const hideTimer = setTimeout(dismissBubble, BUBBLE_AUTO_HIDE_MS);
+    return () => clearTimeout(hideTimer);
+  }, [bubbleVisible]);
 
   function handleNameSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -240,6 +288,37 @@ export function ChatWidget() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
+      {bubbleVisible && !open ? (
+        <div className="chat-panel-in absolute bottom-[72px] right-0 w-64">
+          <div className="relative rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-3 pr-7 shadow-[var(--shadow-elevation)]">
+            <button
+              type="button"
+              onClick={dismissBubble}
+              aria-label="Cerrar aviso"
+              className="absolute right-2 top-2 text-[var(--brand-muted)] transition-colors hover:text-[var(--brand-ink)]"
+            >
+              ✕
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                dismissBubble();
+                trackCtaClick("abrir_chat");
+                setOpen(true);
+              }}
+              className="text-left text-sm leading-relaxed text-[var(--brand-ink)]"
+            >
+              ¿Tienes dudas? Estoy aquí para ayudarte 👋
+            </button>
+            {/* Colita del globo — apunta hacia el botón flotante de abajo. */}
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-[6px] right-6 h-3 w-3 rotate-45 border-b border-r border-[var(--brand-border)] bg-[var(--brand-bg)]"
+            />
+          </div>
+        </div>
+      ) : null}
+
       {open ? (
         <div className="chat-panel-in mb-3 flex h-[520px] w-[360px] flex-col overflow-hidden rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] shadow-[var(--shadow-elevation)]">
           <div className="flex items-center gap-3 border-b border-[var(--brand-border)] px-4 py-3">
@@ -447,6 +526,7 @@ export function ChatWidget() {
         type="button"
         onClick={() => {
           if (!open) trackCtaClick("abrir_chat");
+          if (bubbleVisible) dismissBubble();
           setOpen((v) => !v);
         }}
         aria-label={open ? "Cerrar chat" : "Abrir chat"}
