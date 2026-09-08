@@ -6,19 +6,19 @@ import { BrandIcon } from "./icon";
 
 const STORAGE_KEY = "acelera_chat_conversation_id";
 const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
-const BUBBLE_DISMISSED_KEY = "acelera_chat_bubble_dismissed";
 
 // Nube de bienvenida (patrón Intercom/Drift, pedido explícito de Bastian,
 // 2026-09-08) — aparece sola a los pocos segundos de cargar la página, antes
-// de que la persona haga nada, y se queda ahí (pedido explícito, 2026-09-08:
-// "debería estar todo el tiempo la nube y solo salirse si le dan a cerrar o
-// ingresan al chat" — la primera versión se autoocultaba a los 10s, ya no).
-// Solo desaparece si la cierran con la X o si abren el chat (con la nube o
-// con el ícono), y en ambos casos queda descartada para siempre — si ya
-// tiene una conversación guardada de una visita anterior tampoco se
-// muestra. La idea es invitar a una persona nueva a escribir, no perseguir
-// a alguien que ya sabe que el chat existe ni ser molesta con quien ya la
-// cerró una vez.
+// de que la persona haga nada, y se queda ahí sin autoocultarse. Solo
+// desaparece si la cierran con la X o si abren el chat (con la nube o con
+// el ícono) — pero esto es SOLO para la visita actual (estado en memoria,
+// no en localStorage): pedido explícito, 2026-09-08, "la idea es que
+// aparezca siempre, no solo si es primera vez que ingresan" — la primera
+// versión la descartaba para siempre en ese navegador, así que en una
+// segunda visita nunca volvía a aparecer (probado y confirmado en modo
+// incógnito: ahí sí salía, porque no tenía nada guardado). Ahora se
+// resetea sola en cada carga de página, sea que la hayan cerrado antes o
+// no.
 const BUBBLE_SHOW_DELAY_MS = 2500;
 
 type ChatEntry = { role: "user" | "assistant"; content: string; at: number };
@@ -125,23 +125,6 @@ function saveVisitorName(name: string) {
   }
 }
 
-function loadBubbleDismissed(): boolean {
-  try {
-    return window.localStorage.getItem(BUBBLE_DISMISSED_KEY) === "1";
-  } catch {
-    return false;
-  }
-}
-
-function saveBubbleDismissed() {
-  try {
-    window.localStorage.setItem(BUBBLE_DISMISSED_KEY, "1");
-  } catch {
-    // localStorage puede fallar en modo privado — sin esto la nube podría
-    // volver a aparecer en la próxima visita, molesto pero no grave.
-  }
-}
-
 // Pide nombre y apellido (2+ palabras) — sirve para distinguir usuarios en el
 // historial de conversaciones del admin, que hasta ahora siempre mostraba la
 // columna "nombre" vacía porque nunca se pedía.
@@ -175,14 +158,13 @@ export function ChatWidget() {
 
   function dismissBubble() {
     setBubbleVisible(false);
-    saveBubbleDismissed();
   }
 
   useEffect(() => {
-    // Ya usó el chat antes (tiene conversación guardada) o ya cerró/abrió la
-    // nube alguna vez — no molestar de nuevo. Sin auto-ocultado: una vez que
-    // aparece, se queda hasta que la cierren o entren al chat.
-    if (loadBubbleDismissed() || loadConversationId()) return;
+    // Sin gate de localStorage a propósito (ver comentario arriba de
+    // BUBBLE_SHOW_DELAY_MS) — aparece en cada carga de página. Sin
+    // auto-ocultado: una vez que aparece, se queda hasta que la cierren o
+    // entren al chat.
     const showTimer = setTimeout(() => setBubbleVisible(true), BUBBLE_SHOW_DELAY_MS);
     return () => clearTimeout(showTimer);
   }, []);
