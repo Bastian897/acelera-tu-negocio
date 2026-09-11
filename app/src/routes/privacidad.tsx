@@ -20,7 +20,7 @@ function PrivacidadPage() {
   return (
     <main>
       <SiteNav />
-      <div className="mx-auto max-w-2xl px-6 pt-32 pb-24 leading-relaxed text-[var(--ac-ink)]">
+      <div className="mx-auto max-w-2xl px-6 pt-32 pb-24 leading-relaxed text-brand-ink">
         <h1 className="mb-6 text-2xl font-semibold">Política de Privacidad — Acelera</h1>
         <p className="mb-6">
           Esta página describe cómo Acelera ("nosotros") usa el acceso a Google Calendar que solicita la aplicación
