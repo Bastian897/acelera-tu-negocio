@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as PrivacidadRouteImport } from './routes/privacidad'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -22,6 +23,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadRoute = PrivacidadRouteImport.update({
+  id: '/privacidad',
+  path: '/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiagnosticoRoute = DiagnosticoRouteImport.update({
@@ -38,12 +44,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/privacidad': typeof PrivacidadRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/privacidad': typeof PrivacidadRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
@@ -51,20 +59,29 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/diagnostico': typeof DiagnosticoRoute
+  '/privacidad': typeof PrivacidadRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/diagnostico' | '/robots.txt' | '/sitemap.xml'
+  fullPaths:
+    '/' | '/diagnostico' | '/privacidad' | '/robots.txt' | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/diagnostico' | '/robots.txt' | '/sitemap.xml'
-  id: '__root__' | '/' | '/diagnostico' | '/robots.txt' | '/sitemap.xml'
+  to: '/' | '/diagnostico' | '/privacidad' | '/robots.txt' | '/sitemap.xml'
+  id:
+    | '__root__'
+    | '/'
+    | '/diagnostico'
+    | '/privacidad'
+    | '/robots.txt'
+    | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
+  PrivacidadRoute: typeof PrivacidadRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -83,6 +100,13 @@ declare module '@tanstack/react-router' {
       path: '/robots.txt'
       fullPath: '/robots.txt'
       preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidad': {
+      id: '/privacidad'
+      path: '/privacidad'
+      fullPath: '/privacidad'
+      preLoaderRoute: typeof PrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/diagnostico': {
@@ -105,6 +129,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DiagnosticoRoute: DiagnosticoRoute,
+  PrivacidadRoute: PrivacidadRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
