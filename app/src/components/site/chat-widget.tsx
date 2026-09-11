@@ -21,7 +21,19 @@ const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
 // no.
 const BUBBLE_SHOW_DELAY_MS = 2500;
 
-type ChatEntry = { role: "user" | "assistant"; content: string; at: number };
+// canScheduleNow viene directo del backend (ver ai.ts/chat.ts, campo
+// `canScheduleNow` de /api/chat) — antes esto se adivinaba acá con un regex
+// sobre el TEXTO del bot ("¿menciona agendar/un día/disponibilidad?"). Bug
+// real en vivo (Bastian, 2026-09-11): cualquier mención de pasada de
+// "agendar" (ej. "¿con qué empresa estás hoy que te interesa agendar la
+// llamada?", una simple pregunta de contexto, NO una oferta de horarios)
+// hacía aparecer el selector y la persona podía elegir un horario real sin
+// haber dado ni un dato de calificación — mismo problema de fondo que
+// questionMatchesField en el backend (ai.ts/profile-capture.ts): adivinar a
+// partir de texto libre generado por un modelo no escala. El backend YA
+// sabe con certeza si de verdad ofreció disponibilidad este turno, así que
+// ahora se usa ese booleano en vez de re-adivinarlo acá.
+type ChatEntry = { role: "user" | "assistant"; content: string; at: number; canScheduleNow?: boolean };
 type AvailabilitySlot = { iso: string; label: string };
 
 // Preguntas de apertura sugeridas (patrón Intercom/Drift: reduce la fricción
@@ -29,32 +41,6 @@ type AvailabilitySlot = { iso: string; label: string };
 // mensaje — al hacer clic se mandan tal cual, como si la persona las hubiera
 // escrito.
 const STARTER_PROMPTS = ["Quiero agendar una llamada", "¿Qué incluye la asesoría?", "¿Cuánto cuesta?"];
-
-// Antes esto trataba de ADIVINAR el horario ofrecido con un regex sobre el
-// texto del bot (ej. "Lunes 7 a las 10:30 a. m.") — bug real reportado en
-// vivo (Bastian, 2026-09-07): cuando el bot ofrece un RANGO en vez de
-// horarios puntuales ("martes 8... con horarios entre las 9:00 y las
-// 17:30"), el regex no matcheaba nada y no aparecía ningún botón. En vez de
-// perseguir cada forma nueva de redactar lo mismo (mismo patrón de guards en
-// el backend, ver ai.ts), ahora se detecta solo SI el mensaje habla de
-// agendar/horarios — no QUÉ horario exacto ofrece — y se consulta la
-// disponibilidad real via /api/availability para armar un selector de
-// verdad (día → hora), en vez de tratar de parsear texto libre.
-const SCHEDULING_MENTION_PATTERN =
-  /\b(lunes|martes|mi[ée]rcoles|jueves|viernes|s[áa]bado|domingo)\b|disponibilidad|horario|agendar/i;
-
-// Bug real encontrado probando el flujo completo en vivo (2026-09-07): el
-// mensaje de confirmación final ("quedó agendada para el martes...") TAMBIÉN
-// menciona un día de la semana, así que el botón "Ver horarios disponibles"
-// volvía a aparecer después de agendar de verdad — no tiene sentido ofrecer
-// horarios cuando ya no hay nada que coordinar. Mismo patrón que
-// FAKE_BOOKING_CLAIM_PATTERN en el backend (ai.ts): "agendad[ao]"/"confirmad[ao]"
-// es la señal de que el mensaje es una confirmación, no una oferta.
-const SCHEDULING_CONFIRMED_PATTERN = /agendad[ao]|reservad[ao]|confirmad[ao]|invitaci[oó]n/i;
-
-function mentionsScheduling(text: string): boolean {
-  return SCHEDULING_MENTION_PATTERN.test(text) && !SCHEDULING_CONFIRMED_PATTERN.test(text);
-}
 
 // El label real de /api/availability es "martes, 8 de septiembre, 09:00 a.
 // m." (ver google-calendar.ts) — separa el día de la hora para agrupar el
@@ -223,10 +209,13 @@ export function ChatWidget() {
         body: JSON.stringify({ conversationId: conversationId.current, message, name: visitorName }),
       });
       if (!res.ok) throw new Error("request_failed");
-      const data = (await res.json()) as { conversationId: string; reply: string };
+      const data = (await res.json()) as { conversationId: string; reply: string; canScheduleNow?: boolean };
       conversationId.current = data.conversationId;
       saveConversationId(data.conversationId);
-      setEntries((prev) => [...prev, { role: "assistant", content: data.reply, at: Date.now() }]);
+      setEntries((prev) => [
+        ...prev,
+        { role: "assistant", content: data.reply, at: Date.now(), canScheduleNow: data.canScheduleNow === true },
+      ]);
     } catch {
       setEntries((prev) => [
         ...prev,
@@ -253,7 +242,7 @@ export function ChatWidget() {
   const lastEntry = entries[entries.length - 1];
   const lastAssistantEntry = [...entries].reverse().find((e) => e.role === "assistant");
   const showSchedulingHelper =
-    !sending && lastAssistantEntry !== undefined && lastEntry === lastAssistantEntry && mentionsScheduling(lastAssistantEntry.content);
+    !sending && lastAssistantEntry !== undefined && lastEntry === lastAssistantEntry && lastAssistantEntry.canScheduleNow === true;
 
   const dayGroups = useMemo(() => {
     if (!availableSlots) return [];
