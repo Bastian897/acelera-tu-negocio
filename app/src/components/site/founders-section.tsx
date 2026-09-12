@@ -25,9 +25,9 @@ const FOUNDERS: TeamMember[] = [
     name: siteContent.founders.founder2Name,
     role: siteContent.founders.founder2Role,
     bio: siteContent.founders.founder2Bio,
-    handle: "@ignacioruizc",
+    handle: "@ignacioruizcarrasco",
     followers: "+500K",
-    href: "https://instagram.com/ignacioruizc",
+    href: "https://instagram.com/ignacioruizcarrasco",
   },
   {
     photo: "assets/team/bastian-moreno-card.jpg",
