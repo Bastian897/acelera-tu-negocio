@@ -69,6 +69,14 @@ export function DiagnosticoSection() {
       goal: String(form.get("goal") ?? ""),
       teamSize: String(form.get("teamSize") ?? ""),
       triedTools: String(form.get("triedTools") ?? ""),
+      companyName: String(form.get("companyName") ?? ""),
+      website: String(form.get("website") ?? ""),
+      instagram: String(form.get("instagram") ?? ""),
+      permanentClients: String(form.get("permanentClients") ?? ""),
+      newClients: String(form.get("newClients") ?? ""),
+      bestMonth: String(form.get("bestMonth") ?? ""),
+      bestMonthAmount: String(form.get("bestMonthAmount") ?? ""),
+      worstMonth: String(form.get("worstMonth") ?? ""),
       problem: String(form.get("problem") ?? ""),
     };
 
@@ -138,6 +146,21 @@ export function DiagnosticoSection() {
                   Correo de la empresa
                 </label>
                 <input id="email" name="email" type="email" required className={FIELD_CLASS + " h-11"} />
+              </div>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="companyName" className={LABEL_CLASS}>
+                  Nombre de tu empresa (opcional)
+                </label>
+                <input id="companyName" name="companyName" type="text" className={FIELD_CLASS + " h-11"} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="website" className={LABEL_CLASS}>
+                  Página web (opcional)
+                </label>
+                <input id="website" name="website" type="text" className={FIELD_CLASS + " h-11"} />
               </div>
             </div>
 
@@ -232,6 +255,51 @@ export function DiagnosticoSection() {
                     </option>
                   ))}
                 </select>
+              </div>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="instagram" className={LABEL_CLASS}>
+                  Instagram (opcional)
+                </label>
+                <input id="instagram" name="instagram" type="text" placeholder="@tuempresa" className={FIELD_CLASS + " h-11"} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="permanentClients" className={LABEL_CLASS}>
+                  Clientes permanentes (opcional)
+                </label>
+                <input id="permanentClients" name="permanentClients" type="text" className={FIELD_CLASS + " h-11"} />
+              </div>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="newClients" className={LABEL_CLASS}>
+                  Clientes nuevos o variables al mes (opcional)
+                </label>
+                <input id="newClients" name="newClients" type="text" className={FIELD_CLASS + " h-11"} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="bestMonth" className={LABEL_CLASS}>
+                  Mes que más facturaste en el año (opcional)
+                </label>
+                <input id="bestMonth" name="bestMonth" type="text" placeholder="Ej: Diciembre" className={FIELD_CLASS + " h-11"} />
+              </div>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="bestMonthAmount" className={LABEL_CLASS}>
+                  Monto facturado ese mes (opcional)
+                </label>
+                <input id="bestMonthAmount" name="bestMonthAmount" type="text" className={FIELD_CLASS + " h-11"} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="worstMonth" className={LABEL_CLASS}>
+                  Mes que menos facturaste en el año (opcional)
+                </label>
+                <input id="worstMonth" name="worstMonth" type="text" placeholder="Ej: Marzo" className={FIELD_CLASS + " h-11"} />
               </div>
             </div>
 
