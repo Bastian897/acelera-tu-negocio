@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 
 import { PrimaryCta } from "./cta";
 import { siteContent } from "../../lib/site-content";
@@ -17,7 +18,7 @@ export function SiteNav() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-[var(--brand-border)] bg-white">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <a href="#" className="flex items-center gap-2" aria-label="Acelera tu Negocio">
+        <Link to="/" className="flex items-center gap-2" aria-label="Acelera tu Negocio">
           <img
             src="assets/brand/acelera-icon-ink.svg"
             alt=""
@@ -28,17 +29,18 @@ export function SiteNav() {
           <span className="hidden text-sm font-semibold tracking-tight text-[var(--brand-ink)] sm:inline">
             {siteContent.nav.brandText}
           </span>
-        </a>
+        </Link>
 
         <nav aria-label="Principal" className="hidden items-center gap-8 md:flex">
           {LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
-              href={link.href}
+              to="/"
+              hash={link.href.slice(1)}
               className="relative text-sm text-[var(--brand-muted)] transition-colors hover:text-[var(--brand-ink)]"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -73,14 +75,15 @@ export function SiteNav() {
           className="flex flex-col gap-1 border-t border-[var(--brand-border)]/60 bg-[var(--brand-bg)] px-6 py-4 md:hidden"
         >
           {LINKS.map((link) => (
-            <a
+            <Link
               key={link.href}
-              href={link.href}
+              to="/"
+              hash={link.href.slice(1)}
               onClick={() => setOpen(false)}
               className="py-2 text-sm text-[var(--brand-muted)]"
             >
               {link.label}
-            </a>
+            </Link>
           ))}
           <PrimaryCta className="mt-3 w-full" />
         </nav>

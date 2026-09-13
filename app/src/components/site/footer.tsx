@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 import { BrandIcon } from "./icon";
 import { siteContent } from "../../lib/site-content";
 
@@ -60,19 +62,34 @@ export function SiteFooter() {
                 {column.title}
               </p>
               <ul className="mt-4 flex flex-col gap-3">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="inline-flex items-center gap-2 text-sm text-[var(--dark-ink)]/90 transition-colors hover:text-[var(--brand-accent)]"
-                    >
-                      {"icon" in link && link.icon ? (
-                        <BrandIcon src={link.icon} color="var(--dark-muted)" size={14} />
-                      ) : null}
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
+                {column.links.map((link) =>
+                  link.href.startsWith("#") ? (
+                    <li key={link.label}>
+                      <Link
+                        to="/"
+                        hash={link.href.slice(1)}
+                        className="inline-flex items-center gap-2 text-sm text-[var(--dark-ink)]/90 transition-colors hover:text-[var(--brand-accent)]"
+                      >
+                        {"icon" in link && link.icon ? (
+                          <BrandIcon src={link.icon} color="var(--dark-muted)" size={14} />
+                        ) : null}
+                        {link.label}
+                      </Link>
+                    </li>
+                  ) : (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        className="inline-flex items-center gap-2 text-sm text-[var(--dark-ink)]/90 transition-colors hover:text-[var(--brand-accent)]"
+                      >
+                        {"icon" in link && link.icon ? (
+                          <BrandIcon src={link.icon} color="var(--dark-muted)" size={14} />
+                        ) : null}
+                        {link.label}
+                      </a>
+                    </li>
+                  ),
+                )}
               </ul>
             </div>
           ))}

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "@tanstack/react-router";
 
 import { BACKEND_URL } from "@/lib/backend";
 import { SubmitCta } from "./cta";
@@ -98,6 +99,12 @@ export function DiagnosticoSection() {
   return (
     <section className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
       <div className="mx-auto max-w-2xl">
+        <Link
+          to="/"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm text-[var(--brand-muted)] transition-colors hover:text-[var(--brand-ink)]"
+        >
+          <span aria-hidden="true">←</span> Volver al inicio
+        </Link>
         <SectionKicker>Diagnóstico gratis</SectionKicker>
         <h1 className="text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
           Cuéntanos de tu negocio.
