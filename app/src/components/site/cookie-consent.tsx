@@ -68,7 +68,7 @@ export function CookieConsent() {
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-[var(--brand-muted)]">
           Las usamos para medir cómo se usa el sitio y mejorar tu experiencia. Puedes
-          aceptarlas o rechazarlas cuando quieras — no cambia lo que puedes hacer en el sitio.
+          aceptarlas o rechazarlas cuando quieras, sin que eso cambie lo que puedes hacer en el sitio.
         </p>
 
         <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row">
