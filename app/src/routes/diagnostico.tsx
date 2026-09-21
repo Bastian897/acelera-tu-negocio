@@ -10,7 +10,7 @@ export const Route = createFileRoute("/diagnostico")({
       { title: "Diagnóstico gratis | Acelera tu Negocio" },
       {
         name: "description",
-        content: "Responde unas preguntas sobre tu negocio y recibe un diagnóstico real, generado a partir de tus respuestas.",
+        content: "Responde unas preguntas sobre tu negocio y recibe por correo un diagnóstico real, generado a partir de tus respuestas.",
       },
     ],
   }),

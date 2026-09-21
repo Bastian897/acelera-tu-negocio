@@ -1,8 +1,10 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 
 import { BACKEND_URL } from "@/lib/backend";
+import { captureReferralFromUrl, claimReferral } from "@/lib/referral";
 import { SubmitCta } from "./cta";
+import { DiagnosticoConfirmation, type DiagnosticoScheduled } from "./diagnostico-confirmation";
 import { SectionKicker } from "./section-kicker";
 
 const FIELD_CLASS =
@@ -47,12 +49,65 @@ const GOAL_OPTIONS = [
 
 const TEAM_SIZE_OPTIONS = ["Solo yo", "2-5 personas", "6-15 personas", "16-50 personas", "Más de 50 personas"];
 
+// Preguntas del score de madurez digital (2026-09-20). Al backend NO viaja el
+// texto de la opción sino su nivel (1 = la primera, 4 = la última), así que
+// retocar la redacción de acá no cambia el cálculo. El significado de cada
+// nivel vive en el backend (MATURITY_QUESTIONS en src/lib/maturity.ts): si se
+// cambia el sentido de una opción, hay que cambiarlo en los dos lados.
+const MATURITY_QUESTIONS = [
+  {
+    key: "processes",
+    label: "¿Cómo se hacen hoy los procesos clave (cotizar, vender, entregar y cobrar)?",
+    options: [
+      "Depende de la memoria y de cada persona",
+      "Cada uno lo hace a su manera, con algunas notas o planillas",
+      "Están definidos y escritos, pero no siempre se cumplen",
+      "Están documentados, se cumplen y se mejoran cada cierto tiempo",
+    ],
+  },
+  {
+    key: "data",
+    label: "¿Con qué datos tomas decisiones (ventas, márgenes, caja)?",
+    options: [
+      "Con la intuición y lo que recuerdo",
+      "Reviso cifras cuando las necesito, armadas a mano",
+      "Tengo un informe periódico, pero hay que armarlo a mano",
+      "Tengo un panel o reporte al día que se actualiza solo",
+    ],
+  },
+  {
+    key: "sales",
+    label: "¿Cómo gestionas las consultas y las ventas a tus clientes?",
+    options: [
+      "Por WhatsApp o correo, sin un registro ordenado",
+      "Llevo una lista de clientes en una planilla o cuaderno",
+      "Uso un CRM o sistema, pero el seguimiento es manual",
+      "Tengo un CRM con seguimiento y respuestas automatizadas",
+    ],
+  },
+  {
+    key: "team",
+    label: "¿Cómo usa tu equipo las herramientas digitales? (si trabajas solo, responde por ti)",
+    options: [
+      "Prefieren lo manual y cuesta que adopten algo nuevo",
+      "Usan algunas herramientas, pero cada quien las suyas",
+      "Usan las mismas herramientas, con una capacitación básica",
+      "Todos usan las herramientas del negocio y proponen mejoras",
+    ],
+  },
+] as const;
+
 type Status = "idle" | "loading" | "done" | "error";
-type DiagnosticoResult = { observations: string[]; pdfBase64: string };
 
 export function DiagnosticoSection() {
   const [status, setStatus] = useState<Status>("idle");
-  const [result, setResult] = useState<DiagnosticoResult | null>(null);
+  const [result, setResult] = useState<DiagnosticoScheduled | null>(null);
+
+  // Guarda el código de referido de la URL (?ref=) para atribuirlo al enviar
+  // el formulario; vive en un efecto porque el sitio se prerenderiza sin window.
+  useEffect(() => {
+    captureReferralFromUrl();
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -79,6 +134,11 @@ export function DiagnosticoSection() {
       bestMonthAmount: String(form.get("bestMonthAmount") ?? ""),
       worstMonth: String(form.get("worstMonth") ?? ""),
       problem: String(form.get("problem") ?? ""),
+      // Niveles 1 a 4 (ver MATURITY_QUESTIONS). Si una viniera vacía, el
+      // backend simplemente la ignora.
+      maturityAnswers: Object.fromEntries(
+        MATURITY_QUESTIONS.map((q) => [q.key, Number(form.get(`maturity_${q.key}`)) || null]),
+      ),
     };
 
     try {
@@ -88,9 +148,10 @@ export function DiagnosticoSection() {
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("request_failed");
-      const data = (await res.json()) as DiagnosticoResult;
+      const data = (await res.json()) as DiagnosticoScheduled;
       setResult(data);
       setStatus("done");
+      claimReferral(payload.email);
     } catch {
       setStatus("error");
     }
@@ -110,35 +171,12 @@ export function DiagnosticoSection() {
           Cuéntanos de tu negocio.
         </h1>
         <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
-          Responde estas preguntas y te devolvemos un informe generado a partir de tus
-          respuestas — también te lo enviamos por correo.
+          Responde estas preguntas y te enviamos por correo tu puntaje de madurez digital y un
+          informe generado a partir de tus respuestas. Lo recibes el próximo día hábil a las 9:00 am.
         </p>
 
         {status === "done" && result ? (
-          <div className="mt-12 rounded-[16px] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6">
-            <p className={LABEL_CLASS}>Tu diagnóstico</p>
-            <ul className="mt-4 flex flex-col gap-3">
-              {result.observations.map((observation, i) => (
-                <li
-                  key={i}
-                  className="border-l-2 border-[var(--brand-accent)] bg-[var(--brand-bg)] py-2 pl-4 text-sm leading-relaxed text-[var(--brand-ink)]"
-                >
-                  {observation}
-                </li>
-              ))}
-            </ul>
-            <a
-              href={`data:application/pdf;base64,${result.pdfBase64}`}
-              download="diagnostico-acelera.pdf"
-              className="mt-6 inline-flex items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[var(--ac-white)] transition-transform duration-150 ease-out hover:brightness-110 active:scale-[0.97] motion-reduce:transition-none"
-            >
-              Descargar mi diagnóstico en PDF
-            </a>
-            <p className="mt-6 text-sm text-[var(--brand-muted)]">
-              Te lo enviamos también a tu correo. Si quieres profundizar, respóndelo y
-              coordinamos una llamada.
-            </p>
-          </div>
+          <DiagnosticoConfirmation result={result} />
         ) : (
           <form onSubmit={handleSubmit} className="mt-12 flex flex-col gap-5">
             <div className="grid gap-5 sm:grid-cols-2">
@@ -310,6 +348,31 @@ export function DiagnosticoSection() {
               </div>
             </div>
 
+            <fieldset className="flex flex-col gap-5 rounded-[16px] border border-[var(--brand-border)] p-5">
+              <legend className="px-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-accent)]">
+                Tu madurez digital
+              </legend>
+              <p className="text-sm leading-relaxed text-[var(--brand-muted)]">
+                Cuatro preguntas rápidas. Elige la opción que más se parezca a tu negocio hoy y te damos un
+                puntaje de 0 a 100.
+              </p>
+              {MATURITY_QUESTIONS.map((q) => (
+                <div key={q.key} className="flex flex-col gap-2">
+                  <label htmlFor={`maturity_${q.key}`} className="text-sm font-medium text-[var(--brand-ink)]">
+                    {q.label}
+                  </label>
+                  <select id={`maturity_${q.key}`} name={`maturity_${q.key}`} required className={FIELD_CLASS + " h-11"}>
+                    <option value="">Selecciona una opción</option>
+                    {q.options.map((option, i) => (
+                      <option key={option} value={i + 1}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ))}
+            </fieldset>
+
             <div className="flex flex-col gap-2">
               <label htmlFor="problem" className={LABEL_CLASS}>
                 ¿Cuál es tu principal problema u objetivo hoy?
@@ -331,6 +394,9 @@ export function DiagnosticoSection() {
             ) : null}
 
             <SubmitCta loading={status === "loading"} trackingId="diagnostico_gratis">Quiero mi diagnóstico gratis</SubmitCta>
+            <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
+              Llega a tu correo el próximo día hábil a las 9:00 am (1 día hábil).
+            </p>
           </form>
         )}
       </div>

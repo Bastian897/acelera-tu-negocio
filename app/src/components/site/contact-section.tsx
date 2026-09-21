@@ -3,6 +3,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
 import { BACKEND_URL } from "@/lib/backend";
+import { claimReferral } from "@/lib/referral";
 import { siteContent } from "@/lib/site-content";
 import { SubmitCta } from "./cta";
 import { BrandIcon } from "./icon";
@@ -151,6 +152,7 @@ export function ContactSection() {
         | { error: string };
 
       if ("ok" in result && result.ok) {
+        claimReferral(formData.email);
         setStep({ kind: "done", whenLabel: result.whenLabel });
       } else if ("reason" in result && result.reason === "not_qualified") {
         setStep({ kind: "not_qualified", minRequiredClp: result.minRequiredClp });

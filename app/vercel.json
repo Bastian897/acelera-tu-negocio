@@ -3,6 +3,7 @@
   "rewrites": [
     { "source": "/admin", "destination": "https://acelera-backend.morenobastian897.workers.dev/admin" },
     { "source": "/admin/:path*", "destination": "https://acelera-backend.morenobastian897.workers.dev/admin/:path*" },
+    { "source": "/portal", "destination": "https://acelera-backend.morenobastian897.workers.dev/portal" },
     { "source": "/portal/:path*", "destination": "https://acelera-backend.morenobastian897.workers.dev/portal/:path*" }
   ],
   "headers": [
