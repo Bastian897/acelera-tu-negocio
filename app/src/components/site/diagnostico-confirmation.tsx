@@ -12,7 +12,27 @@ export type DiagnosticoScheduled = {
 
 const FALLBACK_WHEN = "el próximo día hábil a las 9:00";
 
-export function DiagnosticoConfirmation({ result }: { result: DiagnosticoScheduled }) {
+// Nombre y empresa que la persona escribió en el formulario: la confirmación la trata por su
+// nombre y menciona su empresa, para que se sienta atendida y no un trámite genérico.
+export function DiagnosticoConfirmation({
+  result,
+  name,
+  companyName,
+}: {
+  result: DiagnosticoScheduled;
+  name?: string;
+  companyName?: string;
+}) {
+  const firstName = name?.trim().split(/\s+/)[0] ?? "";
+  const company = companyName?.trim() ?? "";
+  const title =
+    firstName && company
+      ? `Gracias, ${firstName}. Recibimos el diagnóstico de ${company}`
+      : company
+        ? `Recibimos el diagnóstico de ${company}`
+        : firstName
+          ? `Gracias, ${firstName}. Recibimos tu diagnóstico`
+          : "Recibimos tu diagnóstico";
   // Solo se afirma la fecha si el backend confirmó que quedó programado; si no,
   // el texto no promete un plazo que no podemos garantizar.
   const when = result.scheduled ? (result.deliveryLabel ?? FALLBACK_WHEN) : null;
@@ -27,7 +47,7 @@ export function DiagnosticoConfirmation({ result }: { result: DiagnosticoSchedul
           ✓
         </span>
         <h2 className="mt-5 text-2xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-3xl">
-          Recibimos tu diagnóstico
+          {title}
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
           {when ? (

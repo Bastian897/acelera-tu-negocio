@@ -133,6 +133,8 @@ type Status = "idle" | "loading" | "done" | "error";
 export function DiagnosticoSection() {
   const [status, setStatus] = useState<Status>("idle");
   const [result, setResult] = useState<DiagnosticoScheduled | null>(null);
+  // Para saludar por nombre y empresa en la confirmación (lo que la persona escribió al enviar).
+  const [person, setPerson] = useState<{ name: string; companyName: string }>({ name: "", companyName: "" });
 
   // Guarda el código de referido de la URL (?ref=) para atribuirlo al enviar
   // el formulario; vive en un efecto porque el sitio se prerenderiza sin window.
@@ -181,6 +183,7 @@ export function DiagnosticoSection() {
       if (!res.ok) throw new Error("request_failed");
       const data = (await res.json()) as DiagnosticoScheduled;
       setResult(data);
+      setPerson({ name: payload.name, companyName: payload.companyName });
       setStatus("done");
       claimReferral(payload.email);
     } catch {
@@ -207,7 +210,7 @@ export function DiagnosticoSection() {
         </p>
 
         {status === "done" && result ? (
-          <DiagnosticoConfirmation result={result} />
+          <DiagnosticoConfirmation result={result} name={person.name} companyName={person.companyName} />
         ) : (
           <form onSubmit={handleSubmit} className="mt-12 flex flex-col gap-5">
             <div className="grid gap-5 sm:grid-cols-2">
