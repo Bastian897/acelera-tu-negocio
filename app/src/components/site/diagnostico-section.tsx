@@ -49,11 +49,12 @@ const GOAL_OPTIONS = [
 
 const TEAM_SIZE_OPTIONS = ["Solo yo", "2-5 personas", "6-15 personas", "16-50 personas", "Más de 50 personas"];
 
-// Preguntas del puntaje del negocio (2026-09-20, rehechas 2026-09-21 para medir el negocio
+// Preguntas del puntaje del negocio (2026-09-20, ampliadas 2026-09-21 para medir el negocio
 // completo y no solo lo digital). Al backend NO viaja el texto de la opción sino su nivel
 // (1 = la primera, 4 = la última), así que retocar la redacción de acá no cambia el cálculo.
 // El significado de cada nivel vive en el backend (MATURITY_QUESTIONS en src/lib/maturity.ts):
-// si se cambia el sentido de una opción, hay que cambiarlo en los dos lados.
+// si se cambia el sentido de una opción, hay que cambiarlo en los dos lados. Van agrupadas por
+// área: finanzas, ventas (2), operación, equipo (2) y datos.
 const MATURITY_QUESTIONS = [
   {
     key: "finance",
@@ -66,13 +67,23 @@ const MATURITY_QUESTIONS = [
     ],
   },
   {
-    key: "sales",
+    key: "acquisition",
     label: "¿Cómo consigues y das seguimiento a tus clientes?",
     options: [
       "Me llegan por recomendación o redes, sin un registro ordenado",
       "Llevo una lista de clientes en una planilla o cuaderno",
-      "Uso un sistema o CRM, pero el seguimiento es manual",
-      "Tengo un proceso comercial con seguimiento, metas y respuestas automatizadas",
+      "Tengo un método para conseguir clientes, pero el seguimiento es manual",
+      "Tengo un proceso comercial con seguimiento, metas y resultados que reviso",
+    ],
+  },
+  {
+    key: "sales",
+    label: "¿Cómo gestionas las consultas y las ventas a tus clientes?",
+    options: [
+      "Por WhatsApp o correo, sin un registro ordenado",
+      "Llevo una lista de clientes en una planilla o cuaderno",
+      "Uso un CRM o sistema, pero el seguimiento es manual",
+      "Tengo un CRM con seguimiento y respuestas automatizadas",
     ],
   },
   {
@@ -86,13 +97,23 @@ const MATURITY_QUESTIONS = [
     ],
   },
   {
-    key: "team",
+    key: "dependence",
     label: "¿Qué pasa con el negocio si te ausentas una semana? (si trabajas solo, responde por ti)",
     options: [
       "Casi todo se detiene: todo depende de mí",
       "Se apagan incendios, pero las decisiones importantes esperan",
       "Funciona lo básico; el equipo sabe qué hacer en lo habitual",
       "Funciona con normalidad: hay roles claros, metas y responsables",
+    ],
+  },
+  {
+    key: "team",
+    label: "¿Cómo usa tu equipo las herramientas digitales? (si trabajas solo, responde por ti)",
+    options: [
+      "Prefieren lo manual y cuesta que adopten algo nuevo",
+      "Usan algunas herramientas, pero cada quien las suyas",
+      "Usan las mismas herramientas, con una capacitación básica",
+      "Todos usan las herramientas del negocio y proponen mejoras",
     ],
   },
   {
@@ -363,7 +384,7 @@ export function DiagnosticoSection() {
                 Cómo funciona tu negocio hoy
               </legend>
               <p className="text-sm leading-relaxed text-[var(--brand-muted)]">
-                Cinco preguntas rápidas sobre finanzas, ventas, operación, equipo y datos. Elige la opción que más
+                Siete preguntas rápidas sobre finanzas, ventas, operación, equipo y datos. Elige la opción que más
                 se parezca a tu negocio hoy y te damos un puntaje de 0 a 100.
               </p>
               {MATURITY_QUESTIONS.map((q) => (
