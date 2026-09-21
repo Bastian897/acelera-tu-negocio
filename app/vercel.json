@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/admin", "destination": "https://acelera-backend.morenobastian897.workers.dev/admin" },
+    { "source": "/admin/:path*", "destination": "https://acelera-backend.morenobastian897.workers.dev/admin/:path*" },
+    { "source": "/portal/:path*", "destination": "https://acelera-backend.morenobastian897.workers.dev/portal/:path*" }
+  ],
+  "headers": [
+    {
+      "source": "/admin/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
+      "source": "/portal/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}
