@@ -274,6 +274,16 @@ export function ContactSection() {
                 />
               </div>
 
+              <label className="flex items-start gap-3 text-sm leading-relaxed text-[var(--brand-muted)]">
+                <input type="checkbox" name="privacy" required className="mt-1 size-4 shrink-0 accent-[var(--brand-primary)]" />
+                <span>
+                  He leído y acepto la{" "}
+                  <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
+                    Política de Privacidad
+                  </a>
+                  y que usen mis datos para contactarme.
+                </span>
+              </label>
               <SubmitCta className="mt-2" trackingId="contacto_enviar">Ver horarios disponibles</SubmitCta>
             </form>
           )}

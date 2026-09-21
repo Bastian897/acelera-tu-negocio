@@ -167,6 +167,8 @@ export function DiagnosticoSection() {
       bestMonthAmount: String(form.get("bestMonthAmount") ?? ""),
       worstMonth: String(form.get("worstMonth") ?? ""),
       problem: String(form.get("problem") ?? ""),
+      // Consentimiento explícito (casilla obligatoria): el backend guarda la fecha en el lead.
+      privacyAccepted: form.get("privacy") === "on",
       // Niveles 1 a 4 (ver MATURITY_QUESTIONS). Si una viniera vacía, el
       // backend simplemente la ignora.
       maturityAnswers: Object.fromEntries(
@@ -427,6 +429,16 @@ export function DiagnosticoSection() {
               </p>
             ) : null}
 
+            <label className="flex items-start gap-3 text-sm leading-relaxed text-[var(--brand-muted)]">
+              <input type="checkbox" name="privacy" required className="mt-1 size-4 shrink-0 accent-[var(--brand-primary)]" />
+              <span>
+                He leído y acepto la{" "}
+                <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
+                  Política de Privacidad
+                </a>
+                y que mis respuestas se procesen con herramientas de inteligencia artificial para generar mi diagnóstico.
+              </span>
+            </label>
             <SubmitCta loading={status === "loading"} trackingId="diagnostico_gratis">Quiero mi diagnóstico gratis</SubmitCta>
             <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
               Llega a tu correo el próximo día hábil a las 9:00 am (1 día hábil).

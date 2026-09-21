@@ -342,6 +342,13 @@ export function ChatWidget() {
                 className="h-10 rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 text-sm text-[var(--brand-ink)] outline-none focus-visible:border-[var(--brand-accent)]"
               />
               {nameError ? <p className="text-xs text-red-600">Escribe tu nombre y apellido, por favor.</p> : null}
+              <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
+                Al continuar aceptas nuestra{" "}
+                <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
+                  Política de Privacidad
+                </a>
+                . Las respuestas del chat las genera una inteligencia artificial.
+              </p>
               <button
                 type="submit"
                 className="h-10 rounded-[10px] bg-[var(--brand-primary)] px-4 text-sm font-medium text-[var(--ac-white)]"
