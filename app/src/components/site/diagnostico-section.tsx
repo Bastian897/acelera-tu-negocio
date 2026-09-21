@@ -49,12 +49,32 @@ const GOAL_OPTIONS = [
 
 const TEAM_SIZE_OPTIONS = ["Solo yo", "2-5 personas", "6-15 personas", "16-50 personas", "Más de 50 personas"];
 
-// Preguntas del score de madurez digital (2026-09-20). Al backend NO viaja el
-// texto de la opción sino su nivel (1 = la primera, 4 = la última), así que
-// retocar la redacción de acá no cambia el cálculo. El significado de cada
-// nivel vive en el backend (MATURITY_QUESTIONS en src/lib/maturity.ts): si se
-// cambia el sentido de una opción, hay que cambiarlo en los dos lados.
+// Preguntas del puntaje del negocio (2026-09-20, rehechas 2026-09-21 para medir el negocio
+// completo y no solo lo digital). Al backend NO viaja el texto de la opción sino su nivel
+// (1 = la primera, 4 = la última), así que retocar la redacción de acá no cambia el cálculo.
+// El significado de cada nivel vive en el backend (MATURITY_QUESTIONS en src/lib/maturity.ts):
+// si se cambia el sentido de una opción, hay que cambiarlo en los dos lados.
 const MATURITY_QUESTIONS = [
+  {
+    key: "finance",
+    label: "¿Cómo llevas hoy las finanzas del negocio (caja, márgenes y costos)?",
+    options: [
+      "No tengo claro cuánto gano; me guío por lo que hay en la cuenta",
+      "Llevo ingresos y gastos en una planilla, pero sin ver márgenes",
+      "Tengo la contabilidad al día y reviso mis márgenes cada mes",
+      "Tengo presupuesto, flujo de caja proyectado y márgenes por producto o servicio",
+    ],
+  },
+  {
+    key: "sales",
+    label: "¿Cómo consigues y das seguimiento a tus clientes?",
+    options: [
+      "Me llegan por recomendación o redes, sin un registro ordenado",
+      "Llevo una lista de clientes en una planilla o cuaderno",
+      "Uso un sistema o CRM, pero el seguimiento es manual",
+      "Tengo un proceso comercial con seguimiento, metas y respuestas automatizadas",
+    ],
+  },
   {
     key: "processes",
     label: "¿Cómo se hacen hoy los procesos clave (cotizar, vender, entregar y cobrar)?",
@@ -66,6 +86,16 @@ const MATURITY_QUESTIONS = [
     ],
   },
   {
+    key: "team",
+    label: "¿Qué pasa con el negocio si te ausentas una semana? (si trabajas solo, responde por ti)",
+    options: [
+      "Casi todo se detiene: todo depende de mí",
+      "Se apagan incendios, pero las decisiones importantes esperan",
+      "Funciona lo básico; el equipo sabe qué hacer en lo habitual",
+      "Funciona con normalidad: hay roles claros, metas y responsables",
+    ],
+  },
+  {
     key: "data",
     label: "¿Con qué datos tomas decisiones (ventas, márgenes, caja)?",
     options: [
@@ -73,26 +103,6 @@ const MATURITY_QUESTIONS = [
       "Reviso cifras cuando las necesito, armadas a mano",
       "Tengo un informe periódico, pero hay que armarlo a mano",
       "Tengo un panel o reporte al día que se actualiza solo",
-    ],
-  },
-  {
-    key: "sales",
-    label: "¿Cómo gestionas las consultas y las ventas a tus clientes?",
-    options: [
-      "Por WhatsApp o correo, sin un registro ordenado",
-      "Llevo una lista de clientes en una planilla o cuaderno",
-      "Uso un CRM o sistema, pero el seguimiento es manual",
-      "Tengo un CRM con seguimiento y respuestas automatizadas",
-    ],
-  },
-  {
-    key: "team",
-    label: "¿Cómo usa tu equipo las herramientas digitales? (si trabajas solo, responde por ti)",
-    options: [
-      "Prefieren lo manual y cuesta que adopten algo nuevo",
-      "Usan algunas herramientas, pero cada quien las suyas",
-      "Usan las mismas herramientas, con una capacitación básica",
-      "Todos usan las herramientas del negocio y proponen mejoras",
     ],
   },
 ] as const;
@@ -171,7 +181,7 @@ export function DiagnosticoSection() {
           Cuéntanos de tu negocio.
         </h1>
         <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
-          Responde estas preguntas y te enviamos por correo tu puntaje de madurez digital y un
+          Responde estas preguntas y te enviamos por correo el puntaje de tu negocio y un
           informe generado a partir de tus respuestas. Lo recibes el próximo día hábil a las 9:00 am.
         </p>
 
@@ -350,11 +360,11 @@ export function DiagnosticoSection() {
 
             <fieldset className="flex flex-col gap-5 rounded-[16px] border border-[var(--brand-border)] p-5">
               <legend className="px-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-accent)]">
-                Tu madurez digital
+                Cómo funciona tu negocio hoy
               </legend>
               <p className="text-sm leading-relaxed text-[var(--brand-muted)]">
-                Cuatro preguntas rápidas. Elige la opción que más se parezca a tu negocio hoy y te damos un
-                puntaje de 0 a 100.
+                Cinco preguntas rápidas sobre finanzas, ventas, operación, equipo y datos. Elige la opción que más
+                se parezca a tu negocio hoy y te damos un puntaje de 0 a 100.
               </p>
               {MATURITY_QUESTIONS.map((q) => (
                 <div key={q.key} className="flex flex-col gap-2">

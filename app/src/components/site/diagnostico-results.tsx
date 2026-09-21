@@ -55,7 +55,7 @@ function ScoreGauge({ score, level, animate }: { score: number; level: string; a
   return (
     <div
       role="img"
-      aria-label={`Score de madurez digital: ${score} de 100, nivel ${level}`}
+      aria-label={`Puntaje del negocio: ${score} de 100, nivel ${level}`}
       className="relative shrink-0"
       style={{ width: GAUGE_SIZE, height: GAUGE_SIZE }}
     >
@@ -92,7 +92,7 @@ function ScoreGauge({ score, level, animate }: { score: number; level: string; a
 
 function LevelScale({ scale, current }: { scale: MaturityLevelRange[]; current: string }) {
   return (
-    <ol className="mt-6 grid grid-cols-4 gap-1.5" aria-label="Escala de niveles de madurez digital">
+    <ol className="mt-6 grid grid-cols-4 gap-1.5" aria-label="Escala de niveles del puntaje">
       {scale.map((range) => {
         const isCurrent = range.name === current;
         return (
@@ -172,7 +172,7 @@ export function DiagnosticoResults({ result }: { result: DiagnosticoResult }) {
           tabIndex={-1}
           className="scroll-mt-24 text-2xl font-semibold tracking-tighter text-[var(--brand-ink)] outline-none md:text-3xl"
         >
-          {maturity ? "Tu madurez digital" : "Tu diagnóstico"}
+          {maturity ? "Tu diagnóstico integral" : "Tu diagnóstico"}
         </h2>
         {maturity ? (
           <p className="mt-3 max-w-lg text-sm leading-relaxed text-[var(--brand-muted)]">
@@ -185,7 +185,7 @@ export function DiagnosticoResults({ result }: { result: DiagnosticoResult }) {
       {maturity ? (
         <>
           <section
-            aria-label="Score de madurez digital"
+            aria-label="Puntaje del negocio"
             className="rounded-[16px] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-[var(--shadow-elevation)] md:p-8"
           >
             <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-center sm:gap-8 sm:text-left">

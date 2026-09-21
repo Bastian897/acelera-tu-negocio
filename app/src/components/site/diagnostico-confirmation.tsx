@@ -37,7 +37,7 @@ export function DiagnosticoConfirmation({ result }: { result: DiagnosticoSchedul
           ) : (
             <>Te lo enviamos a tu correo.</>
           )}{" "}
-          Incluye tu puntaje de madurez digital, el desglose por área y observaciones concretas sobre tu negocio,
+          Incluye el puntaje de tu negocio, el desglose por área y observaciones concretas,
           en un PDF.
         </p>
         <p className="mt-3 text-sm leading-relaxed text-[var(--brand-muted)]">
