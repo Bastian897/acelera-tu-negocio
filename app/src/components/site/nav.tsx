@@ -9,6 +9,9 @@ const LINKS = [
   { href: "#fundadores", label: siteContent.nav.link2 },
   { href: "#proceso", label: siteContent.nav.link3 },
   { href: "#casos", label: siteContent.nav.link4 },
+  // Texto fijo, no editable desde /admin/content: igual que el copy de la propia
+  // calculadora (roi-calculator.tsx), que tampoco vive en siteContent.
+  { href: "#calculadora", label: "Calculadora" },
   { href: "#recursos", label: siteContent.nav.link5 },
 ];
 
