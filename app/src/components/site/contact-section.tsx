@@ -280,7 +280,7 @@ export function ContactSection() {
                   He leído y acepto la{" "}
                   <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
                     Política de Privacidad
-                  </a>
+                  </a>{" "}
                   y que usen mis datos para contactarme.
                 </span>
               </label>

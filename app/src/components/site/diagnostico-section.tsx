@@ -49,82 +49,47 @@ const GOAL_OPTIONS = [
 
 const TEAM_SIZE_OPTIONS = ["Solo yo", "2-5 personas", "6-15 personas", "16-50 personas", "Más de 50 personas"];
 
-// Preguntas del puntaje del negocio (2026-09-20, ampliadas 2026-09-21 para medir el negocio
-// completo y no solo lo digital). Al backend NO viaja el texto de la opción sino su nivel
-// (1 = la primera, 4 = la última), así que retocar la redacción de acá no cambia el cálculo.
-// El significado de cada nivel vive en el backend (MATURITY_QUESTIONS en src/lib/maturity.ts):
-// si se cambia el sentido de una opción, hay que cambiarlo en los dos lados. Van agrupadas por
-// área: finanzas, ventas (2), operación, equipo (2) y datos.
+// Preguntas del puntaje del negocio (rehechas 2026-09-22, pedido del dueño: dejaron de ser de
+// alternativas). Ahora son de TEXTO LIBRE: la persona responde con sus palabras y un
+// especialista de IA por área (en el backend) le asigna el nivel 1 a 4, validado en código
+// (ver src/lib/diagnostic-agents.ts y src/lib/maturity.ts en el backend). El límite de largo
+// (MATURITY_TEXT_MAX_LENGTH allá, el mismo número acá) es el mismo en los dos lados: acá solo
+// evita que la persona escriba de más antes de enviar, la validación real es del backend.
+// Van agrupadas por área: finanzas, ventas (2 preguntas), operación, equipo (2 preguntas). La
+// quinta área, "Digitalización y datos", no tiene pregunta acá: sigue siendo la pregunta de
+// alternativas "Nivel de digitalización", más arriba en el formulario, sin cambios.
+const MATURITY_ANSWER_MAX_LENGTH = 500;
+
 const MATURITY_QUESTIONS = [
   {
     key: "finance",
     label: "¿Cómo llevas hoy las finanzas del negocio (caja, márgenes y costos)?",
-    options: [
-      "No tengo claro cuánto gano; me guío por lo que hay en la cuenta",
-      "Llevo ingresos y gastos en una planilla, pero sin ver márgenes",
-      "Tengo la contabilidad al día y reviso mis márgenes cada mes",
-      "Tengo presupuesto, flujo de caja proyectado y márgenes por producto o servicio",
-    ],
+    placeholder: "Ej: llevo una planilla con lo que entra y sale, pero no reviso márgenes por producto.",
   },
   {
     key: "acquisition",
     label: "¿Cómo consigues y das seguimiento a tus clientes?",
-    options: [
-      "Me llegan por recomendación o redes, sin un registro ordenado",
-      "Llevo una lista de clientes en una planilla o cuaderno",
-      "Tengo un método para conseguir clientes, pero el seguimiento es manual",
-      "Tengo un proceso comercial con seguimiento, metas y resultados que reviso",
-    ],
+    placeholder: "Ej: me llegan por Instagram y recomendación, y anoto los datos en un cuaderno.",
   },
   {
     key: "sales",
     label: "¿Cómo gestionas las consultas y las ventas a tus clientes?",
-    options: [
-      "Por WhatsApp o correo, sin un registro ordenado",
-      "Llevo una lista de clientes en una planilla o cuaderno",
-      "Uso un CRM o sistema, pero el seguimiento es manual",
-      "Tengo un CRM con seguimiento y respuestas automatizadas",
-    ],
+    placeholder: "Ej: respondo por WhatsApp y no tengo un registro ordenado de en qué quedó cada uno.",
   },
   {
     key: "processes",
     label: "¿Cómo se hacen hoy los procesos clave (cotizar, vender, entregar y cobrar)?",
-    options: [
-      "Depende de la memoria y de cada persona",
-      "Cada uno lo hace a su manera, con algunas notas o planillas",
-      "Están definidos y escritos, pero no siempre se cumplen",
-      "Están documentados, se cumplen y se mejoran cada cierto tiempo",
-    ],
+    placeholder: "Ej: cada uno cotiza a su manera, no hay una plantilla ni pasos escritos.",
   },
   {
     key: "dependence",
     label: "¿Qué pasa con el negocio si te ausentas una semana? (si trabajas solo, responde por ti)",
-    options: [
-      "Casi todo se detiene: todo depende de mí",
-      "Se apagan incendios, pero las decisiones importantes esperan",
-      "Funciona lo básico; el equipo sabe qué hacer en lo habitual",
-      "Funciona con normalidad: hay roles claros, metas y responsables",
-    ],
+    placeholder: "Ej: se atrasa casi todo, las decisiones importantes esperan a que yo vuelva.",
   },
   {
     key: "team",
     label: "¿Cómo usa tu equipo las herramientas digitales? (si trabajas solo, responde por ti)",
-    options: [
-      "Prefieren lo manual y cuesta que adopten algo nuevo",
-      "Usan algunas herramientas, pero cada quien las suyas",
-      "Usan las mismas herramientas, con una capacitación básica",
-      "Todos usan las herramientas del negocio y proponen mejoras",
-    ],
-  },
-  {
-    key: "data",
-    label: "¿Con qué datos tomas decisiones (ventas, márgenes, caja)?",
-    options: [
-      "Con la intuición y lo que recuerdo",
-      "Reviso cifras cuando las necesito, armadas a mano",
-      "Tengo un informe periódico, pero hay que armarlo a mano",
-      "Tengo un panel o reporte al día que se actualiza solo",
-    ],
+    placeholder: "Ej: cada uno usa lo que le acomoda, no todos usamos las mismas herramientas.",
   },
 ] as const;
 
@@ -157,7 +122,6 @@ export function DiagnosticoSection() {
       salesChannel: String(form.get("salesChannel") ?? ""),
       goal: String(form.get("goal") ?? ""),
       teamSize: String(form.get("teamSize") ?? ""),
-      triedTools: String(form.get("triedTools") ?? ""),
       companyName: String(form.get("companyName") ?? ""),
       website: String(form.get("website") ?? ""),
       instagram: String(form.get("instagram") ?? ""),
@@ -169,10 +133,10 @@ export function DiagnosticoSection() {
       problem: String(form.get("problem") ?? ""),
       // Consentimiento explícito (casilla obligatoria): el backend guarda la fecha en el lead.
       privacyAccepted: form.get("privacy") === "on",
-      // Niveles 1 a 4 (ver MATURITY_QUESTIONS). Si una viniera vacía, el
-      // backend simplemente la ignora.
+      // Texto libre de cada área (ver MATURITY_QUESTIONS). El backend asigna el nivel 1 a 4
+      // con un especialista de IA por área; acá solo se manda lo que la persona escribió.
       maturityAnswers: Object.fromEntries(
-        MATURITY_QUESTIONS.map((q) => [q.key, Number(form.get(`maturity_${q.key}`)) || null]),
+        MATURITY_QUESTIONS.map((q) => [q.key, String(form.get(`maturity_${q.key}`) ?? "")]),
       ),
     };
 
@@ -384,43 +348,35 @@ export function DiagnosticoSection() {
               </div>
             </div>
 
-            <fieldset className="flex flex-col gap-5 rounded-[16px] border border-[var(--brand-border)] p-5">
-              <legend className="px-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-accent)]">
-                Cómo funciona tu negocio hoy
-              </legend>
+            <div className="flex flex-col gap-2">
+              <p className={LABEL_CLASS}>Cómo funciona tu negocio hoy</p>
               <p className="text-sm leading-relaxed text-[var(--brand-muted)]">
-                Siete preguntas rápidas sobre finanzas, ventas, operación, equipo y datos. Elige la opción que más
-                se parezca a tu negocio hoy y te damos un puntaje de 0 a 100.
+                Seis preguntas sobre finanzas, ventas, operación y equipo. Respóndelas con tus palabras, con el
+                detalle que le darías a alguien que recién conoce tu negocio: con eso calculamos tu puntaje de 0 a 100.
               </p>
-              {MATURITY_QUESTIONS.map((q) => (
-                <div key={q.key} className="flex flex-col gap-2">
-                  <label htmlFor={`maturity_${q.key}`} className="text-sm font-medium text-[var(--brand-ink)]">
-                    {q.label}
-                  </label>
-                  <select id={`maturity_${q.key}`} name={`maturity_${q.key}`} required className={FIELD_CLASS + " h-11"}>
-                    <option value="">Selecciona una opción</option>
-                    {q.options.map((option, i) => (
-                      <option key={option} value={i + 1}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ))}
-            </fieldset>
+            </div>
+            {MATURITY_QUESTIONS.map((q) => (
+              <div key={q.key} className="flex flex-col gap-2">
+                <label htmlFor={`maturity_${q.key}`} className="text-sm font-medium text-[var(--brand-ink)]">
+                  {q.label}
+                </label>
+                <textarea
+                  id={`maturity_${q.key}`}
+                  name={`maturity_${q.key}`}
+                  required
+                  rows={3}
+                  maxLength={MATURITY_ANSWER_MAX_LENGTH}
+                  placeholder={q.placeholder}
+                  className={FIELD_CLASS + " py-3"}
+                />
+              </div>
+            ))}
 
             <div className="flex flex-col gap-2">
               <label htmlFor="problem" className={LABEL_CLASS}>
                 ¿Cuál es tu principal problema u objetivo hoy?
               </label>
               <textarea id="problem" name="problem" required rows={4} className={FIELD_CLASS + " py-3"} />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="triedTools" className={LABEL_CLASS}>
-                ¿Qué has intentado o qué herramientas usan hoy? (opcional)
-              </label>
-              <textarea id="triedTools" name="triedTools" rows={3} className={FIELD_CLASS + " py-3"} />
             </div>
 
             {status === "error" ? (
@@ -435,7 +391,7 @@ export function DiagnosticoSection() {
                 He leído y acepto la{" "}
                 <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
                   Política de Privacidad
-                </a>
+                </a>{" "}
                 y que mis respuestas se procesen con herramientas de inteligencia artificial para generar mi diagnóstico.
               </span>
             </label>

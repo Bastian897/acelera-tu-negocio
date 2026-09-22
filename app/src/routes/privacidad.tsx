@@ -27,76 +27,59 @@ function PrivacidadPage() {
       <SiteNav />
       <div className="mx-auto max-w-2xl px-6 pt-32 pb-24 leading-relaxed text-brand-ink">
         <h1 className="mb-2 text-2xl font-semibold">Política de Privacidad</h1>
-        <p className="mb-8 text-sm opacity-70">Última actualización: 21 de septiembre de 2026</p>
+        <p className="mb-8 text-sm opacity-70">Última actualización: 22 de septiembre de 2026</p>
 
         <p className={P}>
-          Acelera tu Negocio ("Acelera", "nosotros") es una consultora de dirección estratégica y ejecución para
-          empresas chilenas. Esta política explica qué datos personales recogemos cuando usas este sitio, para qué los
-          usamos, con quién los compartimos, cuánto tiempo los conservamos y cómo puedes ejercer tus derechos. Nos
-          regimos por la Ley N° 19.628 y por las modificaciones de la Ley N° 21.719, que entra en vigencia el 1 de
-          diciembre de 2026.
+          Acelera tu Negocio es una consultora de dirección estratégica y ejecución para empresas chilenas. Esta
+          política explica qué datos personales recogemos cuando usas este sitio, para qué los usamos, con quién los
+          compartimos, cuánto tiempo los conservamos y cómo puedes ejercer tus derechos. Nos regimos por la Ley N°
+          19.628 y por las modificaciones de la Ley N° 21.719, que entra en vigencia el 1 de diciembre de 2026.
         </p>
 
-        <h2 className={H2}>1. Qué datos recogemos y cuándo</h2>
+        <h2 className={H2}>1. Qué datos recogemos</h2>
         <ul className={UL}>
           <li>
-            <strong>Diagnóstico gratis:</strong> nombre, correo, teléfono (opcional), nombre de tu empresa, página web,
-            Instagram, industria, facturación mensual, canal de venta, tamaño del equipo, cantidad de clientes, meses de
-            mayor y menor facturación, tus respuestas sobre finanzas, ventas, procesos, equipo y digitalización, y el
-            problema u objetivo que nos cuentas.
+            <strong>Diagnóstico gratis:</strong> tus datos de contacto, datos generales de tu empresa (rubro,
+            facturación, equipo, canal de venta) y tus respuestas sobre tu negocio.
           </li>
           <li>
-            <strong>Agendar una llamada o escribirnos:</strong> nombre, correo, teléfono, facturación mensual y la
-            descripción de tu empresa.
+            <strong>Agendar una llamada o escribirnos:</strong> tus datos de contacto y una breve descripción de tu
+            empresa.
           </li>
           <li>
-            <strong>Chat del sitio:</strong> tu nombre, los mensajes que escribes y el correo si nos lo compartes.
+            <strong>Chat del sitio:</strong> tu nombre y los mensajes que escribes.
           </li>
           <li>
-            <strong>Portal de clientes:</strong> tu correo (para enviarte el código de acceso) y la información de avance
-            que nuestro equipo publica para ti: pasos, entregables, archivos, reuniones e indicadores.
+            <strong>Portal de clientes:</strong> tu correo y la información de avance que publicamos para ti.
           </li>
           <li>
-            <strong>Datos técnicos y de uso:</strong> con tu consentimiento, cookies de analítica (Google Analytics) para
-            entender cómo se usa el sitio. También usamos Cloudflare Web Analytics, que mide visitas sin cookies.
+            <strong>Navegación:</strong> con tu consentimiento, cookies de analítica web.
           </li>
         </ul>
         <p className={P}>No recogemos datos sensibles ni te los pedimos. Por favor no los incluyas en tus respuestas.</p>
 
         <h2 className={H2}>2. Para qué los usamos</h2>
         <ul className={UL}>
-          <li>Generar y enviarte tu diagnóstico y responder tus consultas.</li>
-          <li>Agendar y preparar la llamada de calibración. Para eso el equipo puede revisar información pública de la web e Instagram que declaraste.</li>
-          <li>Contactarte para ofrecerte nuestros servicios y darte seguimiento comercial, sobre la base de tu solicitud.</li>
-          <li>Operar el portal de clientes y avisarte cuando publicamos novedades en él.</li>
-          <li>Mejorar el sitio y mantener su seguridad.</li>
+          <li>Generar tu diagnóstico, responder tus consultas y agendar la llamada de calibración.</li>
+          <li>Contactarte y darte seguimiento comercial sobre tu solicitud.</li>
+          <li>Operar el portal de clientes y avisarte de novedades.</li>
+          <li>Mejorar y proteger el sitio.</li>
           <li>Cumplir obligaciones legales cuando corresponda.</li>
         </ul>
 
         <h2 className={H2}>3. Inteligencia artificial</h2>
         <p className={P}>
-          Para redactar tu diagnóstico y responder el chat usamos modelos de inteligencia artificial de proveedores
-          externos. Tus respuestas del formulario o tus mensajes se envían a esos proveedores únicamente para generar el
-          texto. El puntaje de tu diagnóstico se calcula con reglas fijas, no con inteligencia artificial. No tomamos
-          decisiones automatizadas que produzcan efectos jurídicos sobre ti: el informe es una orientación y puedes
-          pedir que una persona de nuestro equipo revise tu caso.
+          Usamos inteligencia artificial de proveedores externos para generar tu diagnóstico y responder el chat del
+          sitio. No tomamos decisiones automatizadas que produzcan efectos jurídicos sobre ti: el resultado es una
+          orientación y puedes pedir que una persona de nuestro equipo revise tu caso.
         </p>
 
         <h2 className={H2}>4. Con quién compartimos tus datos</h2>
         <p className={P}>
-          No vendemos tus datos. Los compartimos solo con los proveedores que nos permiten operar, bajo sus propias
-          condiciones de privacidad y únicamente para los fines descritos:
-        </p>
-        <ul className={UL}>
-          <li>Cloudflare: alojamiento del sistema, base de datos y almacenamiento de archivos.</li>
-          <li>Vercel: alojamiento de este sitio web.</li>
-          <li>Resend: envío de correos (diagnóstico, códigos de acceso, avisos).</li>
-          <li>Proveedores de modelos de lenguaje (por ejemplo OpenRouter, OpenAI o Anthropic): generación de textos.</li>
-          <li>Google: agenda de llamadas (Calendar), registro interno de contactos (Sheets) y analítica del sitio (Analytics, con tu consentimiento).</li>
-        </ul>
-        <p className={P}>
-          Algunos de estos proveedores operan fuera de Chile, por lo que tus datos pueden tratarse en otros países,
-          como Estados Unidos.
+          No vendemos tus datos. Los compartimos solo con proveedores de hosting e infraestructura en la nube, envío
+          de correos, modelos de inteligencia artificial, y herramientas de agenda, hojas de cálculo y analítica web,
+          bajo sus propias condiciones de privacidad. Algunos operan fuera de Chile, por lo que tus datos pueden
+          tratarse en otros países.
         </p>
 
         <h2 className={H2}>5. Cuánto tiempo los conservamos</h2>
@@ -108,30 +91,24 @@ function PrivacidadPage() {
 
         <h2 className={H2}>6. Tus derechos</h2>
         <p className={P}>
-          Puedes pedirnos acceso a tus datos, que los rectifiquemos, los eliminemos o los bloqueemos, oponerte a su
-          tratamiento, retirar tu consentimiento y solicitar su portabilidad. Para ejercer cualquiera de estos derechos
-          escríbenos a{" "}
+          Puedes pedir acceso, rectificación, eliminación, oposición al tratamiento, retiro del consentimiento y
+          portabilidad de tus datos. Escríbenos a{" "}
           <a className="underline" href="mailto:contacto@aceleratunegocio.cl">
             contacto@aceleratunegocio.cl
           </a>{" "}
-          indicando el correo con el que nos contactaste. También puedes reclamar ante la Agencia de Protección de Datos
-          Personales.
+          indicando el correo con el que nos contactaste. También puedes reclamar ante la Agencia de Protección de
+          Datos Personales.
         </p>
 
-        <h2 className={H2}>7. Seguridad</h2>
+        <h2 className={H2}>7. Seguridad y cookies</h2>
         <p className={P}>
-          Protegemos tus datos con conexiones cifradas, acceso restringido al equipo, y un portal de clientes al que solo
-          se entra con un código enviado al correo autorizado. Ningún sistema es infalible: si ocurriera una brecha que
-          te afecte, te lo informaremos como exige la ley.
+          Protegemos tus datos con conexiones cifradas y acceso restringido; el portal de clientes solo se abre con un
+          código enviado a tu correo. Ante una brecha que te afecte, te avisaremos como exige la ley. Las cookies de
+          analítica solo se activan si las aceptas en el aviso del sitio; el portal de clientes usa una cookie
+          necesaria para mantener tu sesión.
         </p>
 
-        <h2 className={H2}>8. Cookies</h2>
-        <p className={P}>
-          Las cookies de analítica solo se activan si las aceptas en el aviso del sitio, y puedes cambiar tu decisión
-          borrando las cookies de tu navegador. El portal de clientes usa una cookie necesaria para mantener tu sesión.
-        </p>
-
-        <h2 className={H2}>9. Acceso a Google Calendar (aplicación "Acelera - Agenda")</h2>
+        <h2 className={H2}>8. Acceso a Google Calendar (aplicación "Acelera - Agenda")</h2>
         <p className={P}>
           Esta sección describe cómo Acelera usa el acceso a Google Calendar que solicita la aplicación "Acelera -
           Agenda".
@@ -160,7 +137,7 @@ function PrivacidadPage() {
           .
         </p>
 
-        <h2 className={H2}>10. Cambios a esta política</h2>
+        <h2 className={H2}>9. Cambios a esta política</h2>
         <p className={P}>
           Si cambiamos esta política, publicaremos la nueva versión en esta página con su fecha de actualización.
         </p>
