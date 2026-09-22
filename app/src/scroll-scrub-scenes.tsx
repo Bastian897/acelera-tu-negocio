@@ -43,7 +43,11 @@ export const scrollScrubScenes: ScrollScrubScene[] = [
     mobileClip: "assets/world/scene-01-mobile.mp4",
     mobilePoster: "assets/world/scene-01-mobile-poster.png",
     poster: "assets/world/scene-01-poster.png",
-    scroll: 3.2,
+    // Bajado de 3.2 a 2.6 (pedido del dueño: "en computador igual hazlo un poco
+    // más rápido"). En mobile se acorta aún más vía CSS (ver
+    // #hero.scroll-scrub__chapter en scroll-scrub.css), porque ahí se sentía
+    // más lento todavía.
+    scroll: 2.6,
     title: siteContent.hero.title,
   },
 ];

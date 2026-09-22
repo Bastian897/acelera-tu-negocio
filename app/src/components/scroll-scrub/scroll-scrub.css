@@ -225,6 +225,21 @@
     object-position: var(--ss-mobile-position);
   }
 
+  /* El motor lee la altura REAL del elemento (getBoundingClientRect) para mapear
+   * scroll a tiempo de video, así que acortar esto acá basta para que la escena
+   * "hero" (el mecanismo/reloj del inicio) se recorra con menos scroll en mobile,
+   * sin tocar el motor ni la duración base en escritorio (que viene de
+   * `scroll: 2.6` en scroll-scrub-scenes.tsx, ~260dvh). El !important es
+   * necesario porque el alto real se fija con un style inline (mayor
+   * especificidad que una clase). Si el peso de esa escena cambia en el futuro,
+   * ajustar esta proporción (hoy ~73% del valor de escritorio) a mano.
+   * Pedido explícito del dueño: primero "en mobile el scroll del reloj se
+   * demora mucho", después "en computador igual hazlo un poco más rápido"
+   * (eso último se ajustó en scroll-scrub-scenes.tsx, no acá). */
+  #hero.scroll-scrub__chapter {
+    min-height: 190dvh !important;
+  }
+
   .scroll-scrub__route {
     right: max(0.75rem, env(safe-area-inset-right));
     left: max(0.75rem, env(safe-area-inset-left));
