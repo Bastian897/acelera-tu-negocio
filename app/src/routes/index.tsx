@@ -8,7 +8,6 @@ import { FoundersSection } from "@/components/site/founders-section";
 import { SiteNav } from "@/components/site/nav";
 import { ProcessSection } from "@/components/site/process-section";
 import { ResourcesSection } from "@/components/site/resources-section";
-import { RoiCalculator } from "@/components/site/roi-calculator";
 import { ResultsSection } from "@/components/site/results-section";
 import { ServicesSection } from "@/components/site/services-section";
 import { scrollScrubScenes, scrollScrubTheme } from "@/scroll-scrub-scenes";
@@ -35,7 +34,6 @@ function Index() {
       <ProcessSection />
       <ResultsSection />
       <ClientsSection />
-      <RoiCalculator />
       <ResourcesSection />
       <ContactSection />
       <SiteFooter />

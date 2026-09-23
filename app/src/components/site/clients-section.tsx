@@ -24,6 +24,12 @@ const CLIENT_LOGOS = [
   "viraly-34",
   "viraly-35",
   "viraly-36",
+  // Agregados a pedido explícito de Bastian (2026-09-22): Hotel Tupa, Red Bull,
+  // Auto360 y Black Friday Chile.
+  "hotel-tupa",
+  "redbull",
+  "auto360",
+  "blackfriday-chile",
 ];
 
 // Carrusel horizontal continuo (patrón "logo marquee", pedido explícito de
