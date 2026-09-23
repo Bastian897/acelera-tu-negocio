@@ -55,9 +55,11 @@ const TEAM_SIZE_OPTIONS = ["Solo yo", "2-5 personas", "6-15 personas", "16-50 pe
 // (ver src/lib/diagnostic-agents.ts y src/lib/maturity.ts en el backend). El límite de largo
 // (MATURITY_TEXT_MAX_LENGTH allá, el mismo número acá) es el mismo en los dos lados: acá solo
 // evita que la persona escriba de más antes de enviar, la validación real es del backend.
-// Van agrupadas por área: finanzas, ventas (2 preguntas), operación, equipo (2 preguntas). La
+// Van agrupadas por área: finanzas, ventas (3 preguntas), operación, equipo (2 preguntas). La
 // quinta área, "Digitalización y datos", no tiene pregunta acá: sigue siendo la pregunta de
 // alternativas "Nivel de digitalización", más arriba en el formulario, sin cambios.
+// La pregunta "sales" se separó en dos el mismo día (pedido del dueño): antes juntaba
+// consultas y ventas en una sola, ahora son "inquiries" (consultas) y "sales" (ventas).
 const MATURITY_ANSWER_MAX_LENGTH = 500;
 
 const MATURITY_QUESTIONS = [
@@ -72,24 +74,29 @@ const MATURITY_QUESTIONS = [
     placeholder: "Ej: me llegan por Instagram y recomendación, y anoto los datos en un cuaderno.",
   },
   {
+    key: "inquiries",
+    label: "¿Cómo gestionas las consultas de tus clientes?",
+    placeholder: "Ej: respondo por WhatsApp cuando puedo, pero no llevo un registro de qué quedó pendiente.",
+  },
+  {
     key: "sales",
-    label: "¿Cómo gestionas las consultas y las ventas a tus clientes?",
-    placeholder: "Ej: respondo por WhatsApp y no tengo un registro ordenado de en qué quedó cada uno.",
+    label: "¿Cómo gestionas las ventas a tus clientes?",
+    placeholder: "Ej: cierro la venta por WhatsApp o en persona, sin un proceso definido de cotizar a cobrar.",
   },
   {
     key: "processes",
-    label: "¿Cómo se hacen hoy los procesos clave (cotizar, vender, entregar y cobrar)?",
+    label: "¿Tu empresa tiene procesos actualmente para el funcionamiento de ella? Cuéntanos.",
     placeholder: "Ej: cada uno cotiza a su manera, no hay una plantilla ni pasos escritos.",
   },
   {
     key: "dependence",
-    label: "¿Qué pasa con el negocio si te ausentas una semana? (si trabajas solo, responde por ti)",
+    label: "¿Qué pasa si te ausentas más de 2 días en el negocio?",
     placeholder: "Ej: se atrasa casi todo, las decisiones importantes esperan a que yo vuelva.",
   },
   {
     key: "team",
-    label: "¿Cómo usa tu equipo las herramientas digitales? (si trabajas solo, responde por ti)",
-    placeholder: "Ej: cada uno usa lo que le acomoda, no todos usamos las mismas herramientas.",
+    label: "¿Tu empresa usa sistemas para controlar su operación? Cuéntanos.",
+    placeholder: "Ej: no tengo un sistema, controlo todo por WhatsApp y planillas sueltas.",
   },
 ] as const;
 
@@ -100,6 +107,13 @@ export function DiagnosticoSection() {
   const [result, setResult] = useState<DiagnosticoScheduled | null>(null);
   // Para saludar por nombre y empresa en la confirmación (lo que la persona escribió al enviar).
   const [person, setPerson] = useState<{ name: string; companyName: string }>({ name: "", companyName: "" });
+  // Los 3 <select> con opción "Otro" (industry, salesChannel, goal) necesitan mostrar un campo
+  // de texto para que la persona especifique cuál es ese "otro" en vez de mandar la palabra
+  // "Otro" sola y sin información (pedido explícito del dueño). Se controlan acá solo para
+  // saber cuándo mostrar ese campo extra; el valor final se resuelve en handleSubmit.
+  const [industry, setIndustry] = useState("");
+  const [salesChannel, setSalesChannel] = useState("");
+  const [goal, setGoal] = useState("");
 
   // Guarda el código de referido de la URL (?ref=) para atribuirlo al enviar
   // el formulario; vive en un efecto porque el sitio se prerenderiza sin window.
@@ -112,15 +126,19 @@ export function DiagnosticoSection() {
     setStatus("loading");
 
     const form = new FormData(event.currentTarget);
+    // Si se eligió "Otro", se manda lo que la persona escribió en el campo de especificar en
+    // vez de la palabra "Otro" sola (ver los 3 <select> más abajo y su input condicional).
+    const resolveOther = (select: string, otherField: string) =>
+      select === "Otro" ? String(form.get(otherField) ?? "").trim() || "Otro" : select;
     const payload = {
       name: String(form.get("name") ?? ""),
       email: String(form.get("email") ?? ""),
       phone: String(form.get("phone") ?? ""),
-      industry: String(form.get("industry") ?? ""),
+      industry: resolveOther(industry, "industryOther"),
       revenue: String(form.get("revenue") ?? ""),
       digitalization: String(form.get("digitalization") ?? ""),
-      salesChannel: String(form.get("salesChannel") ?? ""),
-      goal: String(form.get("goal") ?? ""),
+      salesChannel: resolveOther(salesChannel, "salesChannelOther"),
+      goal: resolveOther(goal, "goalOther"),
       teamSize: String(form.get("teamSize") ?? ""),
       companyName: String(form.get("companyName") ?? ""),
       website: String(form.get("website") ?? ""),
@@ -220,7 +238,14 @@ export function DiagnosticoSection() {
                 <label htmlFor="industry" className={LABEL_CLASS}>
                   Industria
                 </label>
-                <select id="industry" name="industry" required className={FIELD_CLASS + " h-11"}>
+                <select
+                  id="industry"
+                  name="industry"
+                  required
+                  className={FIELD_CLASS + " h-11"}
+                  value={industry}
+                  onChange={(e) => setIndustry(e.target.value)}
+                >
                   <option value="">Selecciona una opción</option>
                   {INDUSTRY_OPTIONS.map((option) => (
                     <option key={option} value={option}>
@@ -228,6 +253,15 @@ export function DiagnosticoSection() {
                     </option>
                   ))}
                 </select>
+                {industry === "Otro" ? (
+                  <input
+                    name="industryOther"
+                    type="text"
+                    required
+                    placeholder="¿Cuál es tu industria?"
+                    className={FIELD_CLASS + " h-11"}
+                  />
+                ) : null}
               </div>
             </div>
 
@@ -263,7 +297,14 @@ export function DiagnosticoSection() {
                 <label htmlFor="salesChannel" className={LABEL_CLASS}>
                   Canal de venta principal
                 </label>
-                <select id="salesChannel" name="salesChannel" required className={FIELD_CLASS + " h-11"}>
+                <select
+                  id="salesChannel"
+                  name="salesChannel"
+                  required
+                  className={FIELD_CLASS + " h-11"}
+                  value={salesChannel}
+                  onChange={(e) => setSalesChannel(e.target.value)}
+                >
                   <option value="">Selecciona una opción</option>
                   {SALES_CHANNEL_OPTIONS.map((option) => (
                     <option key={option} value={option}>
@@ -271,6 +312,15 @@ export function DiagnosticoSection() {
                     </option>
                   ))}
                 </select>
+                {salesChannel === "Otro" ? (
+                  <input
+                    name="salesChannelOther"
+                    type="text"
+                    required
+                    placeholder="¿Cuál es tu canal de venta?"
+                    className={FIELD_CLASS + " h-11"}
+                  />
+                ) : null}
               </div>
             </div>
 
@@ -279,7 +329,14 @@ export function DiagnosticoSection() {
                 <label htmlFor="goal" className={LABEL_CLASS}>
                   Objetivo principal (próximos 6-12 meses)
                 </label>
-                <select id="goal" name="goal" required className={FIELD_CLASS + " h-11"}>
+                <select
+                  id="goal"
+                  name="goal"
+                  required
+                  className={FIELD_CLASS + " h-11"}
+                  value={goal}
+                  onChange={(e) => setGoal(e.target.value)}
+                >
                   <option value="">Selecciona una opción</option>
                   {GOAL_OPTIONS.map((option) => (
                     <option key={option} value={option}>
@@ -287,6 +344,15 @@ export function DiagnosticoSection() {
                     </option>
                   ))}
                 </select>
+                {goal === "Otro" ? (
+                  <input
+                    name="goalOther"
+                    type="text"
+                    required
+                    placeholder="¿Cuál es tu objetivo?"
+                    className={FIELD_CLASS + " h-11"}
+                  />
+                ) : null}
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="teamSize" className={LABEL_CLASS}>
@@ -351,7 +417,7 @@ export function DiagnosticoSection() {
             <div className="flex flex-col gap-2">
               <p className={LABEL_CLASS}>Cómo funciona tu negocio hoy</p>
               <p className="text-sm leading-relaxed text-[var(--brand-muted)]">
-                Seis preguntas sobre finanzas, ventas, operación y equipo. Respóndelas con tus palabras, con el
+                Siete preguntas sobre finanzas, ventas, operación y equipo. Respóndelas con tus palabras, con el
                 detalle que le darías a alguien que recién conoce tu negocio: con eso calculamos tu puntaje de 0 a 100.
               </p>
             </div>
@@ -374,7 +440,7 @@ export function DiagnosticoSection() {
 
             <div className="flex flex-col gap-2">
               <label htmlFor="problem" className={LABEL_CLASS}>
-                ¿Cuál es tu principal problema u objetivo hoy?
+                ¿Cuál es el dolor que te hizo llegar aquí?
               </label>
               <textarea id="problem" name="problem" required rows={4} className={FIELD_CLASS + " py-3"} />
             </div>
