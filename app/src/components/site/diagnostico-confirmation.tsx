@@ -1,16 +1,16 @@
 import { Link } from "@tanstack/react-router";
 
-// Lo que responde POST /api/diagnostico desde la entrega diferida: el diagnóstico
-// ya está generado, pero llega por correo el próximo día hábil a las 9:00 (hora de
-// Chile). Todos los campos son opcionales a propósito: si el backend respondiera
-// con otra forma (por ejemplo una versión anterior desplegada), la pantalla no
-// se rompe y muestra un texto genérico y verdadero.
+// Lo que responde POST /api/diagnostico: el diagnóstico ya está generado y se
+// encola para salir de inmediato (ver routes/diagnostico.ts). Todos los campos son
+// opcionales a propósito: si el backend respondiera con otra forma (por ejemplo una
+// versión anterior desplegada), la pantalla no se rompe y muestra un texto genérico
+// y verdadero.
 export type DiagnosticoScheduled = {
   scheduled?: boolean;
   deliveryLabel?: string;
 };
 
-const FALLBACK_WHEN = "el próximo día hábil a las 9:00";
+const FALLBACK_WHEN = "en los próximos minutos";
 
 // Nombre y empresa que la persona escribió en el formulario: la confirmación la trata por su
 // nombre y menciona su empresa, para que se sienta atendida y no un trámite genérico.

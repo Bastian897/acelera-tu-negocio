@@ -191,7 +191,7 @@ export function DiagnosticoSection() {
         <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
           Responde estas preguntas y te enviamos por correo el puntaje de tu negocio y un
           informe generado con IA especializada por Acelera a partir de tus respuestas. Lo
-          recibes el próximo día hábil a las 9:00 am.
+          recibes de inmediato.
         </p>
 
         {status === "done" && result ? (
@@ -464,7 +464,7 @@ export function DiagnosticoSection() {
             </label>
             <SubmitCta loading={status === "loading"} trackingId="diagnostico_gratis">Quiero mi diagnóstico gratis</SubmitCta>
             <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
-              Llega a tu correo el próximo día hábil a las 9:00 am (1 día hábil).
+              Llega a tu correo de inmediato.
             </p>
           </form>
         )}

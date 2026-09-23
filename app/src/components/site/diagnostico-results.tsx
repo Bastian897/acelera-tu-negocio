@@ -1,7 +1,7 @@
 // EN DESUSO desde 2026-09-21: el diagnóstico ya no se muestra en pantalla al
-// enviar el formulario; se entrega por correo el próximo día hábil a las 9:00
-// (ver diagnostico-confirmation.tsx y business-days.ts en el backend). Se conserva
-// por si se decide volver a mostrar el resultado al instante o como adelanto.
+// enviar el formulario; se entrega por correo de inmediato (ver
+// diagnostico-confirmation.tsx). Se conserva por si se decide volver a mostrar
+// el resultado al instante o como adelanto.
 import { useEffect, useRef, useState } from "react";
 
 import { SectionKicker } from "./section-kicker";
