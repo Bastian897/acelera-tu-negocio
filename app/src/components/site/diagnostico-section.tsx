@@ -190,7 +190,8 @@ export function DiagnosticoSection() {
         </h1>
         <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
           Responde estas preguntas y te enviamos por correo el puntaje de tu negocio y un
-          informe generado a partir de tus respuestas. Lo recibes el próximo día hábil a las 9:00 am.
+          informe generado con IA especializada por Acelera a partir de tus respuestas. Lo
+          recibes el próximo día hábil a las 9:00 am.
         </p>
 
         {status === "done" && result ? (
