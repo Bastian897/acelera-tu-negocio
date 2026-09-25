@@ -1,4 +1,6 @@
+import { useReveal } from "../../hooks/use-reveal";
 import { BrandIcon } from "./icon";
+import { ServiceGauge } from "./service-gauge";
 import { SectionKicker } from "./section-kicker";
 import { siteContent } from "../../lib/site-content";
 
@@ -7,22 +9,33 @@ const SERVICES = [
     icon: "assets/icons/icon-direccion.png",
     title: siteContent.services.service1Title,
     body: siteContent.services.service1Body,
+    gaugeLabel: "Rumbo",
+    gaugeValue: 0.72,
   },
   {
     icon: "assets/icons/icon-consultoria.png",
     title: siteContent.services.service2Title,
     body: siteContent.services.service2Body,
+    gaugeLabel: "Ejecución",
+    gaugeValue: 0.58,
   },
   {
     icon: "assets/icons/icon-recursos.png",
     title: siteContent.services.service3Title,
     body: siteContent.services.service3Body,
+    gaugeLabel: "Eficiencia",
+    gaugeValue: 0.86,
   },
 ];
 
 export function ServicesSection() {
+  const [cardsRef, phase] = useReveal<HTMLDivElement>(0.3);
+
   return (
-    <section id="servicios" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
+    <section
+      id="servicios"
+      className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32"
+    >
       <div className="mx-auto max-w-7xl">
         <SectionKicker>Servicios</SectionKicker>
         <h2 className="reveal-up max-w-2xl text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
@@ -45,13 +58,21 @@ export function ServicesSection() {
             </figcaption>
           </figure>
 
-          <div className="flex flex-col gap-4">
-            {SERVICES.map((service) => (
+          <div ref={cardsRef} className="flex flex-col gap-4">
+            {SERVICES.map((service, i) => (
               <div
                 key={service.title}
-                className="flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-[var(--shadow-elevation)]"
+                className="service-card flex flex-1 flex-col justify-between gap-4 rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-[var(--shadow-elevation)]"
               >
-                <BrandIcon src={service.icon} />
+                <div className="flex items-start justify-between gap-4">
+                  <BrandIcon src={service.icon} />
+                  <ServiceGauge
+                    label={service.gaugeLabel}
+                    value={service.gaugeValue}
+                    delayMs={i * 120}
+                    phase={phase}
+                  />
+                </div>
                 <div>
                   <h3 className="text-lg font-medium tracking-tight text-[var(--brand-ink)]">
                     {service.title}

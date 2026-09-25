@@ -1,3 +1,5 @@
+import { ScrambleText } from "./scramble-text";
+
 /** "Kicker + section rule" (Brand assets, client design system): a small
  * cyan label with a short accent rule underneath it, sitting above a section
  * headline. Cyan is reserved for this one role site-wide so it never
@@ -12,7 +14,7 @@ export function SectionKicker({
   return (
     <div className="mb-4">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-        {children}
+        <ScrambleText text={children} />
       </p>
       <span
         aria-hidden="true"

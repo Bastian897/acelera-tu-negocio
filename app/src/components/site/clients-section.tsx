@@ -1,3 +1,4 @@
+import { ScrambleText } from "./scramble-text";
 import { siteContent } from "../../lib/site-content";
 
 // Logos migrados desde el sitio anterior (aceleratunegocio.cl, WordPress) a
@@ -43,7 +44,12 @@ const MARQUEE_LOGOS = [...CLIENT_LOGOS, ...CLIENT_LOGOS];
 function LogoTile({ logo }: { logo: string }) {
   return (
     <div className="flex aspect-square w-32 shrink-0 items-center justify-center rounded-[16px] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-4 sm:w-36">
-      <img src={`assets/clients/${logo}.webp`} alt="" loading="lazy" className="h-full w-full object-contain" />
+      <img
+        src={`assets/clients/${logo}.webp`}
+        alt=""
+        loading="lazy"
+        className="h-full w-full object-contain"
+      />
     </div>
   );
 }
@@ -53,7 +59,7 @@ export function ClientsSection() {
     <section className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] py-16 md:py-20">
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-muted)]">
-          {siteContent.clients.heading}
+          <ScrambleText text={siteContent.clients.heading} />
         </h2>
       </div>
 
@@ -63,10 +69,11 @@ export function ClientsSection() {
        * bordes (mask-image) es lo que evita que un logo se vea cortado a
        * la mitad al entrar o salir. */}
       <div
-        className="relative mt-10 overflow-hidden"
+        className="clients-marquee relative mt-10 overflow-hidden"
         style={{
           maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-          WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
         }}
       >
         <div className="clients-marquee-track flex w-max gap-6 px-6">

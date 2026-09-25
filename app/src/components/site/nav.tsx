@@ -22,6 +22,7 @@ export function SiteNav() {
           <img
             src="assets/brand/acelera-icon-ink.svg"
             alt=""
+            data-nav-logo-icon=""
             className="h-7 w-7"
             width={28}
             height={28}

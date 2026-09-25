@@ -1,4 +1,6 @@
 import { Link } from "@tanstack/react-router";
+import { ReportPreview } from "./report-preview";
+import { ScrambleText } from "./scramble-text";
 import { siteContent } from "../../lib/site-content";
 
 const PROOF_POINTS = [
@@ -18,10 +20,13 @@ const PROOF_POINTS = [
 
 export function ResourcesSection() {
   return (
-    <section id="recursos" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
+    <section
+      id="recursos"
+      className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32"
+    >
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-          {siteContent.resources.kicker}
+          <ScrambleText text={siteContent.resources.kicker} />
         </p>
         <h2 className="reveal-up mt-4 text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
           {siteContent.resources.heading}
@@ -30,11 +35,15 @@ export function ResourcesSection() {
           {siteContent.resources.paragraph}
         </p>
 
+        <ReportPreview />
+
         <div className="mt-14 grid gap-8 text-left sm:grid-cols-3">
           {PROOF_POINTS.map((point) => (
             <div key={point.label} className="border-t border-[var(--brand-border)] pt-4">
               <p className="text-sm font-medium text-[var(--brand-ink)]">{point.label}</p>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-muted)]">{point.detail}</p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--brand-muted)]">
+                {point.detail}
+              </p>
             </div>
           ))}
         </div>

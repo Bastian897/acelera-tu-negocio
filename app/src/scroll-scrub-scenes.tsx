@@ -10,11 +10,9 @@
  * Keep this array a module constant. Changing its identity on every render
  * intentionally rebuilds the media controller.
  */
-import type {
-  ScrollScrubScene,
-  ScrollScrubTheme,
-} from "@/components/scroll-scrub/scroll-scrub";
+import type { ScrollScrubScene, ScrollScrubTheme } from "@/components/scroll-scrub/scroll-scrub";
 import { PrimaryCta, TickLink } from "@/components/site/cta";
+import { HeroTitle } from "@/components/site/hero-title";
 import { siteContent } from "@/lib/site-content";
 
 /** Brand tokens for the journey layer: the client design system's dark-impact
@@ -49,5 +47,6 @@ export const scrollScrubScenes: ScrollScrubScene[] = [
     // más lento todavía.
     scroll: 2.6,
     title: siteContent.hero.title,
+    titleNode: <HeroTitle text={siteContent.hero.title} />,
   },
 ];

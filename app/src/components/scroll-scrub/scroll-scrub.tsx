@@ -15,6 +15,9 @@ export interface ScrollScrubScene {
   clip: string;
   mobileClip?: string;
   title: string;
+  /** Optional rich rendering of `title` (e.g. an animated split). `title`
+   * stays the plain-text source of truth. */
+  titleNode?: ReactNode;
   body: string;
   kicker?: string;
   tags?: string[];
@@ -687,7 +690,7 @@ export function ScrollScrub({
                     <p className="scroll-scrub__kicker">{scene.kicker}</p>
                   ) : null}
                   <Heading className="scroll-scrub__title">
-                    {scene.title}
+                    {scene.titleNode ?? scene.title}
                   </Heading>
                   <p className="scroll-scrub__body">{scene.body}</p>
                   {scene.tags?.length ? (

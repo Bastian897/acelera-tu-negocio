@@ -1,3 +1,5 @@
+import { Odometer } from "./odometer";
+import { ScrambleText } from "./scramble-text";
 import { siteContent } from "../../lib/site-content";
 
 const INDUSTRIES = [
@@ -10,12 +12,18 @@ const INDUSTRIES = [
 
 export function ResultsSection() {
   return (
-    <section id="casos" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
+    <section
+      id="casos"
+      className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32"
+    >
       <div className="mx-auto max-w-7xl">
         <h2 className="reveal-up text-xs font-semibold uppercase tracking-[0.2em] text-[var(--brand-accent)]">
-          {siteContent.results.heading}
+          <ScrambleText text={siteContent.results.heading} />
         </h2>
-        <span aria-hidden="true" className="mb-8 mt-2 block h-[3px] w-10 rounded-full bg-[var(--brand-accent)] opacity-70" />
+        <span
+          aria-hidden="true"
+          className="mb-8 mt-2 block h-[3px] w-10 rounded-full bg-[var(--brand-accent)] opacity-70"
+        />
 
         {/* Dark impact block: solid dark surface, white copy, brand-blue number. */}
         <div className="relative mt-8 overflow-hidden rounded-[24px] bg-[var(--dark-bg)]">
@@ -29,7 +37,7 @@ export function ResultsSection() {
 
           <div className="relative flex flex-col items-center gap-6 px-6 py-20 text-center md:py-28">
             <p className="font-[var(--font-display)] text-6xl font-extrabold tracking-tighter text-[var(--brand-primary)] md:text-8xl">
-              {siteContent.results.stat}
+              <Odometer value={siteContent.results.stat} />
             </p>
             <p className="max-w-lg text-base leading-relaxed text-[var(--dark-muted)]">
               {siteContent.results.paragraph}

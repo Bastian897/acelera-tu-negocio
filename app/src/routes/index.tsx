@@ -5,6 +5,7 @@ import { ClientsSection } from "@/components/site/clients-section";
 import { ContactSection } from "@/components/site/contact-section";
 import { SiteFooter } from "@/components/site/footer";
 import { FoundersSection } from "@/components/site/founders-section";
+import { LogoIntro } from "@/components/site/logo-intro";
 import { SiteNav } from "@/components/site/nav";
 import { ProcessSection } from "@/components/site/process-section";
 import { ResourcesSection } from "@/components/site/resources-section";
@@ -28,6 +29,7 @@ function Index() {
   return (
     <main>
       <SiteNav />
+      <LogoIntro />
       <ScrollScrub scenes={scrollScrubScenes} theme={scrollScrubTheme} />
       <ServicesSection />
       <FoundersSection />

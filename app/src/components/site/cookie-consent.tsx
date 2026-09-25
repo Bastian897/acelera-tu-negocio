@@ -49,7 +49,7 @@ export function CookieConsent() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="cookie-consent-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#010b18]/55 p-4 backdrop-blur-sm"
+      className="cookie-consent-overlay fixed inset-0 z-50 flex items-center justify-center bg-[#010b18]/55 p-4 backdrop-blur-sm"
     >
       <div className="chat-panel-in w-full max-w-sm rounded-[var(--ac-radius-lg)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-8 shadow-[var(--shadow-elevation)]">
         <span

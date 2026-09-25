@@ -15,6 +15,7 @@ import { BRAND_BG_HEX } from "../lib/brand";
 import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
 import { ChatWidget } from "../components/site/chat-widget";
 import { CookieConsent } from "../components/site/cookie-consent";
+import { INTRO_HEAD_SCRIPT } from "../components/site/logo-intro";
 // Page metadata (browser <title>/favicon + social og: tags), read at build time.
 import appMetaJson from "../app-meta.json";
 
@@ -75,15 +76,11 @@ function NotFoundComponent() {
   return (
     <div className="bg-brand flex min-h-dvh items-center justify-center px-4">
       <div className="text-center">
-        <p className="text-brand-muted font-mono text-sm uppercase tracking-[0.2em]">
-          Error 404
-        </p>
+        <p className="text-brand-muted font-mono text-sm uppercase tracking-[0.2em]">Error 404</p>
         <h1 className="text-brand-ink mt-3 text-4xl font-semibold tracking-tighter">
           Esta página no existe.
         </h1>
-        <p className="text-brand-muted mt-3">
-          Puede que se haya movido o nunca haya existido.
-        </p>
+        <p className="text-brand-muted mt-3">Puede que se haya movido o nunca haya existido.</p>
         <Link
           to="/"
           className="border-brand text-brand-ink mt-8 inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-medium transition-transform active:scale-[0.98]"
@@ -145,6 +142,8 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="es" data-theme="default-dark" style={{ colorScheme: "dark" }}>
       <head>
+        {/* Antes del primer pintado: decide si corre la intro del logo. */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_HEAD_SCRIPT }} />
         <HeadContent />
         {CF_BEACON_TOKEN ? (
           <script
@@ -181,7 +180,7 @@ function RootComponent() {
           error instanceof Error ? error : new Error("Failed to load design inspector"),
           {
             boundary: "higgsfield_design_inspector_import",
-          }
+          },
         );
       });
   }, []);
