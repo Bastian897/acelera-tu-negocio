@@ -1,3 +1,4 @@
+import { SectionKicker } from "./section-kicker";
 import { siteContent } from "../../lib/site-content";
 
 type TeamMember = {
@@ -10,9 +11,12 @@ type TeamMember = {
   href?: string;
 };
 
+// Fotos "-card": recortes normalizados (misma altura de cabeza y posición,
+// 1200x840) generados a partir de los originales, para que las tres tarjetas
+// se vean parejas.
 const FOUNDERS: TeamMember[] = [
   {
-    photo: "assets/team/felipe-nancupil.jpg",
+    photo: "assets/team/felipe-nancupil-card.jpg",
     name: siteContent.founders.founder1Name,
     role: siteContent.founders.founder1Role,
     bio: siteContent.founders.founder1Bio,
@@ -21,7 +25,7 @@ const FOUNDERS: TeamMember[] = [
     href: "https://instagram.com/nancupil.oficial",
   },
   {
-    photo: "assets/team/ignacio-ruiz.jpg",
+    photo: "assets/team/ignacio-ruiz-card.jpg",
     name: siteContent.founders.founder2Name,
     role: siteContent.founders.founder2Role,
     bio: siteContent.founders.founder2Bio,
@@ -30,7 +34,7 @@ const FOUNDERS: TeamMember[] = [
     href: "https://instagram.com/ignacioruizcarrasco",
   },
   {
-    photo: "assets/team/bastian-moreno-card.jpg",
+    photo: "assets/team/bastian-moreno-card-v2.jpg",
     name: siteContent.founders.founder3Name,
     role: siteContent.founders.founder3Role,
     bio: siteContent.founders.founder3Bio,
@@ -50,7 +54,7 @@ function TeamCard({ member }: { member: TeamMember }) {
       {...wrapperProps}
       className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)]"
     >
-      <div className="relative aspect-[4/3] shrink-0 overflow-hidden bg-[var(--brand-bg)]">
+      <div className="relative aspect-[10/7] shrink-0 overflow-hidden bg-[var(--brand-bg)]">
         <img
           src={member.photo}
           alt={member.name}
@@ -70,7 +74,7 @@ function TeamCard({ member }: { member: TeamMember }) {
         </div>
         <p className="text-sm leading-relaxed text-[var(--brand-muted)]">{member.bio}</p>
         {member.handle ? (
-          <div className="mt-2 flex items-center gap-2 border-t border-[var(--brand-border)] pt-3 text-xs text-[var(--brand-muted)]">
+          <div className="mt-auto flex items-center gap-2 border-t border-[var(--brand-border)] pt-3 text-xs text-[var(--brand-muted)]">
             <span>{member.handle}</span>
             {member.followers ? (
               <>
@@ -89,8 +93,12 @@ function TeamCard({ member }: { member: TeamMember }) {
 
 export function FoundersSection() {
   return (
-    <section id="fundadores" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
+    <section
+      id="fundadores"
+      className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32"
+    >
       <div className="mx-auto max-w-7xl">
+        <SectionKicker>Equipo</SectionKicker>
         <h2 className="reveal-up max-w-xl text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
           {siteContent.founders.heading}
         </h2>

@@ -6,12 +6,12 @@ import { BACKEND_URL } from "@/lib/backend";
 import { claimReferral } from "@/lib/referral";
 import { siteContent } from "@/lib/site-content";
 import { SubmitCta } from "./cta";
-import { BrandIcon } from "./icon";
 import { SectionKicker } from "./section-kicker";
 
 const FIELD_CLASS =
   "w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)]/70 focus-visible:border-[var(--brand-accent)]";
-const LABEL_CLASS = "text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-muted)]";
+const LABEL_CLASS =
+  "text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-muted)]";
 
 const INDUSTRY_OPTIONS = [
   "Marketing",
@@ -86,6 +86,83 @@ type Step =
   | { kind: "slot_taken" }
   | { kind: "error" };
 
+// Qué pasa en la llamada: reemplaza la foto del reloj para que la columna
+// izquierda acompañe al formulario con información útil. Es la secuencia
+// real de la llamada, por eso va numerada.
+const CALL_STEPS = [
+  {
+    title: "Revisamos tu negocio",
+    body: "Tus números, tu operación y dónde sientes que se traba el crecimiento.",
+  },
+  {
+    title: "Te decimos dónde vemos la oportunidad",
+    body: "Una lectura concreta de qué movería la aguja primero.",
+  },
+  {
+    title: "Te respondemos sin vueltas",
+    body: "Si podemos ayudarte a acelerar, te proponemos cómo. Si no, también te lo decimos.",
+  },
+];
+
+const TEAM_AVATARS = [
+  { src: "assets/team/felipe-nancupil-card.jpg", name: "Felipe Ñancupil" },
+  { src: "assets/team/ignacio-ruiz-card.jpg", name: "Ignacio Ruiz" },
+  { src: "assets/team/bastian-moreno-card-v2.jpg", name: "Bastián Moreno" },
+];
+
+function CallAgenda() {
+  return (
+    <div className="max-w-md lg:mt-10">
+      <p className={LABEL_CLASS}>Qué pasa en los 30 minutos</p>
+      <ol className="mt-5 flex flex-col gap-5">
+        {CALL_STEPS.map((item, i) => (
+          <li key={item.title} className="grid grid-cols-[28px_1fr] gap-4">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[var(--ac-blue-soft)] text-xs font-semibold text-[var(--brand-primary)]">
+              {i + 1}
+            </span>
+            <div>
+              <p className="text-sm font-medium text-[var(--brand-ink)]">{item.title}</p>
+              <p className="mt-1 text-sm leading-relaxed text-[var(--brand-muted)]">{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <div className="mt-8 flex items-center gap-4 border-t border-[var(--brand-border)] pt-6">
+        <div className="flex -space-x-3">
+          {TEAM_AVATARS.map((member) => (
+            <span
+              key={member.name}
+              className="block h-11 w-11 overflow-hidden rounded-full border-2 border-[var(--brand-bg)] bg-[var(--brand-surface)]"
+            >
+              {/* Las fotos "-card" tienen la cabeza en el mismo lugar (ver
+               * founders-section.tsx): zoom x2.2 centrado en la cara. */}
+              <img
+                src={member.src}
+                alt={member.name}
+                width={44}
+                height={44}
+                loading="lazy"
+                className="h-full w-full origin-[50%_28%] scale-[2.2] object-cover grayscale"
+              />
+            </span>
+          ))}
+        </div>
+        <p className="text-sm leading-snug text-[var(--brand-muted)]">
+          El equipo detrás de Acelera.
+          <br />
+          <a
+            href="mailto:contacto@aceleratunegocio.cl"
+            className="text-[var(--brand-ink)] underline-offset-2 hover:underline"
+          >
+            contacto@aceleratunegocio.cl
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export function ContactSection() {
   const [step, setStep] = useState<Step>({ kind: "form" });
   const [formData, setFormData] = useState<ContactFormData | null>(null);
@@ -97,7 +174,8 @@ export function ContactSection() {
     fetch(`${BACKEND_URL}/api/agent-config`)
       .then((res) => res.json())
       .then((data: { minQualifyingRevenueClp?: number }) => {
-        if (typeof data.minQualifyingRevenueClp === "number") setMinRevenueClp(data.minQualifyingRevenueClp);
+        if (typeof data.minQualifyingRevenueClp === "number")
+          setMinRevenueClp(data.minQualifyingRevenueClp);
       })
       .catch(() => {
         // Se queda con DEFAULT_MIN_REVENUE_CLP si el backend no responde — mejor
@@ -167,9 +245,15 @@ export function ContactSection() {
   }
 
   return (
-    <section id="contacto" className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32">
-      <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-2 md:items-center">
-        <div>
+    <section
+      id="contacto"
+      className="border-t border-[var(--brand-border)] bg-[var(--brand-bg)] px-6 py-24 md:py-32"
+    >
+      {/* Celular: título → formulario → qué pasa en la llamada (el formulario
+       * no queda enterrado). Escritorio: título y pasos a la izquierda, el
+       * formulario ocupa toda la columna derecha. */}
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_1.35fr] lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-0">
+        <div className="lg:col-start-1 lg:row-start-1">
           <SectionKicker>{siteContent.contact.kicker}</SectionKicker>
           <h2 className="reveal-up max-w-md text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
             {siteContent.contact.heading}
@@ -177,9 +261,15 @@ export function ContactSection() {
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-[var(--brand-muted)]">
             {siteContent.contact.paragraph}
           </p>
+        </div>
 
+        <div className="max-lg:order-last lg:col-start-1 lg:row-start-2">
+          <CallAgenda />
+        </div>
+
+        <div className="rounded-2xl border border-[var(--brand-border)] bg-[var(--brand-surface)] p-6 shadow-[var(--shadow-elevation)] md:p-8 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
           {step.kind === "form" && (
-            <form onSubmit={handleSubmit} className="mt-10 flex max-w-sm flex-col gap-5">
+            <form onSubmit={handleSubmit} className="grid gap-5 sm:grid-cols-2">
               <div className="flex flex-col gap-2">
                 <label htmlFor="name" className={LABEL_CLASS}>
                   Nombre
@@ -194,8 +284,7 @@ export function ContactSection() {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="email" className={LABEL_CLASS + " flex items-center gap-1.5"}>
-                  <BrandIcon src="assets/icons/icon-email.png" color="var(--brand-muted)" size={14} />
+                <label htmlFor="email" className={LABEL_CLASS}>
                   Email
                 </label>
                 <input
@@ -208,8 +297,7 @@ export function ContactSection() {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="phone" className={LABEL_CLASS + " flex items-center gap-1.5"}>
-                  <BrandIcon src="assets/icons/icon-telefono.png" color="var(--brand-muted)" size={14} />
+                <label htmlFor="phone" className={LABEL_CLASS}>
                   Teléfono
                 </label>
                 <PhoneInput
@@ -241,7 +329,7 @@ export function ContactSection() {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 sm:col-span-2">
                 <label htmlFor="revenue" className={LABEL_CLASS}>
                   Facturación mensual
                 </label>
@@ -260,7 +348,7 @@ export function ContactSection() {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 sm:col-span-2">
                 <label htmlFor="description" className={LABEL_CLASS}>
                   Cuéntanos de tu negocio
                 </label>
@@ -274,28 +362,38 @@ export function ContactSection() {
                 />
               </div>
 
-              <label className="flex items-start gap-3 text-sm leading-relaxed text-[var(--brand-muted)]">
-                <input type="checkbox" name="privacy" required className="mt-1 size-4 shrink-0 accent-[var(--brand-primary)]" />
+              <label className="flex items-start gap-3 text-sm leading-relaxed text-[var(--brand-muted)] sm:col-span-2">
+                <input
+                  type="checkbox"
+                  name="privacy"
+                  required
+                  className="mt-1 size-4 shrink-0 accent-[var(--brand-primary)]"
+                />
                 <span>
                   He leído y acepto la{" "}
-                  <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
+                  <a
+                    href="/privacidad"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
                     Política de Privacidad
                   </a>{" "}
                   y que usen mis datos para contactarme.
                 </span>
               </label>
-              <SubmitCta className="mt-2" trackingId="contacto_enviar">Ver horarios disponibles</SubmitCta>
+              <SubmitCta className="sm:col-span-2" trackingId="contacto_enviar">
+                Ver horarios disponibles
+              </SubmitCta>
             </form>
           )}
 
           {step.kind === "loading_slots" && (
-            <p className="mt-10 max-w-sm text-sm text-[var(--brand-muted)]">
-              Buscando horarios disponibles...
-            </p>
+            <p className="text-sm text-[var(--brand-muted)]">Buscando horarios disponibles...</p>
           )}
 
           {step.kind === "slots" && (
-            <div className="mt-10 max-w-sm">
+            <div>
               <div className="flex items-center justify-between">
                 <p className={LABEL_CLASS}>Elige un horario</p>
                 <button
@@ -309,7 +407,9 @@ export function ContactSection() {
               <div className="mt-4 flex max-h-80 flex-col gap-4 overflow-y-auto pr-1">
                 {groupSlotsByDay(step.slots).map((group) => (
                   <div key={group.dayLabel}>
-                    <p className="text-xs font-medium capitalize text-[var(--brand-muted)]">{group.dayLabel}</p>
+                    <p className="text-xs font-medium capitalize text-[var(--brand-muted)]">
+                      {group.dayLabel}
+                    </p>
                     <div className="mt-2 grid grid-cols-4 gap-2">
                       {group.slots.map((slot) => (
                         <button
@@ -329,18 +429,18 @@ export function ContactSection() {
           )}
 
           {step.kind === "booking" && (
-            <p className="mt-10 max-w-sm text-sm text-[var(--brand-muted)]">Agendando tu llamada...</p>
+            <p className="text-sm text-[var(--brand-muted)]">Agendando tu llamada...</p>
           )}
 
           {step.kind === "done" && (
-            <p className="mt-10 max-w-sm text-base text-[var(--brand-ink)]">
+            <p className="text-base text-[var(--brand-ink)]">
               Listo, quedó agendada tu llamada de calibración para el {step.whenLabel}. Te llegará
               la confirmación a tu correo.
             </p>
           )}
 
           {step.kind === "not_qualified" && (
-            <p className="mt-10 max-w-sm text-sm text-[var(--brand-ink)]">
+            <p className="text-sm text-[var(--brand-ink)]">
               Por ahora el acompañamiento estructurado de Acelera está pensado para negocios que ya
               facturan desde ${step.minRequiredClp.toLocaleString("es-CL")} CLP mensuales. Te
               recomendamos revisar la asesoría personal de Ignacio Ruiz, que tiene un formato más
@@ -349,7 +449,7 @@ export function ContactSection() {
           )}
 
           {step.kind === "slot_taken" && (
-            <div className="mt-10 max-w-sm">
+            <div>
               <p className="text-sm text-[var(--brand-ink)]">
                 Justo ese horario ya no está disponible. Elige otro:
               </p>
@@ -364,7 +464,7 @@ export function ContactSection() {
           )}
 
           {step.kind === "error" && (
-            <div className="mt-10 max-w-sm">
+            <div>
               <p className="text-sm text-[var(--brand-ink)]">
                 Tuvimos un problema técnico agendando tu llamada. Escríbenos directamente a{" "}
                 <a href="mailto:contacto@aceleratunegocio.cl" className="underline">
@@ -381,19 +481,6 @@ export function ContactSection() {
               </button>
             </div>
           )}
-        </div>
-
-        <div className="relative min-h-[20rem] overflow-hidden rounded-2xl border border-[var(--brand-border)] md:min-h-[32rem]">
-          <img
-            src="assets/plates/contacto-dial.jpg"
-            alt="Macro fotografía de un cronómetro de titanio cepillado"
-            className="absolute inset-0 h-full w-full object-cover"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark-bg)] via-transparent to-transparent" />
-          <p className="absolute bottom-6 left-6 right-6 text-xs font-semibold uppercase tracking-[0.15em] text-[var(--dark-muted)]">
-            {siteContent.contact.imageCaption}
-          </p>
         </div>
       </div>
     </section>

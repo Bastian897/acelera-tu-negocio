@@ -1018,3 +1018,53 @@ body.acelera-site {
     transition: none;
   }
 }
+
+/* ---- Hero: indicación de scroll en vez de "Apertura" ---------------------
+ * El hero tiene un solo capítulo, así que la navegación de capítulos del
+ * motor (que mostraba "Apertura") no le decía nada al visitante. Se oculta y
+ * en su lugar va una indicación abajo al centro que se desvanece apenas se
+ * empieza a hacer scroll (--ss-progress lo escribe el motor en la sección).
+ * Solo desde tablet: en celular el bloque de texto ocupa la parte baja y
+ * todos saben hacer scroll. Selector con dos clases porque scroll-scrub.css
+ * se carga después que este archivo. */
+.scroll-scrub__stage .scroll-scrub__route {
+  display: none;
+}
+@media (min-width: 768px) {
+  .scroll-scrub__stage::after {
+    content: "Desliza para calibrar";
+    position: absolute;
+    z-index: 6;
+    left: 0;
+    right: 0;
+    bottom: 1.75rem;
+    padding-bottom: 30px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ss-muted);
+    background: linear-gradient(var(--ac-cyan), var(--ac-cyan)) no-repeat center bottom / 1px 20px;
+    opacity: clamp(0, calc(1 - var(--ss-progress) * 14), 1);
+    pointer-events: none;
+    animation: acelera-scroll-hint 2.2s ease-in-out infinite;
+  }
+  .intro-active .scroll-scrub__stage::after {
+    animation-delay: 2s;
+  }
+}
+@keyframes acelera-scroll-hint {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-scrub__stage::after {
+    animation: none;
+  }
+}

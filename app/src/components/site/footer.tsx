@@ -1,3 +1,4 @@
+import { InstagramLogo } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 
 import { BrandIcon } from "./icon";
@@ -33,6 +34,11 @@ const COLUMNS = [
         href: "mailto:contacto@aceleratunegocio.cl",
         icon: "assets/icons/icon-email.png",
         label: "contacto@aceleratunegocio.cl",
+      },
+      {
+        href: "https://www.instagram.com/acelera.cl/",
+        label: "@acelera.cl",
+        instagram: true,
       },
     ],
   },
@@ -80,10 +86,20 @@ export function SiteFooter() {
                     <li key={link.label}>
                       <a
                         href={link.href}
+                        {...(link.href.startsWith("http")
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
                         className="inline-flex items-center gap-2 text-sm text-[var(--dark-ink)]/90 transition-colors hover:text-[var(--brand-accent)]"
                       >
                         {"icon" in link && link.icon ? (
                           <BrandIcon src={link.icon} color="var(--dark-muted)" size={14} />
+                        ) : null}
+                        {"instagram" in link && link.instagram ? (
+                          <InstagramLogo
+                            size={15}
+                            aria-label="Instagram"
+                            className="text-[var(--dark-muted)]"
+                          />
                         ) : null}
                         {link.label}
                       </a>
@@ -96,7 +112,9 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-16 flex flex-col gap-3 border-t border-[var(--dark-border)] pt-6 text-xs text-[var(--dark-muted)] sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} {siteContent.nav.brandText}. Todos los derechos reservados.</p>
+          <p>
+            © {year} {siteContent.nav.brandText}. Todos los derechos reservados.
+          </p>
           <p>{siteContent.footer.location}</p>
         </div>
       </div>
