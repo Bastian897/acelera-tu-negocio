@@ -24,7 +24,7 @@ export function HeroTitle({ text }: { text: string }) {
                     preserveAspectRatio="none"
                     aria-hidden="true"
                   >
-                    <path pathLength={1} d="M2 7 C 25 2, 55 9, 98 4" />
+                    <path pathLength={1} d="M2 7.5 C 30 9.5, 68 8, 98 1.5" />
                   </svg>
                 </span>
               ) : (

@@ -698,8 +698,8 @@ body.acelera-site {
   overflow: hidden;
   vertical-align: top;
   /* Aire para descendentes (g, p) sin cambiar el interlineado. */
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
+  padding-bottom: 0.22em;
+  margin-bottom: -0.22em;
 }
 .hero-title__inner {
   display: inline-block;
@@ -716,15 +716,17 @@ body.acelera-site {
 .hero-title__underline {
   position: absolute;
   left: 0;
-  bottom: -0.02em;
-  width: calc(100% - 0.2em);
-  height: 0.18em;
+  /* Trazo que sube hacia la derecha (gesto de "acelerar"); necesita altura
+   * real para que la curva se note en todo el ancho de la palabra. */
+  bottom: -0.14em;
+  width: calc(100% - 0.15em);
+  height: 0.34em;
   overflow: visible;
 }
 .hero-title__underline path {
   fill: none;
   stroke: var(--ac-cyan);
-  stroke-width: 2.5;
+  stroke-width: 3;
   stroke-linecap: round;
   stroke-dasharray: 1;
   animation: acelera-intro-draw 0.5s var(--ac-ease) both;
