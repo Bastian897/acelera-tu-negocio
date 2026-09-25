@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { openAceleraChat } from "./chat-widget";
 
 // Lo que responde POST /api/diagnostico: el diagnóstico ya está generado y se
 // encola para salir de inmediato (ver routes/diagnostico.ts). Todos los campos son
@@ -69,13 +69,13 @@ export function DiagnosticoConfirmation({
         <p className="text-sm leading-relaxed text-[var(--brand-muted)]">
           Si prefieres conversar antes, puedes agendar una llamada con nosotros.
         </p>
-        <Link
-          to="/"
-          hash="contacto"
+        <button
+          type="button"
+          onClick={() => openAceleraChat()}
           className="inline-flex min-h-11 items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[var(--ac-white)] shadow-[var(--shadow-elevation)] transition-transform duration-150 ease-out hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--brand-primary)] active:scale-[0.97] motion-reduce:transition-none"
         >
           Agendar una llamada
-        </Link>
+        </button>
       </div>
     </div>
   );

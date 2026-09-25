@@ -2,6 +2,7 @@ import { InstagramLogo } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 
 import { BrandIcon } from "./icon";
+import { openAceleraChat } from "./chat-widget";
 import { siteContent } from "../../lib/site-content";
 
 const COLUMNS = [
@@ -27,6 +28,7 @@ const COLUMNS = [
     links: [
       {
         href: "#contacto",
+        openChat: true,
         icon: "assets/icons/icon-agendar.png",
         label: "Agendar llamada",
       },
@@ -69,7 +71,20 @@ export function SiteFooter() {
               </p>
               <ul className="mt-4 flex flex-col gap-3">
                 {column.links.map((link) =>
-                  link.href.startsWith("#") ? (
+                  "openChat" in link && link.openChat ? (
+                    <li key={link.label}>
+                      <button
+                        type="button"
+                        onClick={() => openAceleraChat()}
+                        className="inline-flex items-center gap-2 text-sm text-[var(--dark-ink)]/90 transition-colors hover:text-[var(--brand-accent)]"
+                      >
+                        {"icon" in link && link.icon ? (
+                          <BrandIcon src={link.icon} color="var(--dark-muted)" size={14} />
+                        ) : null}
+                        {link.label}
+                      </button>
+                    </li>
+                  ) : link.href.startsWith("#") ? (
                     <li key={link.label}>
                       <Link
                         to="/"

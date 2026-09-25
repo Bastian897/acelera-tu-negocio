@@ -1,31 +1,36 @@
 import { type ReactNode } from "react";
 import { trackCtaClick } from "../../lib/analytics";
 import { siteContent } from "../../lib/site-content";
+import { openAceleraChat } from "./chat-widget";
 
 /** "Agendar llamada", primary intent, reused everywhere. Garment: a solid
- * brand-primary pill that lifts on hover and depresses on press. */
+ * brand-primary pill that lifts on hover and depresses on press.
+ *
+ * Abre el chat en vez de anclar a un formulario (el agendamiento se hace por
+ * chat desde 2026-09-25, ver chat-widget.tsx). */
 export function PrimaryCta({
   children = siteContent.general.primaryCtaText,
-  href = "#contacto",
   className = "",
   trackingId = "agendar_llamada",
 }: {
   children?: ReactNode;
-  href?: string;
   className?: string;
   trackingId?: string | null;
 }) {
   return (
-    <a
-      href={href}
-      onClick={trackingId ? () => trackCtaClick(trackingId) : undefined}
+    <button
+      type="button"
+      onClick={() => {
+        if (trackingId) trackCtaClick(trackingId);
+        openAceleraChat();
+      }}
       className={
         "inline-flex items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[var(--ac-white)] shadow-[var(--shadow-elevation)] transition-transform duration-150 ease-out hover:brightness-110 active:scale-[0.97] motion-reduce:transition-none " +
         className
       }
     >
       {children}
-    </a>
+    </button>
   );
 }
 

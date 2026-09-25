@@ -7,6 +7,20 @@ import { BrandIcon } from "./icon";
 const STORAGE_KEY = "acelera_chat_conversation_id";
 const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
 
+// El agendamiento ahora se hace por el chat (el formulario de la home se dio
+// de baja, 2026-09-25: la IA ya calificaba y agendaba por chat de todas
+// formas, así que mantener dos caminos era redundante). Los botones
+// "Agendar llamada" del resto del sitio (nav, footer, hero, confirmación del
+// diagnóstico) no tienen forma directa de tocar el estado de <ChatWidget>,
+// así que abren el panel disparando este evento en vez de levantar el estado
+// hasta un ancestro común — evita pasar props de apertura por todo el árbol
+// solo para este caso.
+const OPEN_CHAT_EVENT = "acelera:open-chat";
+
+export function openAceleraChat() {
+  window.dispatchEvent(new Event(OPEN_CHAT_EVENT));
+}
+
 // Nube de bienvenida (patrón Intercom/Drift, pedido explícito de Bastian,
 // 2026-09-08) — aparece sola a los pocos segundos de cargar la página, antes
 // de que la persona haga nada, y se queda ahí sin autoocultarse. Solo
@@ -145,6 +159,15 @@ export function ChatWidget() {
   function dismissBubble() {
     setBubbleVisible(false);
   }
+
+  useEffect(() => {
+    function handleOpenRequest() {
+      setBubbleVisible(false);
+      setOpen(true);
+    }
+    window.addEventListener(OPEN_CHAT_EVENT, handleOpenRequest);
+    return () => window.removeEventListener(OPEN_CHAT_EVENT, handleOpenRequest);
+  }, []);
 
   useEffect(() => {
     // Sin gate de localStorage a propósito (ver comentario arriba de
