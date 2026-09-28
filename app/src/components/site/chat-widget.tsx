@@ -6,6 +6,7 @@ import { BrandIcon } from "./icon";
 
 const STORAGE_KEY = "acelera_chat_conversation_id";
 const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
+const EMAIL_STORAGE_KEY = "acelera_chat_visitor_email";
 
 // El agendamiento ahora se hace por el chat (el formulario de la home se dio
 // de baja, 2026-09-25: la IA ya calificaba y agendaba por chat de todas
@@ -125,11 +126,34 @@ function saveVisitorName(name: string) {
   }
 }
 
+function loadVisitorEmail(): string | null {
+  try {
+    return window.localStorage.getItem(EMAIL_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function saveVisitorEmail(email: string) {
+  try {
+    window.localStorage.setItem(EMAIL_STORAGE_KEY, email);
+  } catch {
+    // idem — solo se vuelve a pedir el correo en la próxima visita.
+  }
+}
+
 // Pide nombre y apellido (2+ palabras) — sirve para distinguir usuarios en el
 // historial de conversaciones del admin, que hasta ahora siempre mostraba la
 // columna "nombre" vacía porque nunca se pedía.
 function isFullName(value: string): boolean {
   return value.trim().split(/\s+/).filter(Boolean).length >= 2;
+}
+
+// Chequeo liviano en el cliente (UX, feedback inmediato) — el backend valida en serio
+// con su propio regex (email-capture.ts) antes de guardar nada, así que esto nunca es
+// la única barrera.
+function isLikelyEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
 }
 
 export function ChatWidget() {
@@ -138,8 +162,11 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [visitorName, setVisitorName] = useState<string | null>(null);
+  const [visitorEmail, setVisitorEmail] = useState<string | null>(null);
   const [nameDraft, setNameDraft] = useState("");
+  const [emailDraft, setEmailDraft] = useState("");
   const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   // Selector de horarios real (día → hora), reemplaza el intento anterior de
   // adivinar el horario ofrecido parseando el texto del bot.
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -154,6 +181,7 @@ export function ChatWidget() {
   useEffect(() => {
     conversationId.current = loadConversationId();
     setVisitorName(loadVisitorName());
+    setVisitorEmail(loadVisitorEmail());
   }, []);
 
   function dismissBubble() {
@@ -178,15 +206,19 @@ export function ChatWidget() {
     return () => clearTimeout(showTimer);
   }, []);
 
-  function handleNameSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleGateSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const name = nameDraft.trim();
-    if (!isFullName(name)) {
-      setNameError(true);
-      return;
-    }
+    const email = emailDraft.trim().toLowerCase();
+    const nameOk = isFullName(name);
+    const emailOk = isLikelyEmail(email);
+    setNameError(!nameOk);
+    setEmailError(!emailOk);
+    if (!nameOk || !emailOk) return;
     saveVisitorName(name);
+    saveVisitorEmail(email);
     setVisitorName(name);
+    setVisitorEmail(email);
   }
 
   useEffect(() => {
@@ -229,7 +261,12 @@ export function ChatWidget() {
       const res = await fetch(`${BACKEND_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversationId: conversationId.current, message, name: visitorName }),
+        body: JSON.stringify({
+          conversationId: conversationId.current,
+          message,
+          name: visitorName,
+          email: visitorEmail,
+        }),
       });
       if (!res.ok) throw new Error("request_failed");
       const data = (await res.json()) as { conversationId: string; reply: string; canScheduleNow?: boolean };
@@ -351,9 +388,9 @@ export function ChatWidget() {
             </button>
           </div>
 
-          {visitorName === null ? (
-            <form onSubmit={handleNameSubmit} className="flex flex-1 flex-col justify-center gap-3 px-4 py-4">
-              <p className="text-sm text-[var(--brand-ink)]">Antes de comenzar, ¿cuál es tu nombre y apellido?</p>
+          {visitorName === null || visitorEmail === null ? (
+            <form onSubmit={handleGateSubmit} className="flex flex-1 flex-col justify-center gap-3 px-4 py-4">
+              <p className="text-sm text-[var(--brand-ink)]">Antes de comenzar, ¿cuál es tu nombre y tu correo?</p>
               <input
                 autoFocus
                 value={nameDraft}
@@ -361,10 +398,21 @@ export function ChatWidget() {
                   setNameDraft(e.target.value);
                   setNameError(false);
                 }}
-                placeholder="Ej: María Pérez"
+                placeholder="Nombre y apellido, ej: María Pérez"
                 className="h-10 rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 text-sm text-[var(--brand-ink)] outline-none focus-visible:border-[var(--brand-accent)]"
               />
               {nameError ? <p className="text-xs text-red-600">Escribe tu nombre y apellido, por favor.</p> : null}
+              <input
+                type="email"
+                value={emailDraft}
+                onChange={(e) => {
+                  setEmailDraft(e.target.value);
+                  setEmailError(false);
+                }}
+                placeholder="Tu correo, ej: maria@empresa.cl"
+                className="h-10 rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 text-sm text-[var(--brand-ink)] outline-none focus-visible:border-[var(--brand-accent)]"
+              />
+              {emailError ? <p className="text-xs text-red-600">Escribe un correo válido, por favor.</p> : null}
               <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
                 Al continuar aceptas nuestra{" "}
                 <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
