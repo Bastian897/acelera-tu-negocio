@@ -16,7 +16,7 @@ type TeamMember = {
 // se vean parejas.
 const FOUNDERS: TeamMember[] = [
   {
-    photo: "assets/team/felipe-nancupil-card.jpg",
+    photo: "assets/team/felipe-nancupil-card.webp",
     name: siteContent.founders.founder1Name,
     role: siteContent.founders.founder1Role,
     bio: siteContent.founders.founder1Bio,
@@ -25,7 +25,7 @@ const FOUNDERS: TeamMember[] = [
     href: "https://instagram.com/nancupil.oficial",
   },
   {
-    photo: "assets/team/ignacio-ruiz-card.jpg",
+    photo: "assets/team/ignacio-ruiz-card.webp",
     name: siteContent.founders.founder2Name,
     role: siteContent.founders.founder2Role,
     bio: siteContent.founders.founder2Bio,
@@ -34,7 +34,7 @@ const FOUNDERS: TeamMember[] = [
     href: "https://instagram.com/ignacioruizcarrasco",
   },
   {
-    photo: "assets/team/bastian-moreno-card-v2.jpg",
+    photo: "assets/team/bastian-moreno-card-v2.webp",
     name: siteContent.founders.founder3Name,
     role: siteContent.founders.founder3Role,
     bio: siteContent.founders.founder3Bio,

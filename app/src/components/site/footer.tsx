@@ -29,12 +29,12 @@ const COLUMNS = [
       {
         href: "#contacto",
         openChat: true,
-        icon: "assets/icons/icon-agendar.png",
+        icon: "assets/icons/icon-agendar.webp",
         label: "Agendar llamada",
       },
       {
         href: "mailto:contacto@aceleratunegocio.cl",
-        icon: "assets/icons/icon-email.png",
+        icon: "assets/icons/icon-email.webp",
         label: "contacto@aceleratunegocio.cl",
       },
       {

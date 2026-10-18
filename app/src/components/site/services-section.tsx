@@ -6,21 +6,21 @@ import { siteContent } from "../../lib/site-content";
 
 const SERVICES = [
   {
-    icon: "assets/icons/icon-direccion.png",
+    icon: "assets/icons/icon-direccion.webp",
     title: siteContent.services.service1Title,
     body: siteContent.services.service1Body,
     gaugeLabel: "Rumbo",
     gaugeValue: 0.72,
   },
   {
-    icon: "assets/icons/icon-consultoria.png",
+    icon: "assets/icons/icon-consultoria.webp",
     title: siteContent.services.service2Title,
     body: siteContent.services.service2Body,
     gaugeLabel: "Ejecución",
     gaugeValue: 0.58,
   },
   {
-    icon: "assets/icons/icon-recursos.png",
+    icon: "assets/icons/icon-recursos.webp",
     title: siteContent.services.service3Title,
     body: siteContent.services.service3Body,
     gaugeLabel: "Eficiencia",
@@ -45,7 +45,7 @@ export function ServicesSection() {
         <div className="mt-12 grid gap-4 md:grid-cols-[1.3fr_1fr] md:items-stretch">
           <figure className="relative min-h-[22rem] overflow-hidden rounded-2xl border border-[var(--brand-border)]">
             <img
-              src="assets/plates/servicios-texture.jpg"
+              src="assets/plates/servicios-texture.webp"
               alt="Detalle macro de un instrumento de precisión de acero cepillado"
               className="absolute inset-0 h-full w-full object-cover"
               loading="lazy"

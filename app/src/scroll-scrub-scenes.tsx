@@ -39,8 +39,8 @@ export const scrollScrubScenes: ScrollScrubScene[] = [
     label: siteContent.hero.chapterLabel,
     linger: 0.1,
     mobileClip: "assets/world/scene-01-mobile.mp4",
-    mobilePoster: "assets/world/scene-01-mobile-poster.png",
-    poster: "assets/world/scene-01-poster.png",
+    mobilePoster: "assets/world/scene-01-mobile-poster.webp",
+    poster: "assets/world/scene-01-poster.webp",
     // Bajado de 3.2 a 2.6 (pedido del dueño: "en computador igual hazlo un poco
     // más rápido"). En mobile se acorta aún más vía CSS (ver
     // #hero.scroll-scrub__chapter en scroll-scrub.css), porque ahí se sentía

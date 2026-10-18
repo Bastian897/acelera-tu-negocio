@@ -28,7 +28,7 @@ export function ResultsSection() {
         {/* Dark impact block: solid dark surface, white copy, brand-blue number. */}
         <div className="relative mt-8 overflow-hidden rounded-[24px] bg-[var(--dark-bg)]">
           <img
-            src="assets/plates/casos-atmosphere.jpg"
+            src="assets/plates/casos-atmosphere.webp"
             alt="Instrumentos de precisión sobre una mesa de trabajo en un taller oscuro"
             className="absolute inset-0 h-full w-full object-cover opacity-30"
             loading="lazy"

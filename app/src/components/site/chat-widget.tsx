@@ -7,6 +7,7 @@ import { BrandIcon } from "./icon";
 const STORAGE_KEY = "acelera_chat_conversation_id";
 const NAME_STORAGE_KEY = "acelera_chat_visitor_name";
 const EMAIL_STORAGE_KEY = "acelera_chat_visitor_email";
+const PHONE_STORAGE_KEY = "acelera_chat_visitor_phone";
 
 // El agendamiento ahora se hace por el chat (el formulario de la home se dio
 // de baja, 2026-09-25: la IA ya calificaba y agendaba por chat de todas
@@ -142,6 +143,22 @@ function saveVisitorEmail(email: string) {
   }
 }
 
+function loadVisitorPhone(): string | null {
+  try {
+    return window.localStorage.getItem(PHONE_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function saveVisitorPhone(phone: string) {
+  try {
+    window.localStorage.setItem(PHONE_STORAGE_KEY, phone);
+  } catch {
+    // idem — solo se vuelve a pedir el teléfono en la próxima visita.
+  }
+}
+
 // Pide nombre y apellido (2+ palabras) — sirve para distinguir usuarios en el
 // historial de conversaciones del admin, que hasta ahora siempre mostraba la
 // columna "nombre" vacía porque nunca se pedía.
@@ -156,6 +173,15 @@ function isLikelyEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim());
 }
 
+// Chequeo liviano (UX): solo dígitos y símbolos habituales, 8–15 dígitos. El backend
+// vuelve a validar (normalizePhone en email-capture.ts).
+function isLikelyPhone(value: string): boolean {
+  const trimmed = value.trim();
+  if (!/^\+?[\d\s().-]+$/.test(trimmed)) return false;
+  const digits = trimmed.replace(/\D/g, "").length;
+  return digits >= 8 && digits <= 15;
+}
+
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [entries, setEntries] = useState<ChatEntry[]>([]);
@@ -163,10 +189,13 @@ export function ChatWidget() {
   const [sending, setSending] = useState(false);
   const [visitorName, setVisitorName] = useState<string | null>(null);
   const [visitorEmail, setVisitorEmail] = useState<string | null>(null);
+  const [visitorPhone, setVisitorPhone] = useState<string | null>(null);
   const [nameDraft, setNameDraft] = useState("");
   const [emailDraft, setEmailDraft] = useState("");
+  const [phoneDraft, setPhoneDraft] = useState("");
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
   // Selector de horarios real (día → hora), reemplaza el intento anterior de
   // adivinar el horario ofrecido parseando el texto del bot.
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -180,8 +209,15 @@ export function ChatWidget() {
 
   useEffect(() => {
     conversationId.current = loadConversationId();
-    setVisitorName(loadVisitorName());
-    setVisitorEmail(loadVisitorEmail());
+    const storedName = loadVisitorName();
+    const storedEmail = loadVisitorEmail();
+    setVisitorName(storedName);
+    setVisitorEmail(storedEmail);
+    setVisitorPhone(loadVisitorPhone());
+    // Quien ya dio nombre y correo antes de que existiera el campo de teléfono ve el
+    // formulario otra vez: se le precargan los datos para que solo agregue el teléfono.
+    if (storedName) setNameDraft(storedName);
+    if (storedEmail) setEmailDraft(storedEmail);
   }, []);
 
   function dismissBubble() {
@@ -212,13 +248,18 @@ export function ChatWidget() {
     const email = emailDraft.trim().toLowerCase();
     const nameOk = isFullName(name);
     const emailOk = isLikelyEmail(email);
+    const phone = phoneDraft.trim();
+    const phoneOk = isLikelyPhone(phone);
     setNameError(!nameOk);
     setEmailError(!emailOk);
-    if (!nameOk || !emailOk) return;
+    setPhoneError(!phoneOk);
+    if (!nameOk || !emailOk || !phoneOk) return;
     saveVisitorName(name);
     saveVisitorEmail(email);
+    saveVisitorPhone(phone);
     setVisitorName(name);
     setVisitorEmail(email);
+    setVisitorPhone(phone);
   }
 
   useEffect(() => {
@@ -266,6 +307,7 @@ export function ChatWidget() {
           message,
           name: visitorName,
           email: visitorEmail,
+          phone: visitorPhone,
         }),
       });
       if (!res.ok) throw new Error("request_failed");
@@ -388,9 +430,11 @@ export function ChatWidget() {
             </button>
           </div>
 
-          {visitorName === null || visitorEmail === null ? (
+          {visitorName === null || visitorEmail === null || visitorPhone === null ? (
             <form onSubmit={handleGateSubmit} className="flex flex-1 flex-col justify-center gap-3 px-4 py-4">
-              <p className="text-sm text-[var(--brand-ink)]">Antes de comenzar, ¿cuál es tu nombre y tu correo?</p>
+              <p className="text-sm text-[var(--brand-ink)]">
+                Antes de comenzar, ¿cuál es tu nombre, tu correo y tu WhatsApp?
+              </p>
               <input
                 autoFocus
                 value={nameDraft}
@@ -413,6 +457,18 @@ export function ChatWidget() {
                 className="h-10 rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 text-sm text-[var(--brand-ink)] outline-none focus-visible:border-[var(--brand-accent)]"
               />
               {emailError ? <p className="text-xs text-red-600">Escribe un correo válido, por favor.</p> : null}
+              <input
+                type="tel"
+                inputMode="tel"
+                value={phoneDraft}
+                onChange={(e) => {
+                  setPhoneDraft(e.target.value);
+                  setPhoneError(false);
+                }}
+                placeholder="Tu WhatsApp, ej: +56 9 1234 5678"
+                className="h-10 rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 text-sm text-[var(--brand-ink)] outline-none focus-visible:border-[var(--brand-accent)]"
+              />
+              {phoneError ? <p className="text-xs text-red-600">Escribe un número válido, por favor.</p> : null}
               <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
                 Al continuar aceptas nuestra{" "}
                 <a href="/privacidad" target="_blank" rel="noopener noreferrer" className="underline">
