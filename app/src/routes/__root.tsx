@@ -139,12 +139,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
-// Rutas donde no se muestra el chat flotante: /evaluacion es un formulario oculto que
-// Ignacio manda por link, y el chat ahí solo distrae de completarlo.
-const ROUTES_WITHOUT_CHAT = new Set(["/evaluacion"]);
+// Rutas sin chat flotante ni aviso de cookies: /evaluacion es un formulario oculto que
+// Ignacio manda por link, y ambos solo distraen de completarlo. Sin el aviso nunca hay
+// consentimiento ahí, así que GA4 (que espera ese consentimiento, ver lib/analytics.ts)
+// no se carga en esa página: no hace falta pedir nada.
+const ROUTES_WITHOUT_WIDGETS = new Set(["/evaluacion"]);
 
 function RootShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const showWidgets = !ROUTES_WITHOUT_WIDGETS.has(pathname.replace(/\/$/, "") || "/");
   return (
     <html lang="es" data-theme="default-dark" style={{ colorScheme: "dark" }}>
       <head>
@@ -161,8 +164,8 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body className="acelera-site">
         {children}
-        {ROUTES_WITHOUT_CHAT.has(pathname.replace(/\/$/, "") || "/") ? null : <ChatWidget />}
-        <CookieConsent />
+        {showWidgets ? <ChatWidget /> : null}
+        {showWidgets ? <CookieConsent /> : null}
         <Scripts />
       </body>
     </html>
