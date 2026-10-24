@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useRouterState,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
@@ -138,7 +139,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+// Rutas donde no se muestra el chat flotante: /evaluacion es un formulario oculto que
+// Ignacio manda por link, y el chat ahí solo distrae de completarlo.
+const ROUTES_WITHOUT_CHAT = new Set(["/evaluacion"]);
+
 function RootShell({ children }: { children: ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
     <html lang="es" data-theme="default-dark" style={{ colorScheme: "dark" }}>
       <head>
@@ -155,7 +161,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body className="acelera-site">
         {children}
-        <ChatWidget />
+        {ROUTES_WITHOUT_CHAT.has(pathname.replace(/\/$/, "") || "/") ? null : <ChatWidget />}
         <CookieConsent />
         <Scripts />
       </body>
