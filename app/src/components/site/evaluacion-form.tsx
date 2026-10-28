@@ -119,14 +119,17 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-function Question({ n, text, children }: { n: number; text: string; children: ReactNode }) {
+function Question({ n, text, optional, children }: { n: number; text: string; optional?: boolean; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-3 border-t border-[var(--brand-border)] pt-7">
       <p className="flex gap-3 text-[15px] font-semibold leading-snug text-[var(--brand-ink)]">
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--ac-blue-soft)] text-xs font-semibold text-[var(--brand-primary)]">
           {n}
         </span>
-        <span className="pt-0.5">{text}</span>
+        <span className="pt-0.5">
+          {text}
+          {optional ? <span className="ml-1.5 text-xs font-normal text-[var(--brand-muted)]">(opcional)</span> : null}
+        </span>
       </p>
       <div className="flex flex-col gap-3 sm:pl-10">{children}</div>
     </div>
@@ -338,6 +341,11 @@ export function EvaluacionForm() {
               {/* Trampa para bots: invisible para personas, un bot la rellena. */}
               <input type="text" name="company_url" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 opacity-0" />
 
+              <p className="rounded-[12px] bg-[var(--ac-blue-soft)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-ink)]">
+                Todas las preguntas son obligatorias, salvo las marcadas como <strong>(opcional)</strong>. Si algo no
+                aplica a tu caso o no conoces el dato, usa los botones <strong>No aplica</strong> o <strong>No lo sé</strong>.
+              </p>
+
               <div className="flex flex-col gap-4">
                 <h2 className="text-lg font-semibold tracking-tight text-[var(--brand-ink)]">Tus datos de contacto</h2>
                 <div className="grid gap-4 sm:grid-cols-3">
@@ -358,7 +366,7 @@ export function EvaluacionForm() {
 
               {textQuestion(1)}
 
-              <Question n={2} text="Comparte los enlaces de tus redes sociales personales y de tu negocio o proyecto, si tienes.">
+              <Question n={2} optional text="Comparte los enlaces de tus redes sociales personales y de tu negocio o proyecto, si tienes.">
                 {subFields("q2", Q2_FIELDS, false)}
               </Question>
 
