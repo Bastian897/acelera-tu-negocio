@@ -9,8 +9,8 @@ import { EvaluacionForm } from "@/components/site/evaluacion-form";
 export const Route = createFileRoute("/evaluacion")({
   head: () => ({
     meta: [
-      { title: "Evaluación de negocio | Acelera tu Negocio" },
-      { name: "description", content: "Cuéntanos de tu negocio para preparar tu conversación con Ignacio Ruiz." },
+      { title: "Cuestionario previo a la asesoría | Acelera tu Negocio" },
+      { name: "description", content: "Cuestionario previo a tu asesoría con Ignacio Ruiz." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
