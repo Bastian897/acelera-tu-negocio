@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { CF_BEACON_TOKEN } from "../lib/analytics";
+import { captureAttribution } from "../lib/attribution";
+import { trackMetaPageView } from "../lib/meta-pixel";
 import { BRAND_BG_HEX } from "../lib/brand";
 import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
 import { ChatWidget } from "../components/site/chat-widget";
@@ -174,6 +176,23 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+
+  // utm_*/fbclid de la URL de entrada (ver lib/attribution.ts): se guardan antes de que
+  // la persona navegue a otra página y se pierdan de la barra de direcciones.
+  useEffect(() => {
+    captureAttribution();
+  }, []);
+
+  // El Pixel registra solo el PageView de la carga inicial; cada navegación interna
+  // del router (home → /diagnostico) se le avisa acá. No hace nada sin Pixel cargado.
+  useEffect(
+    () =>
+      router.subscribe("onResolved", (event) => {
+        if (event.fromLocation && event.fromLocation.pathname !== event.toLocation.pathname) trackMetaPageView();
+      }),
+    [router],
+  );
 
   useEffect(() => {
     if (!__HF_DESIGN_INSPECTOR__) {

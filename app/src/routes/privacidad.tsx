@@ -27,7 +27,7 @@ function PrivacidadPage() {
       <SiteNav />
       <div className="mx-auto max-w-2xl px-6 pt-32 pb-24 leading-relaxed text-brand-ink">
         <h1 className="mb-2 text-2xl font-semibold">Política de Privacidad</h1>
-        <p className="mb-8 text-sm opacity-70">Última actualización: 22 de septiembre de 2026</p>
+        <p className="mb-8 text-sm opacity-70">Última actualización: 31 de octubre de 2026</p>
 
         <p className={P}>
           Acelera tu Negocio es una consultora de dirección estratégica y ejecución para empresas chilenas. Esta
@@ -53,7 +53,13 @@ function PrivacidadPage() {
             <strong>Portal de clientes:</strong> tu correo y la información de avance que publicamos para ti.
           </li>
           <li>
-            <strong>Navegación:</strong> con tu consentimiento, cookies de analítica web.
+            <strong>Navegación:</strong> con tu consentimiento, cookies de analítica web y de medición de anuncios
+            (Google Analytics y Meta Pixel).
+          </li>
+          <li>
+            <strong>Origen de tu visita:</strong> si llegas desde un anuncio o un enlace de campaña, guardamos los
+            parámetros de ese enlace (por ejemplo, la campaña y el anuncio), la página por la que entraste, tu dirección
+            IP y el tipo de navegador al momento de dejarnos tus datos.
           </li>
         </ul>
         <p className={P}>No recogemos datos sensibles ni te los pedimos. Por favor no los incluyas en tus respuestas.</p>
@@ -64,6 +70,10 @@ function PrivacidadPage() {
           <li>Contactarte y darte seguimiento comercial sobre tu solicitud.</li>
           <li>Operar el portal de clientes y avisarte de novedades.</li>
           <li>Mejorar y proteger el sitio.</li>
+          <li>
+            Medir qué anuncios y campañas funcionan y mostrar nuestros anuncios a personas con un perfil similar al de
+            nuestros clientes (ver sección 4).
+          </li>
           <li>Cumplir obligaciones legales cuando corresponda.</li>
         </ul>
 
@@ -80,6 +90,17 @@ function PrivacidadPage() {
           de correos, modelos de inteligencia artificial, y herramientas de agenda, hojas de cálculo y analítica web,
           bajo sus propias condiciones de privacidad. Algunos operan fuera de Chile, por lo que tus datos pueden
           tratarse en otros países.
+        </p>
+        <p className={P}>
+          <strong>Meta (Facebook e Instagram).</strong> Cuando nos dejas tus datos (diagnóstico o chat), y cuando tu
+          solicitud avanza con nosotros, le informamos ese hecho a Meta Platforms para medir el resultado de nuestros
+          anuncios. Tu correo, teléfono y nombre se envían cifrados con una función irreversible (hash), nunca en
+          texto legible, junto con la IP, el tipo de navegador y el identificador del clic en el anuncio. Meta usa esta
+          información según su propia{" "}
+          <a className="underline" href="https://www.facebook.com/privacy/policy/">
+            política de privacidad
+          </a>
+          . Puedes oponerte escribiéndonos al correo de contacto.
         </p>
 
         <h2 className={H2}>5. Cuánto tiempo los conservamos</h2>
@@ -104,7 +125,7 @@ function PrivacidadPage() {
         <p className={P}>
           Protegemos tus datos con conexiones cifradas y acceso restringido; el portal de clientes solo se abre con un
           código enviado a tu correo. Ante una brecha que te afecte, te avisaremos como exige la ley. Las cookies de
-          analítica solo se activan si las aceptas en el aviso del sitio; el portal de clientes usa una cookie
+          analítica y de medición de anuncios solo se activan si las aceptas en el aviso del sitio; el portal de clientes usa una cookie
           necesaria para mantener tu sesión.
         </p>
 

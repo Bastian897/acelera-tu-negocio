@@ -3,6 +3,8 @@ import { Link } from "@tanstack/react-router";
 
 import { BACKEND_URL } from "@/lib/backend";
 import { captureReferralFromUrl, claimReferral } from "@/lib/referral";
+import { getAttributionPayload } from "@/lib/attribution";
+import { newMetaEventId, trackMetaEvent } from "@/lib/meta-pixel";
 import { SubmitCta } from "./cta";
 import { DiagnosticoConfirmation, type DiagnosticoScheduled } from "./diagnostico-confirmation";
 import { SectionKicker } from "./section-kicker";
@@ -130,6 +132,7 @@ export function DiagnosticoSection() {
     // vez de la palabra "Otro" sola (ver los 3 <select> más abajo y su input condicional).
     const resolveOther = (select: string, otherField: string) =>
       select === "Otro" ? String(form.get(otherField) ?? "").trim() || "Otro" : select;
+    const metaEventId = newMetaEventId();
     const payload = {
       name: String(form.get("name") ?? ""),
       email: String(form.get("email") ?? ""),
@@ -156,6 +159,9 @@ export function DiagnosticoSection() {
       maturityAnswers: Object.fromEntries(
         MATURITY_QUESTIONS.map((q) => [q.key, String(form.get(`maturity_${q.key}`) ?? "")]),
       ),
+      // De qué anuncio llegó + id compartido Pixel/Conversions API (ver lib/meta-pixel.ts).
+      attribution: getAttributionPayload(),
+      metaEventId,
     };
 
     try {
@@ -169,6 +175,7 @@ export function DiagnosticoSection() {
       setResult(data);
       setPerson({ name: payload.name, companyName: payload.companyName });
       setStatus("done");
+      trackMetaEvent("Lead", { content_name: "diagnostico" }, metaEventId);
       claimReferral(payload.email);
     } catch {
       setStatus("error");

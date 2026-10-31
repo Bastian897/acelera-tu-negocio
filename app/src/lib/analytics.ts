@@ -1,3 +1,5 @@
+import { trackMetaCustomEvent } from "@/lib/meta-pixel";
+
 // Token del beacon de Cloudflare Web Analytics (gratis, sin cookies, funciona
 // aunque el sitio esté en Vercel). Sitio creado vía API el 2026-09-01
 // (site_tag 83a41c75431e47b89eef4f503257fcd9, host
@@ -32,6 +34,9 @@ export function trackCtaClick(name: string) {
   } catch {
     // gtag puede no existir aún (bloqueadores de anuncios, script no cargado) — no bloquear el clic real por esto.
   }
+  // El mismo clic como evento propio del Pixel: sirve para armar públicos de "hizo clic
+  // en el diagnóstico pero no lo envió" para remarketing.
+  trackMetaCustomEvent("CtaClick", { cta_name: name });
 }
 
 // GA4 usa cookies, así que legalmente necesita consentimiento previo (GDPR para

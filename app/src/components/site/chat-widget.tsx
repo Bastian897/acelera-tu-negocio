@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
 import { BACKEND_URL } from "@/lib/backend";
 import { trackCtaClick } from "@/lib/analytics";
+import { getAttributionPayload } from "@/lib/attribution";
+import { newMetaEventId, trackMetaEvent } from "@/lib/meta-pixel";
 import { BrandIcon } from "./icon";
 
 const STORAGE_KEY = "acelera_chat_conversation_id";
@@ -298,6 +300,7 @@ export function ChatWidget() {
     setInput("");
     setSending(true);
 
+    const metaEventId = newMetaEventId();
     try {
       const res = await fetch(`${BACKEND_URL}/api/chat`, {
         method: "POST",
@@ -308,10 +311,15 @@ export function ChatWidget() {
           name: visitorName,
           email: visitorEmail,
           phone: visitorPhone,
+          // De qué anuncio llegó + id compartido Pixel/Conversions API: el backend solo
+          // los usa si este mensaje crea el lead (ver leadCreated más abajo).
+          attribution: getAttributionPayload(),
+          metaEventId,
         }),
       });
       if (!res.ok) throw new Error("request_failed");
-      const data = (await res.json()) as { conversationId: string; reply: string; canScheduleNow?: boolean };
+      const data = (await res.json()) as { conversationId: string; reply: string; canScheduleNow?: boolean; leadCreated?: boolean };
+      if (data.leadCreated) trackMetaEvent("Lead", { content_name: "chat" }, metaEventId);
       conversationId.current = data.conversationId;
       saveConversationId(data.conversationId);
       setEntries((prev) => [
@@ -358,7 +366,8 @@ export function ChatWidget() {
   }, [availableSlots]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    // --cookie-bar-h: alto del aviso de cookies mientras está abierto (cookie-consent.tsx).
+    <div className="fixed right-6 z-50" style={{ bottom: "calc(1.5rem + var(--cookie-bar-h, 0px))" }}>
       {bubbleVisible && !open ? (
         <div className="chat-panel-in absolute bottom-[72px] right-0 w-[calc(100vw-3rem)] max-w-64">
           <div className="relative rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-3 pr-7 shadow-[var(--shadow-elevation)]">
