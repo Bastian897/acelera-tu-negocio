@@ -146,10 +146,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 // consentimiento ahí, así que GA4 (que espera ese consentimiento, ver lib/analytics.ts)
 // no se carga en esa página: no hace falta pedir nada.
 const ROUTES_WITHOUT_WIDGETS = new Set(["/evaluacion"]);
+// /agenda (landing de los anuncios de Meta) va sin chat para no distraer del formulario,
+// pero CON aviso de cookies: sin consentimiento no carga el Pixel que mide el anuncio.
+const ROUTES_WITHOUT_CHAT = new Set(["/agenda"]);
 
 function RootShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const showWidgets = !ROUTES_WITHOUT_WIDGETS.has(pathname.replace(/\/$/, "") || "/");
+  const route = pathname.replace(/\/$/, "") || "/";
+  const showWidgets = !ROUTES_WITHOUT_WIDGETS.has(route);
+  const showChat = showWidgets && !ROUTES_WITHOUT_CHAT.has(route);
   return (
     <html lang="es" data-theme="default-dark" style={{ colorScheme: "dark" }}>
       <head>
@@ -166,7 +171,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body className="acelera-site">
         {children}
-        {showWidgets ? <ChatWidget /> : null}
+        {showChat ? <ChatWidget /> : null}
         {showWidgets ? <CookieConsent /> : null}
         <Scripts />
       </body>

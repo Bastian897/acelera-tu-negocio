@@ -9,19 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
-import { Route as EvaluacionRouteImport } from './routes/evaluacion'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
+import { Route as EvaluacionRouteImport } from './routes/evaluacion'
+import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
+import { Route as AgendaRouteImport } from './routes/agenda'
+import { Route as IndexRouteImport } from './routes/index'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DiagnosticoRoute = DiagnosticoRouteImport.update({
-  id: '/diagnostico',
-  path: '/diagnostico',
+const PrivacidadRoute = PrivacidadRouteImport.update({
+  id: '/privacidad',
+  path: '/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EvaluacionRoute = EvaluacionRouteImport.update({
@@ -29,20 +25,32 @@ const EvaluacionRoute = EvaluacionRouteImport.update({
   path: '/evaluacion',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PrivacidadRoute = PrivacidadRouteImport.update({
-  id: '/privacidad',
-  path: '/privacidad',
+const DiagnosticoRoute = DiagnosticoRouteImport.update({
+  id: '/diagnostico',
+  path: '/diagnostico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgendaRoute = AgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agenda': typeof AgendaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agenda': typeof AgendaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
@@ -50,20 +58,28 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agenda': typeof AgendaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/diagnostico' | '/evaluacion' | '/privacidad'
+  fullPaths: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/diagnostico' | '/evaluacion' | '/privacidad'
-  id: '__root__' | '/' | '/diagnostico' | '/evaluacion' | '/privacidad'
+  to: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
+  id:
+    | '__root__'
+    | '/'
+    | '/agenda'
+    | '/diagnostico'
+    | '/evaluacion'
+    | '/privacidad'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgendaRoute: typeof AgendaRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
   EvaluacionRoute: typeof EvaluacionRoute
   PrivacidadRoute: typeof PrivacidadRoute
@@ -71,18 +87,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/diagnostico': {
-      id: '/diagnostico'
-      path: '/diagnostico'
-      fullPath: '/diagnostico'
-      preLoaderRoute: typeof DiagnosticoRouteImport
+    '/privacidad': {
+      id: '/privacidad'
+      path: '/privacidad'
+      fullPath: '/privacidad'
+      preLoaderRoute: typeof PrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/evaluacion': {
@@ -92,11 +101,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EvaluacionRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/privacidad': {
-      id: '/privacidad'
-      path: '/privacidad'
-      fullPath: '/privacidad'
-      preLoaderRoute: typeof PrivacidadRouteImport
+    '/diagnostico': {
+      id: '/diagnostico'
+      path: '/diagnostico'
+      fullPath: '/diagnostico'
+      preLoaderRoute: typeof DiagnosticoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agenda': {
+      id: '/agenda'
+      path: '/agenda'
+      fullPath: '/agenda'
+      preLoaderRoute: typeof AgendaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -104,6 +127,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgendaRoute: AgendaRoute,
   DiagnosticoRoute: DiagnosticoRoute,
   EvaluacionRoute: EvaluacionRoute,
   PrivacidadRoute: PrivacidadRoute,
