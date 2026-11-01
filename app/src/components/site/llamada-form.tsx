@@ -1,23 +1,22 @@
-import { useMemo, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 
 import { BACKEND_URL } from "@/lib/backend";
 import { getAttributionPayload } from "@/lib/attribution";
 import { newMetaEventId, trackMetaEvent } from "@/lib/meta-pixel";
 import { SubmitCta } from "./cta";
+import { CHIP_CLASS, SlotPicker } from "./llamada-slot-picker";
 
 // Formulario "Agenda tu llamada" (/agenda), destino de los anuncios de Meta
 // (2026-10-31). Manda todo a /api/llamada, que registra exactamente lo mismo que el
 // chat cuando termina (acelera-backend/src/routes/llamada.ts): lead, correo de
-// confirmación, dossier al equipo y ruta según facturación. La persona elige un día y
-// una hora (2026-11-01), pero todavía no se cruza con el calendario: el equipo la
-// confirma por WhatsApp. Reservar contra la disponibilidad real queda para después.
+// confirmación, dossier al equipo y ruta según facturación. Desde 2026-11-01 la persona
+// elige un horario real en que Bastian e Ignacio están libres (SlotPicker) y la
+// llamada queda agendada con invitación y Meet; si el calendario no responde, elige
+// día y hora como preferencia y el equipo la confirma por WhatsApp.
 
 const FIELD_CLASS =
   "w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)]/70 focus-visible:border-[var(--brand-accent)]";
 const LABEL_CLASS = "text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-muted)]";
-const CHIP_CLASS =
-  "flex min-h-10 cursor-pointer items-center justify-center rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-3 py-2 text-center text-sm leading-tight text-[var(--brand-ink)] transition-colors has-[:checked]:border-[var(--brand-primary)] has-[:checked]:bg-[var(--brand-primary)] has-[:checked]:text-[var(--ac-white)] has-[:focus-visible]:border-[var(--brand-accent)]";
-
 const INDUSTRY_OPTIONS = ["Marketing", "E-commerce", "Gastronomía", "Salud y estética", "Fotografía", "Otro"];
 
 // Mismas franjas que el diagnóstico más una bajo el mínimo: bajo $10M no se rechaza, el
@@ -31,45 +30,12 @@ const DECISION_OPTIONS = [
   { value: "no_decide", label: "Decide otra persona" },
 ] as const;
 
-// Próximos 10 días hábiles desde mañana, y bloques de 30 minutos de 9:00 a 18:00 sin
-// la hora de almuerzo.
-const BOOKABLE_DAYS = 10;
-const TIME_OPTIONS = [
-  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
-  "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-];
-
-type DayOption = { key: string; weekday: string; dayNumber: number; month: string; long: string };
-type Result = { track: "consultoria" | "asesoria" | "por_verificar" | null; alreadyRequested: boolean };
+type Result = {
+  track: "consultoria" | "asesoria" | "por_verificar" | null;
+  alreadyRequested: boolean;
+  booked: { whenLabel: string; meetLink: string | null } | null;
+};
 type Status = "idle" | "loading" | "done" | "error";
-
-// La página es estática (prerender): la fecha de hoy se lee recién en el navegador.
-// El snapshot es "AAAA-MM-DD" (string estable, no re-renderiza en loop); en el servidor
-// es null y los días aparecen al hidratar.
-const subscribeNoop = () => () => {};
-const dateKey = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-const todayKey = () => dateKey(new Date());
-
-function nextBusinessDays(today: string): DayOption[] {
-  const [y, m, d] = today.split("-").map(Number);
-  const cursor = new Date(y, m - 1, d);
-  const days: DayOption[] = [];
-  while (days.length < BOOKABLE_DAYS) {
-    cursor.setDate(cursor.getDate() + 1);
-    const dow = cursor.getDay();
-    if (dow === 0 || dow === 6) continue;
-    const weekday = cursor.toLocaleDateString("es-CL", { weekday: "short" }).replace(".", "");
-    days.push({
-      key: dateKey(cursor),
-      weekday: weekday.charAt(0).toUpperCase() + weekday.slice(1),
-      dayNumber: cursor.getDate(),
-      month: cursor.toLocaleDateString("es-CL", { month: "short" }).replace(".", ""),
-      long: cursor.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" }),
-    });
-  }
-  return days;
-}
 
 export function LlamadaForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -78,15 +44,16 @@ export function LlamadaForm() {
   const [firstName, setFirstName] = useState("");
   const [industry, setIndustry] = useState("");
   const [preferredTimes, setPreferredTimes] = useState("");
-  const today = useSyncExternalStore(subscribeNoop, todayKey, () => null);
-  const dayOptions = useMemo(() => (today ? nextBusinessDays(today) : []), [today]);
+  // Se incrementa para que SlotPicker vuelva a pedir horarios (el elegido se ocupó).
+  const [slotsReloadKey, setSlotsReloadKey] = useState(0);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const day = dayOptions.find((d) => d.key === form.get("day"));
-    const time = String(form.get("time") ?? "");
-    if (!day || !time) {
+    // "martes, 4 de noviembre a las 10:00"; slotIso vacío = modo respaldo (sin calendario).
+    const times = String(form.get("slotLabel") ?? "");
+    const slotIso = String(form.get("slotIso") ?? "");
+    if (!times) {
       setStatus("error");
       setErrorMessage("Elige el día y la hora de tu llamada.");
       return;
@@ -94,8 +61,6 @@ export function LlamadaForm() {
     setStatus("loading");
     setErrorMessage("");
 
-    // "martes, 4 de noviembre a las 10:00": texto libre, igual que lo que guarda el chat.
-    const times = `${day.long} a las ${time}`;
     const name = String(form.get("name") ?? "").trim();
     const metaEventId = newMetaEventId();
     const payload = {
@@ -111,6 +76,7 @@ export function LlamadaForm() {
       businessState: String(form.get("businessState") ?? ""),
       mainChallenge: String(form.get("mainChallenge") ?? ""),
       preferredTimes: times,
+      slotIso: slotIso || undefined,
       privacyAccepted: form.get("privacy") === "on",
       attribution: getAttributionPayload(),
       metaEventId,
@@ -122,13 +88,14 @@ export function LlamadaForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = (await res.json().catch(() => ({}))) as Partial<Result> & { error?: string };
+      const data = (await res.json().catch(() => ({}))) as Partial<Result> & { error?: string; slotTaken?: boolean };
       if (!res.ok) {
+        if (data.slotTaken) setSlotsReloadKey((k) => k + 1);
         setStatus("error");
         setErrorMessage(data.error ?? "No pudimos enviar tu solicitud. Intenta de nuevo en un momento.");
         return;
       }
-      setResult({ track: data.track ?? null, alreadyRequested: data.alreadyRequested === true });
+      setResult({ track: data.track ?? null, alreadyRequested: data.alreadyRequested === true, booked: data.booked ?? null });
       setFirstName(name.split(/\s+/)[0] ?? "");
       setPreferredTimes(times);
       setStatus("done");
@@ -264,32 +231,7 @@ export function LlamadaForm() {
         />
       </Field>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className={LABEL_CLASS + " mb-2"}>Elige el día de tu llamada</legend>
-        {/* 5 columnas = una semana hábil por fila (10 días, dos semanas). */}
-        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
-          {dayOptions.map((day) => (
-            <label key={day.key} className={CHIP_CLASS + " flex-col gap-0.5 px-1"}>
-              <input type="radio" name="day" value={day.key} required className="sr-only" />
-              <span className="text-xs">{day.weekday}</span>
-              <span className="text-base font-semibold">{day.dayNumber}</span>
-              <span className="text-xs">{day.month}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
-      <fieldset className="flex flex-col gap-2">
-        <legend className={LABEL_CLASS + " mb-2"}>Elige la hora</legend>
-        <div className="grid grid-cols-4 gap-2">
-          {TIME_OPTIONS.map((time) => (
-            <label key={time} className={CHIP_CLASS}>
-              <input type="radio" name="time" value={time} required className="sr-only" />
-              {time}
-            </label>
-          ))}
-        </div>
-      </fieldset>
+      <SlotPicker reloadKey={slotsReloadKey} />
 
       <label className="flex items-start gap-3 text-xs leading-relaxed text-[var(--brand-muted)]">
         <input type="checkbox" name="privacy" required className="mt-0.5 size-4 shrink-0 accent-[var(--brand-primary)]" />
@@ -312,7 +254,7 @@ export function LlamadaForm() {
         {status === "loading" ? "Enviando…" : "Agendar mi llamada"}
       </SubmitCta>
       <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
-        Te escribimos por WhatsApp para confirmar tu hora. 30 minutos, sin costo.
+        30 minutos por videollamada, sin costo.
       </p>
     </form>
   );
@@ -332,7 +274,9 @@ function Field({ label, htmlFor, children }: { label: string; htmlFor: string; c
 function LlamadaConfirmation({ result, firstName, preferredTimes }: { result: Result; firstName: string; preferredTimes: string }) {
   const greeting = firstName ? `Listo, ${firstName}.` : "Listo.";
   let body: string;
-  if (result.alreadyRequested) {
+  if (result.booked) {
+    body = `Tu llamada quedó agendada para el ${result.booked.whenLabel}. Te enviamos la invitación con el link de la videollamada.`;
+  } else if (result.alreadyRequested) {
     body = "Ya teníamos registrada tu solicitud de llamada. El equipo te va a contactar para coordinar el horario.";
   } else if (result.track === "asesoria") {
     // Bajo el mínimo de consultoría: no se promete llamada (mismo criterio que el chat).
