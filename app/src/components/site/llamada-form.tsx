@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useMemo, useState, useSyncExternalStore, type FormEvent, type ReactNode } from "react";
 
 import { BACKEND_URL } from "@/lib/backend";
 import { getAttributionPayload } from "@/lib/attribution";
@@ -8,9 +8,9 @@ import { SubmitCta } from "./cta";
 // Formulario "Agenda tu llamada" (/agenda), destino de los anuncios de Meta
 // (2026-10-31). Manda todo a /api/llamada, que registra exactamente lo mismo que el
 // chat cuando termina (acelera-backend/src/routes/llamada.ts): lead, correo de
-// confirmación, dossier al equipo y ruta según facturación. Por ahora la persona deja
-// días y franja preferidas y el equipo coordina; elegir un horario real del calendario
-// queda para una segunda etapa.
+// confirmación, dossier al equipo y ruta según facturación. La persona elige un día y
+// una hora (2026-11-01), pero todavía no se cruza con el calendario: el equipo la
+// confirma por WhatsApp. Reservar contra la disponibilidad real queda para después.
 
 const FIELD_CLASS =
   "w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)]/70 focus-visible:border-[var(--brand-accent)]";
@@ -31,27 +31,44 @@ const DECISION_OPTIONS = [
   { value: "no_decide", label: "Decide otra persona" },
 ] as const;
 
-const DAY_OPTIONS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-
-const SLOT_OPTIONS = [
-  { value: "en la mañana (9:00 a 13:00)", label: "Mañana" },
-  { value: "en la tarde (14:00 a 18:00)", label: "Tarde" },
-  { value: "a cualquier hora", label: "Cualquiera" },
+// Próximos 10 días hábiles desde mañana, y bloques de 30 minutos de 9:00 a 18:00 sin
+// la hora de almuerzo.
+const BOOKABLE_DAYS = 10;
+const TIME_OPTIONS = [
+  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
+  "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
 ];
 
+type DayOption = { key: string; weekday: string; dayNumber: number; month: string; long: string };
 type Result = { track: "consultoria" | "asesoria" | "por_verificar" | null; alreadyRequested: boolean };
 type Status = "idle" | "loading" | "done" | "error";
 
-// "martes o jueves, en la tarde (14:00 a 18:00)" — mismo formato libre que guarda el chat.
-function formatPreferredTimes(days: string[], slot: string): string {
-  const dayText =
-    days.length === DAY_OPTIONS.length
-      ? "cualquier día de la semana"
-      : days
-          .map((d) => d.toLowerCase())
-          .join(", ")
-          .replace(/, ([^,]*)$/, " o $1");
-  return `${dayText}, ${slot}`;
+// La página es estática (prerender): la fecha de hoy se lee recién en el navegador.
+// El snapshot es "AAAA-MM-DD" (string estable, no re-renderiza en loop); en el servidor
+// es null y los días aparecen al hidratar.
+const subscribeNoop = () => () => {};
+const dateKey = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const todayKey = () => dateKey(new Date());
+
+function nextBusinessDays(today: string): DayOption[] {
+  const [y, m, d] = today.split("-").map(Number);
+  const cursor = new Date(y, m - 1, d);
+  const days: DayOption[] = [];
+  while (days.length < BOOKABLE_DAYS) {
+    cursor.setDate(cursor.getDate() + 1);
+    const dow = cursor.getDay();
+    if (dow === 0 || dow === 6) continue;
+    const weekday = cursor.toLocaleDateString("es-CL", { weekday: "short" }).replace(".", "");
+    days.push({
+      key: dateKey(cursor),
+      weekday: weekday.charAt(0).toUpperCase() + weekday.slice(1),
+      dayNumber: cursor.getDate(),
+      month: cursor.toLocaleDateString("es-CL", { month: "short" }).replace(".", ""),
+      long: cursor.toLocaleDateString("es-CL", { weekday: "long", day: "numeric", month: "long" }),
+    });
+  }
+  return days;
 }
 
 export function LlamadaForm() {
@@ -61,20 +78,24 @@ export function LlamadaForm() {
   const [firstName, setFirstName] = useState("");
   const [industry, setIndustry] = useState("");
   const [preferredTimes, setPreferredTimes] = useState("");
+  const today = useSyncExternalStore(subscribeNoop, todayKey, () => null);
+  const dayOptions = useMemo(() => (today ? nextBusinessDays(today) : []), [today]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    const days = form.getAll("days").map(String);
-    if (days.length === 0) {
+    const day = dayOptions.find((d) => d.key === form.get("day"));
+    const time = String(form.get("time") ?? "");
+    if (!day || !time) {
       setStatus("error");
-      setErrorMessage("Elige al menos un día en que te acomode la llamada.");
+      setErrorMessage("Elige el día y la hora de tu llamada.");
       return;
     }
     setStatus("loading");
     setErrorMessage("");
 
-    const times = formatPreferredTimes(days, String(form.get("slot") ?? "a cualquier hora"));
+    // "martes, 4 de noviembre a las 10:00": texto libre, igual que lo que guarda el chat.
+    const times = `${day.long} a las ${time}`;
     const name = String(form.get("name") ?? "").trim();
     const metaEventId = newMetaEventId();
     const payload = {
@@ -83,8 +104,11 @@ export function LlamadaForm() {
       phone: String(form.get("phone") ?? ""),
       companyName: String(form.get("companyName") ?? ""),
       industry: industry === "Otro" ? String(form.get("industryOther") ?? "").trim() || "Otro" : industry,
+      website: String(form.get("website") ?? ""),
+      instagram: String(form.get("instagram") ?? ""),
       revenueText: String(form.get("revenue") ?? ""),
       decisionRole: String(form.get("decisionRole") ?? ""),
+      businessState: String(form.get("businessState") ?? ""),
       mainChallenge: String(form.get("mainChallenge") ?? ""),
       preferredTimes: times,
       privacyAccepted: form.get("privacy") === "on",
@@ -169,6 +193,25 @@ export function LlamadaForm() {
         </Field>
       </div>
 
+      {/* Opcionales: no todo negocio tiene sitio o Instagram. */}
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="Página web (si tienes)" htmlFor="website">
+          <input
+            id="website"
+            name="website"
+            type="text"
+            inputMode="url"
+            autoComplete="url"
+            autoCapitalize="none"
+            placeholder="tuempresa.cl"
+            className={FIELD_CLASS + " h-11"}
+          />
+        </Field>
+        <Field label="Instagram del negocio (si tienes)" htmlFor="instagram">
+          <input id="instagram" name="instagram" type="text" autoCapitalize="none" placeholder="@tuempresa" className={FIELD_CLASS + " h-11"} />
+        </Field>
+      </div>
+
       <Field label="Facturación mensual" htmlFor="revenue">
         <select id="revenue" name="revenue" required defaultValue="" className={FIELD_CLASS + " h-11"}>
           <option value="" disabled>
@@ -194,37 +237,55 @@ export function LlamadaForm() {
         </div>
       </fieldset>
 
-      <Field label="¿Qué te gustaría resolver en tu negocio?" htmlFor="mainChallenge">
+      <Field label="¿Cómo describirías el estado actual de tu negocio?" htmlFor="businessState">
+        <textarea
+          id="businessState"
+          name="businessState"
+          required
+          rows={3}
+          maxLength={1500}
+          placeholder="Ej: llevamos 4 años, vendemos bien, pero el equipo está colapsado y yo estoy metido en todo."
+          className={FIELD_CLASS + " resize-none py-3"}
+        />
+      </Field>
+
+      <Field
+        label="¿Cuáles son los principales dolores en tu negocio, qué has intentado y cuáles fueron los resultados?"
+        htmlFor="mainChallenge"
+      >
         <textarea
           id="mainChallenge"
           name="mainChallenge"
           required
-          rows={3}
-          maxLength={500}
-          placeholder="Ej: vendemos bien, pero no sabemos cuánto ganamos realmente ni dónde se nos va la plata."
+          rows={4}
+          maxLength={1500}
+          placeholder="Ej: no sabemos cuánto ganamos realmente. Probamos con un contador externo y planillas, pero seguimos sin números claros."
           className={FIELD_CLASS + " resize-none py-3"}
         />
       </Field>
 
       <fieldset className="flex flex-col gap-2">
-        <legend className={LABEL_CLASS + " mb-2"}>¿Qué días te acomoda la llamada?</legend>
-        <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
-          {DAY_OPTIONS.map((day) => (
-            <label key={day} className={CHIP_CLASS}>
-              <input type="checkbox" name="days" value={day} className="sr-only" />
-              {day}
+        <legend className={LABEL_CLASS + " mb-2"}>Elige el día de tu llamada</legend>
+        {/* 5 columnas = una semana hábil por fila (10 días, dos semanas). */}
+        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+          {dayOptions.map((day) => (
+            <label key={day.key} className={CHIP_CLASS + " flex-col gap-0.5 px-1"}>
+              <input type="radio" name="day" value={day.key} required className="sr-only" />
+              <span className="text-xs">{day.weekday}</span>
+              <span className="text-base font-semibold">{day.dayNumber}</span>
+              <span className="text-xs">{day.month}</span>
             </label>
           ))}
         </div>
       </fieldset>
 
       <fieldset className="flex flex-col gap-2">
-        <legend className={LABEL_CLASS + " mb-2"}>¿En qué horario?</legend>
-        <div className="grid grid-cols-3 gap-2">
-          {SLOT_OPTIONS.map((slot) => (
-            <label key={slot.value} className={CHIP_CLASS}>
-              <input type="radio" name="slot" value={slot.value} required className="sr-only" />
-              {slot.label}
+        <legend className={LABEL_CLASS + " mb-2"}>Elige la hora</legend>
+        <div className="grid grid-cols-4 gap-2">
+          {TIME_OPTIONS.map((time) => (
+            <label key={time} className={CHIP_CLASS}>
+              <input type="radio" name="time" value={time} required className="sr-only" />
+              {time}
             </label>
           ))}
         </div>
@@ -251,7 +312,7 @@ export function LlamadaForm() {
         {status === "loading" ? "Enviando…" : "Agendar mi llamada"}
       </SubmitCta>
       <p className="text-xs leading-relaxed text-[var(--brand-muted)]">
-        Te escribimos por WhatsApp o correo para confirmar el horario. 30 minutos, sin costo.
+        Te escribimos por WhatsApp para confirmar tu hora. 30 minutos, sin costo.
       </p>
     </form>
   );
@@ -277,7 +338,7 @@ function LlamadaConfirmation({ result, firstName, preferredTimes }: { result: Re
     // Bajo el mínimo de consultoría: no se promete llamada (mismo criterio que el chat).
     body = "Recibimos tu solicitud. El equipo va a revisar tu caso y te escribirá con la mejor forma de ayudarte.";
   } else {
-    body = `Recibimos tu solicitud. Te escribiremos por WhatsApp o correo para confirmar la hora: nos dijiste que te acomoda ${preferredTimes}.`;
+    body = `Recibimos tu solicitud para el ${preferredTimes}. Te escribiremos por WhatsApp para confirmarla.`;
   }
   return (
     <div role="status" className="rounded-[var(--ac-radius-lg)] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-8">
