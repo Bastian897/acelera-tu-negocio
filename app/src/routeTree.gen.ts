@@ -9,25 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PrivacidadRouteImport } from './routes/privacidad'
-import { Route as EvaluacionRouteImport } from './routes/evaluacion'
-import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
-import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AgendaRouteImport } from './routes/agenda'
+import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
+import { Route as EvaluacionRouteImport } from './routes/evaluacion'
+import { Route as PrivacidadRouteImport } from './routes/privacidad'
+import { Route as SolicitudRouteImport } from './routes/solicitud'
 
-const PrivacidadRoute = PrivacidadRouteImport.update({
-  id: '/privacidad',
-  path: '/privacidad',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EvaluacionRoute = EvaluacionRouteImport.update({
-  id: '/evaluacion',
-  path: '/evaluacion',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DiagnosticoRoute = DiagnosticoRouteImport.update({
-  id: '/diagnostico',
-  path: '/diagnostico',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AgendaRoute = AgendaRouteImport.update({
@@ -35,9 +26,24 @@ const AgendaRoute = AgendaRouteImport.update({
   path: '/agenda',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const DiagnosticoRoute = DiagnosticoRouteImport.update({
+  id: '/diagnostico',
+  path: '/diagnostico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EvaluacionRoute = EvaluacionRouteImport.update({
+  id: '/evaluacion',
+  path: '/evaluacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacidadRoute = PrivacidadRouteImport.update({
+  id: '/privacidad',
+  path: '/privacidad',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolicitudRoute = SolicitudRouteImport.update({
+  id: '/solicitud',
+  path: '/solicitud',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
+  '/solicitud': typeof SolicitudRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
+  '/solicitud': typeof SolicitudRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,12 +70,25 @@ export interface FileRoutesById {
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
+  '/solicitud': typeof SolicitudRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
+  fullPaths:
+    | '/'
+    | '/agenda'
+    | '/diagnostico'
+    | '/evaluacion'
+    | '/privacidad'
+    | '/solicitud'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
+  to:
+    | '/'
+    | '/agenda'
+    | '/diagnostico'
+    | '/evaluacion'
+    | '/privacidad'
+    | '/solicitud'
   id:
     | '__root__'
     | '/'
@@ -75,6 +96,7 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/evaluacion'
     | '/privacidad'
+    | '/solicitud'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -83,29 +105,16 @@ export interface RootRouteChildren {
   DiagnosticoRoute: typeof DiagnosticoRoute
   EvaluacionRoute: typeof EvaluacionRoute
   PrivacidadRoute: typeof PrivacidadRoute
+  SolicitudRoute: typeof SolicitudRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/privacidad': {
-      id: '/privacidad'
-      path: '/privacidad'
-      fullPath: '/privacidad'
-      preLoaderRoute: typeof PrivacidadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/evaluacion': {
-      id: '/evaluacion'
-      path: '/evaluacion'
-      fullPath: '/evaluacion'
-      preLoaderRoute: typeof EvaluacionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/diagnostico': {
-      id: '/diagnostico'
-      path: '/diagnostico'
-      fullPath: '/diagnostico'
-      preLoaderRoute: typeof DiagnosticoRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/agenda': {
@@ -115,11 +124,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgendaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/diagnostico': {
+      id: '/diagnostico'
+      path: '/diagnostico'
+      fullPath: '/diagnostico'
+      preLoaderRoute: typeof DiagnosticoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/evaluacion': {
+      id: '/evaluacion'
+      path: '/evaluacion'
+      fullPath: '/evaluacion'
+      preLoaderRoute: typeof EvaluacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacidad': {
+      id: '/privacidad'
+      path: '/privacidad'
+      fullPath: '/privacidad'
+      preLoaderRoute: typeof PrivacidadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solicitud': {
+      id: '/solicitud'
+      path: '/solicitud'
+      fullPath: '/solicitud'
+      preLoaderRoute: typeof SolicitudRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -131,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   DiagnosticoRoute: DiagnosticoRoute,
   EvaluacionRoute: EvaluacionRoute,
   PrivacidadRoute: PrivacidadRoute,
+  SolicitudRoute: SolicitudRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

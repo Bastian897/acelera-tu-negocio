@@ -3,9 +3,10 @@ import { LlamadaForm } from "./llamada-form";
 import { SectionKicker } from "./section-kicker";
 import { siteContent } from "../../lib/site-content";
 
-// Landing de los anuncios de Meta (/agenda, ver routes/agenda.tsx): una sola acción,
-// agendar la llamada de calibración, sin menú. Fotos de Felipe e Ignacio porque son
-// quienes aparecen en los anuncios.
+// Landing de los anuncios de Meta (/agenda y /solicitud, ver routes/): una sola acción,
+// pedir la llamada de calibración, sin menú. /solicitud es la misma página sin elegir
+// horario (withAgenda={false}): es la que van a usar los anuncios. Fotos de Felipe e
+// Ignacio porque son quienes aparecen en los anuncios.
 const CALL_POINTS = [
   "Revisamos tus números y dónde está la fricción real de tu negocio.",
   "Te decimos, sin vueltas, si podemos ayudarte y cómo.",
@@ -17,7 +18,7 @@ const HOSTS = [
   { photo: "/assets/team/ignacio-ruiz-card.webp", name: siteContent.founders.founder2Name, detail: siteContent.founders.founder2Bio },
 ];
 
-export function AgendaPage() {
+export function AgendaPage({ withAgenda = true }: { withAgenda?: boolean } = {}) {
   return (
     <main className="bg-[var(--brand-bg)]">
       <header className="border-b border-[var(--brand-border)] bg-white">
@@ -35,7 +36,7 @@ export function AgendaPage() {
           <div className="md:col-start-1 md:row-start-1 md:pt-4">
             <SectionKicker>Llamada de calibración</SectionKicker>
             <h1 className="text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
-              {siteContent.contact.heading}
+              {withAgenda ? siteContent.contact.heading : "Solicita tu llamada de calibración."}
             </h1>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
               {siteContent.contact.paragraph}
@@ -43,7 +44,7 @@ export function AgendaPage() {
           </div>
 
           <div className="self-start rounded-[var(--ac-radius-lg)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-6 shadow-[var(--shadow-elevation)] md:col-start-2 md:row-span-2 md:row-start-1 md:p-8">
-            <LlamadaForm />
+            <LlamadaForm withAgenda={withAgenda} />
           </div>
 
           <div className="md:col-start-1 md:row-start-2">
