@@ -208,20 +208,28 @@ export function LlamadaForm({ withAgenda = true }: { withAgenda?: boolean } = {}
         </div>
       </fieldset>
 
-      <Field label="¿Cómo describirías el estado actual de tu negocio?" htmlFor="businessState">
-        <textarea
-          id="businessState"
-          name="businessState"
-          required
-          rows={3}
-          maxLength={1500}
-          placeholder="Ej: llevamos 4 años, vendemos bien, pero el equipo está colapsado y yo estoy metido en todo."
-          className={FIELD_CLASS + " resize-none py-3"}
-        />
-      </Field>
+      {/* /solicitud (ajustes de Fernando, 2026-11-02): sin esta pregunta y con una más corta
+       * sobre desafíos en vez de dolores/intentos/resultados. /agenda queda como estaba. */}
+      {withAgenda ? (
+        <Field label="¿Cómo describirías el estado actual de tu negocio?" htmlFor="businessState">
+          <textarea
+            id="businessState"
+            name="businessState"
+            required
+            rows={3}
+            maxLength={1500}
+            placeholder="Ej: llevamos 4 años, vendemos bien, pero el equipo está colapsado y yo estoy metido en todo."
+            className={FIELD_CLASS + " resize-none py-3"}
+          />
+        </Field>
+      ) : null}
 
       <Field
-        label="¿Cuáles son los principales dolores en tu negocio, qué has intentado y cuáles fueron los resultados?"
+        label={
+          withAgenda
+            ? "¿Cuáles son los principales dolores en tu negocio, qué has intentado y cuáles fueron los resultados?"
+            : "¿Cuáles son los principales desafíos de tu negocio actualmente?"
+        }
         htmlFor="mainChallenge"
       >
         <textarea
@@ -230,7 +238,11 @@ export function LlamadaForm({ withAgenda = true }: { withAgenda?: boolean } = {}
           required
           rows={4}
           maxLength={1500}
-          placeholder="Ej: no sabemos cuánto ganamos realmente. Probamos con un contador externo y planillas, pero seguimos sin números claros."
+          placeholder={
+            withAgenda
+              ? "Ej: no sabemos cuánto ganamos realmente. Probamos con un contador externo y planillas, pero seguimos sin números claros."
+              : "Ej: no sabemos cuánto ganamos realmente y el equipo depende de mí para todo."
+          }
           className={FIELD_CLASS + " resize-none py-3"}
         />
       </Field>
