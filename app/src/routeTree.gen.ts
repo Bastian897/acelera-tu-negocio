@@ -14,7 +14,6 @@ import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as EvaluacionRouteImport } from './routes/evaluacion'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
-import { Route as SolicitudRouteImport } from './routes/solicitud'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -41,11 +40,6 @@ const PrivacidadRoute = PrivacidadRouteImport.update({
   path: '/privacidad',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SolicitudRoute = SolicitudRouteImport.update({
-  id: '/solicitud',
-  path: '/solicitud',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,7 +47,6 @@ export interface FileRoutesByFullPath {
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
-  '/solicitud': typeof SolicitudRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +54,6 @@ export interface FileRoutesByTo {
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
-  '/solicitud': typeof SolicitudRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,25 +62,12 @@ export interface FileRoutesById {
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
   '/privacidad': typeof PrivacidadRoute
-  '/solicitud': typeof SolicitudRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/agenda'
-    | '/diagnostico'
-    | '/evaluacion'
-    | '/privacidad'
-    | '/solicitud'
+  fullPaths: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/agenda'
-    | '/diagnostico'
-    | '/evaluacion'
-    | '/privacidad'
-    | '/solicitud'
+  to: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
   id:
     | '__root__'
     | '/'
@@ -96,7 +75,6 @@ export interface FileRouteTypes {
     | '/diagnostico'
     | '/evaluacion'
     | '/privacidad'
-    | '/solicitud'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -105,7 +83,6 @@ export interface RootRouteChildren {
   DiagnosticoRoute: typeof DiagnosticoRoute
   EvaluacionRoute: typeof EvaluacionRoute
   PrivacidadRoute: typeof PrivacidadRoute
-  SolicitudRoute: typeof SolicitudRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -145,13 +122,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacidadRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/solicitud': {
-      id: '/solicitud'
-      path: '/solicitud'
-      fullPath: '/solicitud'
-      preLoaderRoute: typeof SolicitudRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -161,7 +131,6 @@ const rootRouteChildren: RootRouteChildren = {
   DiagnosticoRoute: DiagnosticoRoute,
   EvaluacionRoute: EvaluacionRoute,
   PrivacidadRoute: PrivacidadRoute,
-  SolicitudRoute: SolicitudRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

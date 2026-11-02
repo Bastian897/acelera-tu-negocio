@@ -14,7 +14,7 @@ import { CHIP_CLASS, SlotPicker } from "./llamada-slot-picker";
 // llamada queda agendada con invitación y Meet; si el calendario no responde, elige
 // día y hora como preferencia y el equipo la confirma por WhatsApp.
 //
-// withAgenda={false} (/solicitud, 2026-11-02, recomendación de Fernando para los ads):
+// withAgenda={false} (lo que publica /agenda desde 2026-11-02, recomendación de Fernando para los ads):
 // mismo formulario sin elegir horario. El equipo califica el caso primero y después
 // coordina la llamada por WhatsApp, para que no se llene la agenda de gente que no llega.
 
@@ -208,8 +208,8 @@ export function LlamadaForm({ withAgenda = true }: { withAgenda?: boolean } = {}
         </div>
       </fieldset>
 
-      {/* /solicitud (ajustes de Fernando, 2026-11-02): sin esta pregunta y con una más corta
-       * sobre desafíos en vez de dolores/intentos/resultados. /agenda queda como estaba. */}
+      {/* Sin agenda (ajustes de Fernando, 2026-11-02): sin esta pregunta y con una más corta
+       * sobre desafíos en vez de dolores/intentos/resultados. */}
       {withAgenda ? (
         <Field label="¿Cómo describirías el estado actual de tu negocio?" htmlFor="businessState">
           <textarea
@@ -302,7 +302,7 @@ function LlamadaConfirmation({ result, firstName, preferredTimes }: { result: Re
   } else if (preferredTimes) {
     body = `Recibimos tu solicitud para el ${preferredTimes}. Te escribiremos por WhatsApp para confirmarla.`;
   } else {
-    // Formulario sin agenda (/solicitud): no hubo horario elegido.
+    // Formulario sin agenda (/agenda publicada): no hubo horario elegido.
     body = "Recibimos tu solicitud. El equipo va a revisar tu caso y te escribirá por WhatsApp para coordinar la llamada.";
   }
   return (

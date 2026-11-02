@@ -3,9 +3,9 @@ import { LlamadaForm } from "./llamada-form";
 import { SectionKicker } from "./section-kicker";
 import { siteContent } from "../../lib/site-content";
 
-// Landing de los anuncios de Meta (/agenda y /solicitud, ver routes/): una sola acción,
-// pedir la llamada de calibración, sin menú. /solicitud es la misma página sin elegir
-// horario (withAgenda={false}): es la que van a usar los anuncios. Fotos de Felipe e
+// Landing de los anuncios de Meta (/agenda, ver routes/agenda.tsx): una sola acción,
+// pedir la llamada de calibración, sin menú. Publicada con withAgenda={false} (sin elegir
+// horario, 2026-11-02); withAgenda={true} es la versión con agenda directa, guardada. Fotos de Felipe e
 // Ignacio porque son quienes aparecen en los anuncios.
 const CALL_POINTS = [
   "Revisamos tus números y dónde está la fricción real de tu negocio.",
