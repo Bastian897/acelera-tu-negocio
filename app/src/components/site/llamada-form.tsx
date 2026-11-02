@@ -162,7 +162,7 @@ export function LlamadaForm() {
 
       {/* Opcionales: no todo negocio tiene sitio o Instagram. */}
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Página web (si tienes)" htmlFor="website">
+        <Field label="Página web (opcional)" htmlFor="website">
           <input
             id="website"
             name="website"
@@ -174,7 +174,7 @@ export function LlamadaForm() {
             className={FIELD_CLASS + " h-11"}
           />
         </Field>
-        <Field label="Instagram del negocio (si tienes)" htmlFor="instagram">
+        <Field label="Instagram (opcional)" htmlFor="instagram">
           <input id="instagram" name="instagram" type="text" autoCapitalize="none" placeholder="@tuempresa" className={FIELD_CLASS + " h-11"} />
         </Field>
       </div>
