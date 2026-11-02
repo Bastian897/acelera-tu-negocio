@@ -45,7 +45,7 @@ function LogoTile({ logo }: { logo: string }) {
   return (
     <div className="flex aspect-square w-32 shrink-0 items-center justify-center rounded-[16px] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-4 sm:w-36">
       <img
-        src={`assets/clients/${logo}.webp`}
+        src={`/assets/clients/${logo}.webp`}
         alt=""
         loading="lazy"
         className="h-full w-full object-contain"

@@ -18,23 +18,23 @@ import { CHIP_CLASS, SlotPicker } from "./llamada-slot-picker";
 // mismo formulario sin elegir horario. El equipo califica el caso primero y después
 // coordina la llamada por WhatsApp, para que no se llene la agenda de gente que no llega.
 
-const FIELD_CLASS =
+export const FIELD_CLASS =
   "w-full rounded-[10px] border border-[var(--brand-border)] bg-[var(--brand-surface)] px-4 text-sm text-[var(--brand-ink)] outline-none placeholder:text-[var(--brand-muted)]/70 focus-visible:border-[var(--brand-accent)]";
-const LABEL_CLASS = "text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-muted)]";
-const INDUSTRY_OPTIONS = ["Marketing", "E-commerce", "Gastronomía", "Salud y estética", "Fotografía", "Otro"];
+export const LABEL_CLASS = "text-[11px] font-semibold uppercase tracking-[0.15em] text-[var(--brand-muted)]";
+export const INDUSTRY_OPTIONS = ["Marketing", "E-commerce", "Gastronomía", "Salud y estética", "Fotografía", "Otro"];
 
 // Mismas franjas que el diagnóstico más una bajo el mínimo: bajo $10M no se rechaza, el
 // backend lo deja en ruta "asesoría" para que el equipo evalúe. El texto tiene que
 // seguir leyéndose con parseMonthlyRevenueClp del backend (lo cubre tests/llamada.test.ts).
-const REVENUE_OPTIONS = ["Menos de $10M CLP", "$10M - $20M CLP", "$20M - $50M CLP", "Sobre $50M CLP"];
+export const REVENUE_OPTIONS = ["Menos de $10M CLP", "$10M - $20M CLP", "$20M - $50M CLP", "Sobre $50M CLP"];
 
-const DECISION_OPTIONS = [
+export const DECISION_OPTIONS = [
   { value: "decide", label: "Sí, yo decido" },
   { value: "comparte", label: "Lo decido con un socio" },
   { value: "no_decide", label: "Decide otra persona" },
 ] as const;
 
-type Result = {
+export type Result = {
   track: "consultoria" | "asesoria" | "por_verificar" | null;
   alreadyRequested: boolean;
   booked: { whenLabel: string; meetLink: string | null } | null;
@@ -82,6 +82,8 @@ export function LlamadaForm({ withAgenda = true }: { withAgenda?: boolean } = {}
       preferredTimes: times,
       slotIso: slotIso || undefined,
       privacyAccepted: form.get("privacy") === "on",
+      // Versión A de la landing; la B es /postula (postula-form.tsx). Para comparar A/B.
+      landingVariant: "agenda",
       attribution: getAttributionPayload(),
       metaEventId,
     };
@@ -278,7 +280,7 @@ export function LlamadaForm({ withAgenda = true }: { withAgenda?: boolean } = {}
   );
 }
 
-function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: ReactNode }) {
+export function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={htmlFor} className={LABEL_CLASS}>
@@ -289,7 +291,7 @@ function Field({ label, htmlFor, children }: { label: string; htmlFor: string; c
   );
 }
 
-function LlamadaConfirmation({ result, firstName, preferredTimes }: { result: Result; firstName: string; preferredTimes: string }) {
+export function LlamadaConfirmation({ result, firstName, preferredTimes }: { result: Result; firstName: string; preferredTimes: string }) {
   const greeting = firstName ? `Listo, ${firstName}.` : "Listo.";
   let body: string;
   if (result.booked) {

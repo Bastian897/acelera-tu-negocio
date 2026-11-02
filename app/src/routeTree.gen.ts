@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as DiagnosticoRouteImport } from './routes/diagnostico'
 import { Route as EvaluacionRouteImport } from './routes/evaluacion'
+import { Route as PostulaRouteImport } from './routes/postula'
 import { Route as PrivacidadRouteImport } from './routes/privacidad'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const EvaluacionRoute = EvaluacionRouteImport.update({
   path: '/evaluacion',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PostulaRoute = PostulaRouteImport.update({
+  id: '/postula',
+  path: '/postula',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacidadRoute = PrivacidadRouteImport.update({
   id: '/privacidad',
   path: '/privacidad',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/agenda': typeof AgendaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
+  '/postula': typeof PostulaRoute
   '/privacidad': typeof PrivacidadRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/agenda': typeof AgendaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
+  '/postula': typeof PostulaRoute
   '/privacidad': typeof PrivacidadRoute
 }
 export interface FileRoutesById {
@@ -61,19 +69,33 @@ export interface FileRoutesById {
   '/agenda': typeof AgendaRoute
   '/diagnostico': typeof DiagnosticoRoute
   '/evaluacion': typeof EvaluacionRoute
+  '/postula': typeof PostulaRoute
   '/privacidad': typeof PrivacidadRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
+  fullPaths:
+    | '/'
+    | '/agenda'
+    | '/diagnostico'
+    | '/evaluacion'
+    | '/postula'
+    | '/privacidad'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agenda' | '/diagnostico' | '/evaluacion' | '/privacidad'
+  to:
+    | '/'
+    | '/agenda'
+    | '/diagnostico'
+    | '/evaluacion'
+    | '/postula'
+    | '/privacidad'
   id:
     | '__root__'
     | '/'
     | '/agenda'
     | '/diagnostico'
     | '/evaluacion'
+    | '/postula'
     | '/privacidad'
   fileRoutesById: FileRoutesById
 }
@@ -82,6 +104,7 @@ export interface RootRouteChildren {
   AgendaRoute: typeof AgendaRoute
   DiagnosticoRoute: typeof DiagnosticoRoute
   EvaluacionRoute: typeof EvaluacionRoute
+  PostulaRoute: typeof PostulaRoute
   PrivacidadRoute: typeof PrivacidadRoute
 }
 
@@ -115,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EvaluacionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/postula': {
+      id: '/postula'
+      path: '/postula'
+      fullPath: '/postula'
+      preLoaderRoute: typeof PostulaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacidad': {
       id: '/privacidad'
       path: '/privacidad'
@@ -130,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgendaRoute: AgendaRoute,
   DiagnosticoRoute: DiagnosticoRoute,
   EvaluacionRoute: EvaluacionRoute,
+  PostulaRoute: PostulaRoute,
   PrivacidadRoute: PrivacidadRoute,
 }
 export const routeTree = rootRouteImport
