@@ -338,9 +338,6 @@ export function EvaluacionForm() {
                 </div>
               </div>
 
-              {/* Trampa para bots: invisible para personas, un bot la rellena. */}
-              <input type="text" name="company_url" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 opacity-0" />
-
               <p className="rounded-[12px] bg-[var(--ac-blue-soft)] px-4 py-3 text-sm leading-relaxed text-[var(--brand-ink)]">
                 Todas las preguntas son obligatorias, salvo las marcadas como <strong>(opcional)</strong>. Si algo no
                 aplica a tu caso o no conoces el dato, usa los botones <strong>No aplica</strong> o <strong>No lo sé</strong>.
