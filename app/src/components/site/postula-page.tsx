@@ -1,3 +1,5 @@
+import { type ReactNode } from "react";
+
 import { ClientsSection } from "./clients-section";
 import { CTA_PILL_CLASS, CheckList, FilterPill, HostCards, HostsStack, LandingHeader } from "./landing-ui";
 import { PostulaForm } from "./postula-form";
@@ -27,6 +29,16 @@ type Case = { name: string; company: string; result: string; quote: string };
 const CASES: Case[] = [];
 
 const INSTAGRAM_ACELERA = "https://www.instagram.com/acelera.cl/";
+const INSTAGRAM_IGNACIO = "https://instagram.com/ignacioruizcarrasco";
+const INSTAGRAM_FELIPE = "https://instagram.com/nancupil.oficial";
+
+function FaqLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-[var(--brand-ink)] underline underline-offset-4">
+      {children}
+    </a>
+  );
+}
 const ANCHOR = "#postular";
 
 const SYMPTOMS = [
@@ -70,11 +82,18 @@ const FAQ = [
   },
   {
     q: "¿Qué pasa si mi empresa factura menos de $10M al mes?",
-    a: "Por ahora este proceso es solo para empresas sobre $10M al mes. Si estás bajo esa cifra, en el Instagram de Acelera compartimos gratis cómo ordenar los números y crecer.",
+    a: (
+      <>
+        Este proceso es para empresas sobre $10M al mes, pero hay dos caminos para ti. En los Instagram de{" "}
+        <FaqLink href={INSTAGRAM_IGNACIO}>Ignacio</FaqLink> y <FaqLink href={INSTAGRAM_FELIPE}>Felipe</FaqLink> hay
+        contenido gratis para emprendedores. Y en el de Ignacio encuentras su servicio de asesorías, pensado para
+        negocios que todavía facturan menos de esa cifra.
+      </>
+    ),
   },
   {
     q: "¿Trabajan solo con empresas de Santiago?",
-    a: "No. Las llamadas y el trabajo se hacen por videollamada, así que atendemos empresas de todo Chile.",
+    a: "No, trabajamos con empresas de todo Chile. La llamada y gran parte del trabajo son por videollamada, y cuando el proyecto lo requiere hacemos visitas a terreno para un mejor resultado.",
   },
 ];
 
@@ -99,7 +118,6 @@ export function PostulaPage() {
           <a href={ANCHOR} className={CTA_PILL_CLASS + " mt-8"}>
             <span className="md:hidden">Postula a tu llamada</span>
             <span className="hidden md:inline">Postula a una llamada de calibración</span>
-            <span aria-hidden="true">→</span>
           </a>
           <p className="mt-4 text-xs text-[var(--dark-muted)]">30 minutos · Sin costo · Revisamos cada postulación</p>
           <div className="mt-12">
@@ -265,7 +283,6 @@ export function PostulaPage() {
         </h2>
         <a href={ANCHOR} className={CTA_PILL_CLASS + " mt-8"}>
           Postula a una llamada de calibración
-          <span aria-hidden="true">→</span>
         </a>
       </section>
     </main>
