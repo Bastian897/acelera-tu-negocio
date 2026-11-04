@@ -15,7 +15,7 @@ import { SectionKicker } from "./section-kicker";
 //  3. Síntomas ("si eres el que más trabaja en tu empresa, ese es el problema").
 //  4. Qué ordenamos (3 frentes).
 //  5. Quiénes somos.
-//  6. Es para ti / no es para ti (el que no califica se va solo, al Instagram de Felipe
+//  6. Es para ti / no es para ti (el que no califica se va solo, al Instagram de Acelera
 //     y NO al diagnóstico, que también dispara Lead y ensuciaría la optimización).
 //  7. Postulación (con el "qué pasa después" al lado) → FAQ → cierre.
 //
@@ -26,7 +26,7 @@ import { SectionKicker } from "./section-kicker";
 type Case = { name: string; company: string; result: string; quote: string };
 const CASES: Case[] = [];
 
-const INSTAGRAM_FELIPE = "https://instagram.com/nancupil.oficial";
+const INSTAGRAM_ACELERA = "https://www.instagram.com/acelera.cl/";
 const ANCHOR = "#postular";
 
 const SYMPTOMS = [
@@ -55,7 +55,7 @@ const NOT_FOR_YOU = [
 
 const NEXT_STEPS = [
   { title: "Postulas", body: "Unas preguntas sobre tu negocio. Menos de 2 minutos." },
-  { title: "Revisamos tu caso", body: "Si calificas, te escribimos por WhatsApp para coordinar." },
+  { title: "Revisamos tu caso", body: "Luego te contactamos por WhatsApp para coordinar la llamada." },
   { title: "Llamada de calibración", body: "30 minutos, sin costo. Te decimos sin vueltas si podemos ayudarte." },
 ];
 
@@ -70,7 +70,7 @@ const FAQ = [
   },
   {
     q: "¿Qué pasa si mi empresa factura menos de $10M al mes?",
-    a: "Por ahora este proceso es solo para empresas sobre $10M al mes. Si estás bajo esa cifra, en el Instagram de Felipe compartimos gratis cómo ordenar los números y crecer.",
+    a: "Por ahora este proceso es solo para empresas sobre $10M al mes. Si estás bajo esa cifra, en el Instagram de Acelera compartimos gratis cómo ordenar los números y crecer.",
   },
   {
     q: "¿Trabajan solo con empresas de Santiago?",
@@ -180,12 +180,12 @@ export function PostulaPage() {
               <p className="mt-6 text-sm leading-relaxed text-[var(--brand-muted)]">
                 ¿Recién partiendo?{" "}
                 <a
-                  href={INSTAGRAM_FELIPE}
+                  href={INSTAGRAM_ACELERA}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-[var(--brand-ink)] underline underline-offset-4"
                 >
-                  Sigue a Felipe en Instagram
+                  Sigue a Acelera en Instagram
                 </a>
                 : compartimos gratis cómo ordenar los números y crecer.
               </p>

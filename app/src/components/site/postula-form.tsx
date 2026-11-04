@@ -43,20 +43,37 @@ const BUDGET_OPTIONS = [
 ];
 const TIMING_OPTIONS = ["Este mes", "En 1 a 3 meses", ONLY_EXPLORING];
 
-// Respuestas que dejan fuera, por paso. REVENUE_OPTIONS[0] = "Menos de $10M CLP".
-function isDisqualified(step: number, form: FormData): boolean {
-  if (step === 0) return form.get("revenue") === REVENUE_OPTIONS[0];
-  if (step === 1) {
-    return (
-      form.get("decisionRole") === "no_decide" ||
-      form.get("budget") === NO_BUDGET ||
-      form.get("timing") === ONLY_EXPLORING
+// Respuestas que dejan fuera, por paso, cada una con el motivo que se le muestra a la
+// persona (pedido de Bastian, 2026-11-04: que entienda por qué, citando su respuesta).
+// REVENUE_OPTIONS[0] = "Menos de $10M CLP". Lista vacía = califica.
+function disqualifyReasons(step: number, form: FormData): string[] {
+  const reasons: string[] = [];
+  if (step === 0 && form.get("revenue") === REVENUE_OPTIONS[0]) {
+    reasons.push(
+      "Nos contaste que tu empresa factura menos de $10M al mes. Este proceso está pensado para empresas que ya superan esa cifra, que es donde nuestro trabajo tiene el impacto que justifica la inversión.",
     );
   }
-  return false;
+  if (step === 1) {
+    if (form.get("decisionRole") === "no_decide") {
+      reasons.push(
+        "Nos contaste que las decisiones las toma otra persona. Para que la llamada sirva necesitamos conversar con quien decide: si quieres, compártele esta página.",
+      );
+    }
+    if (form.get("budget") === NO_BUDGET) {
+      reasons.push(
+        "Nos contaste que hoy no tienes presupuesto para invertir. Trabajar con nosotros requiere una inversión, así que preferimos no quitarte tiempo ahora.",
+      );
+    }
+    if (form.get("timing") === ONLY_EXPLORING) {
+      reasons.push(
+        "Nos contaste que solo estás explorando. Esta llamada es para quienes quieren empezar pronto; cuando sea tu momento, aquí vamos a estar.",
+      );
+    }
+  }
+  return reasons;
 }
 
-const FELIPE_INSTAGRAM = "https://instagram.com/nancupil.oficial";
+const ACELERA_INSTAGRAM = "https://www.instagram.com/acelera.cl/";
 const STEPS = ["Tu negocio", "Tu momento", "Tus datos"] as const;
 
 type Status = "idle" | "loading" | "done" | "error";
@@ -68,7 +85,9 @@ export function PostulaForm() {
   const [result, setResult] = useState<Result | null>(null);
   const [firstName, setFirstName] = useState("");
   const [industry, setIndustry] = useState("");
-  const [disqualified, setDisqualified] = useState(false);
+  // Motivos por los que no califica; vacío = sigue en el formulario.
+  const [reasons, setReasons] = useState<string[]>([]);
+  const disqualified = reasons.length > 0;
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const topRef = useRef<HTMLDivElement | null>(null);
 
@@ -105,9 +124,10 @@ export function PostulaForm() {
     // y bloquearía el "Siguiente". Se valida a mano, paso por paso.
     if (!stepIsValid(step)) return;
     if (step < STEPS.length - 1) {
-      if (isDisqualified(step, new FormData(event.currentTarget))) {
+      const found = disqualifyReasons(step, new FormData(event.currentTarget));
+      if (found.length > 0) {
         trackCtaClick(`postula_no_califica_paso_${step + 1}`);
-        setDisqualified(true);
+        setReasons(found);
         topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
@@ -182,25 +202,40 @@ export function PostulaForm() {
       <p className="text-2xl font-semibold tracking-tighter text-[var(--brand-ink)]">
         Gracias por tu interés.
       </p>
-      <p className="mt-3 text-sm leading-relaxed text-[var(--brand-muted)]">
-        Por lo que nos cuentas, hoy no es el momento para este proceso: está pensado para empresas
-        que facturan sobre $10M al mes y están listas para invertir en crecer ahora.
+      <p className="mt-2 text-sm leading-relaxed text-[var(--brand-muted)]">
+        Hoy este proceso no es el indicado para ti, y preferimos decírtelo claro:
       </p>
-      <p className="mt-3 text-sm leading-relaxed text-[var(--brand-muted)]">
-        Mientras tanto, en el Instagram de Felipe compartimos gratis cómo ordenar los números y
+      <ul className="mt-6 flex flex-col gap-4">
+        {reasons.map((reason) => (
+          <li
+            key={reason}
+            className="flex gap-4 rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-surface)] p-4 text-sm leading-relaxed text-[var(--brand-ink)]"
+          >
+            <span
+              aria-hidden="true"
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[var(--brand-border)] text-xs font-bold text-[var(--brand-muted)]"
+            >
+              i
+            </span>
+            {reason}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 text-sm leading-relaxed text-[var(--brand-muted)]">
+        Mientras tanto, en el Instagram de Acelera compartimos gratis cómo ordenar los números y
         hacer crecer un negocio.
       </p>
       <a
-        href={FELIPE_INSTAGRAM}
+        href={ACELERA_INSTAGRAM}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-6 inline-flex items-center justify-center rounded-[999px] bg-[var(--brand-primary)] px-6 py-3 text-sm font-medium text-[var(--ac-white)] transition-transform duration-150 hover:brightness-110 active:scale-[0.97]"
       >
-        Ver el Instagram de Felipe
+        Sigue a Acelera en Instagram
       </a>
       <button
         type="button"
-        onClick={() => setDisqualified(false)}
+        onClick={() => setReasons([])}
         className="mt-4 block text-sm text-[var(--brand-muted)] underline-offset-4 hover:underline"
       >
         Me equivoqué en una respuesta
