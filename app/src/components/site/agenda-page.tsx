@@ -1,87 +1,76 @@
 import { ClientsSection } from "./clients-section";
+import { CheckList, FilterPill, HostCards, HostsStack, LandingHeader } from "./landing-ui";
 import { LlamadaForm } from "./llamada-form";
 import { SectionKicker } from "./section-kicker";
 import { siteContent } from "../../lib/site-content";
 
-// Landing de los anuncios de Meta (/agenda, ver routes/agenda.tsx): una sola acción,
+// Landing A de los anuncios de Meta (/agenda, ver routes/agenda.tsx): una sola acción,
 // pedir la llamada de calibración, sin menú. Publicada con withAgenda={false} (sin elegir
-// horario, 2026-11-02); withAgenda={true} es la versión con agenda directa, guardada. Fotos de Felipe e
-// Ignacio porque son quienes aparecen en los anuncios.
+// horario, 2026-11-02); withAgenda={true} es la versión con agenda directa, guardada.
+//
+// Rediseño 2026-11-04 (feedback de Fernando: el formulario tiene que verse en la primera
+// pantalla y hay demasiado texto). Copy inspirado en la página de workshop de Hormozi
+// (acquisition.com/workshop): filtro arriba ("dueños de empresas sobre X"), el resultado
+// que quiere el dueño en el título y nada más antes del formulario. En móvil: filtro →
+// título → formulario. Fotos de Felipe e Ignacio porque son quienes aparecen en los anuncios.
 const CALL_POINTS = [
-  "Revisamos tus números y dónde está la fricción real de tu negocio.",
+  "Revisamos tus números y dónde se está trabando tu crecimiento.",
   "Te decimos, sin vueltas, si podemos ayudarte y cómo.",
   "Si no somos la mejor opción para ti, también te lo decimos.",
-];
-
-const HOSTS = [
-  { photo: "/assets/team/felipe-nancupil-card.webp", name: siteContent.founders.founder1Name, detail: "+900K en Instagram" },
-  { photo: "/assets/team/ignacio-ruiz-card.webp", name: siteContent.founders.founder2Name, detail: siteContent.founders.founder2Bio },
 ];
 
 export function AgendaPage({ withAgenda = true }: { withAgenda?: boolean } = {}) {
   return (
     <main className="bg-[var(--brand-bg)]">
-      <header className="border-b border-[var(--brand-border)] bg-white">
-        <div className="mx-auto flex h-12 max-w-6xl items-center px-4 md:h-16 md:px-6">
-          <img src="/assets/brand/acelera-icon-ink.svg" alt="" className="h-7 w-7" width={28} height={28} />
-          <span className="ml-2 text-sm font-semibold tracking-tight text-[var(--brand-ink)]">{siteContent.nav.brandText}</span>
-        </div>
-      </header>
+      <LandingHeader />
 
-      <section className="px-4 pb-12 pt-5 md:px-6 md:py-20">
-        {/* Móvil: título corto → formulario → detalles. Fernando (2026-11-04): el
-         * formulario tiene que verse en la primera pantalla, así que en móvil el párrafo
-         * va abajo y el espaciado arriba es mínimo. Escritorio: título y detalles a la
-         * izquierda, formulario a la derecha ocupando las dos filas. */}
-        <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-[1fr_minmax(0,34rem)] md:grid-rows-[auto_1fr] md:gap-x-16 md:gap-y-0">
-          <div className="md:col-start-1 md:row-start-1 md:pt-4">
-            <div className="hidden md:block">
-              <SectionKicker>Llamada de calibración</SectionKicker>
-            </div>
-            <h1 className="text-2xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
-              {withAgenda ? siteContent.contact.heading : "Solicita tu llamada de calibración."}
+      <section className="landing-hero px-4 pb-16 pt-20 md:px-6 md:pb-24 md:pt-32">
+        <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-[1fr_minmax(0,32rem)] md:grid-rows-[auto_1fr] md:gap-x-16 md:gap-y-0">
+          <div className="md:col-start-1 md:row-start-1">
+            <FilterPill>
+              <span className="md:hidden">Para empresas que facturan +$10M al mes</span>
+              <span className="hidden md:inline">Para dueños de empresas que facturan sobre $10M al mes</span>
+            </FilterPill>
+            <h1 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tighter text-[var(--dark-ink)] md:mt-6 md:text-6xl">
+              {withAgenda ? siteContent.contact.heading : "Haz crecer tu empresa sin que todo dependa de ti."}
             </h1>
-            <p className="mt-1 text-sm text-[var(--brand-muted)] md:hidden">30 minutos por videollamada, sin costo.</p>
-            <p className="mt-4 hidden max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:block md:text-base">
-              {siteContent.contact.paragraph}
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--dark-muted)] md:text-lg">
+              <span className="md:hidden">Llamada de calibración · 30 minutos · Sin costo</span>
+              <span className="hidden md:inline">
+                Pide una llamada de calibración de 30 minutos, sin costo. Revisamos tu negocio y te decimos si podemos
+                ayudarte a crecer con control.
+              </span>
             </p>
           </div>
 
-          <div className="self-start rounded-[var(--ac-radius-lg)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-5 shadow-[var(--shadow-elevation)] md:col-start-2 md:row-span-2 md:row-start-1 md:p-8">
+          <div className="self-start rounded-[var(--ac-radius-lg)] bg-[var(--brand-bg)] p-6 shadow-[0_32px_64px_-24px_rgb(0_0_0/0.6)] ring-1 ring-[rgb(255_255_255/0.1)] md:col-start-2 md:row-span-2 md:row-start-1 md:p-8">
+            <p className="text-lg font-semibold tracking-tight text-[var(--brand-ink)]">Solicita tu llamada</p>
+            <p className="mb-6 mt-1 text-sm text-[var(--brand-muted)]">Toma 2 minutos. Te escribimos por WhatsApp.</p>
             <LlamadaForm withAgenda={withAgenda} />
           </div>
 
-          <div className="mt-5 md:col-start-1 md:row-start-2 md:mt-0">
-            <p className="mb-6 text-sm leading-relaxed text-[var(--brand-muted)] md:hidden">{siteContent.contact.paragraph}</p>
-            <ul className="flex flex-col gap-3 md:mt-8">
-              {CALL_POINTS.map((point) => (
-                <li key={point} className="flex gap-3 text-sm leading-relaxed text-[var(--brand-ink)]">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand-primary)]" />
-                  {point}
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-10 flex flex-col gap-4">
-              {HOSTS.map((host) => (
-                <div key={host.name} className="flex items-center gap-4">
-                  <img
-                    src={host.photo}
-                    alt={host.name}
-                    width={56}
-                    height={56}
-                    className="h-14 w-14 rounded-full border border-[var(--brand-border)] object-cover"
-                  />
-                  <div>
-                    <p className="text-sm font-semibold text-[var(--brand-ink)]">{host.name}</p>
-                    <p className="text-xs text-[var(--brand-muted)]">{host.detail}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="flex flex-col gap-8 md:col-start-1 md:row-start-2 md:mt-8">
+            <div className="hidden md:block">
+              <CheckList items={CALL_POINTS} tone="dark" />
             </div>
-
-            <p className="mt-10 max-w-lg text-xs leading-relaxed text-[var(--brand-muted)]">{siteContent.results.paragraph}</p>
+            <HostsStack />
           </div>
+        </div>
+      </section>
+
+      <section className="px-4 py-16 md:hidden">
+        <SectionKicker>En la llamada</SectionKicker>
+        <CheckList items={CALL_POINTS} />
+      </section>
+
+      <section className="hidden px-6 py-24 md:block">
+        <div className="mx-auto max-w-6xl">
+          <SectionKicker>Quiénes somos</SectionKicker>
+          <h2 className="mb-8 max-w-2xl text-4xl font-semibold tracking-tighter text-[var(--brand-ink)]">
+            Las personas detrás de Acelera.
+          </h2>
+          <HostCards />
+          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-[var(--brand-muted)]">{siteContent.results.paragraph}</p>
         </div>
       </section>
 

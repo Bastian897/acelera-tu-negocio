@@ -1026,3 +1026,32 @@ body.acelera-site {
     animation: none;
   }
 }
+
+/* Landings de anuncios (/agenda, /postula — landing-ui.tsx, 2026-11-04): fondo del
+ * hero oscuro. Cuadrícula técnica muy tenue (el motivo "panel de instrumentos" de la
+ * marca) que se desvanece hacia abajo + un halo del azul de marca arriba. */
+.landing-hero {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--ac-ink);
+}
+.landing-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 35%, transparent 80%);
+}
+.landing-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 55% at 50% -10%, rgb(1 11 248 / 0.45), transparent 70%),
+    radial-gradient(40% 40% at 90% 10%, rgb(0 167 237 / 0.12), transparent 70%);
+}
