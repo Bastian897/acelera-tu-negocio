@@ -17,7 +17,7 @@ import { trackMetaPageView } from "../lib/meta-pixel";
 import { BRAND_BG_HEX } from "../lib/brand";
 import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
 import { ChatWidget } from "../components/site/chat-widget";
-import { CookieConsent } from "../components/site/cookie-consent";
+import { AnalyticsLoader } from "../components/site/analytics-loader";
 import { INTRO_HEAD_SCRIPT } from "../components/site/logo-intro";
 // Page metadata (browser <title>/favicon + social og: tags), read at build time.
 import appMetaJson from "../app-meta.json";
@@ -141,13 +141,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
-// Rutas sin chat flotante ni aviso de cookies: /evaluacion es un formulario oculto que
-// Ignacio manda por link, y ambos solo distraen de completarlo. Sin el aviso nunca hay
-// consentimiento ahí, así que GA4 (que espera ese consentimiento, ver lib/analytics.ts)
-// no se carga en esa página: no hace falta pedir nada.
+// Rutas sin chat flotante ni analítica: /evaluacion es un formulario oculto que Ignacio
+// manda por link; el chat distrae de completarlo y no hace falta medirlo con GA4/Pixel.
 const ROUTES_WITHOUT_WIDGETS = new Set(["/evaluacion"]);
 // /agenda y /postula (landings A y B de los anuncios de Meta) van sin chat para no distraer del formulario,
-// pero CON aviso de cookies: sin consentimiento no carga el Pixel que mide el anuncio.
+// pero CON GA4 y Pixel, que miden el anuncio.
 const ROUTES_WITHOUT_CHAT = new Set(["/agenda", "/postula"]);
 
 function RootShell({ children }: { children: ReactNode }) {
@@ -172,7 +170,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <body className="acelera-site">
         {children}
         {showChat ? <ChatWidget /> : null}
-        {showWidgets ? <CookieConsent /> : null}
+        {showWidgets ? <AnalyticsLoader /> : null}
         <Scripts />
       </body>
     </html>

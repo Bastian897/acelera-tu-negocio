@@ -4,7 +4,7 @@ import { PostulaPage } from "@/components/site/postula-page";
 
 // Versión B de la landing de los anuncios de Meta (2026-11-02): página de postulación
 // (ver postula-page.tsx). La versión A es /agenda. Sin menú ni chat flotante
-// (ROUTES_WITHOUT_CHAT en __root.tsx), con aviso de cookies (Pixel) y fuera del buscador.
+// (ROUTES_WITHOUT_CHAT en __root.tsx) y fuera del buscador.
 export const Route = createFileRoute("/postula")({
   head: () => ({
     meta: [

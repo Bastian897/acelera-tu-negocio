@@ -22,32 +22,37 @@ export function AgendaPage({ withAgenda = true }: { withAgenda?: boolean } = {})
   return (
     <main className="bg-[var(--brand-bg)]">
       <header className="border-b border-[var(--brand-border)] bg-white">
-        <div className="mx-auto flex h-16 max-w-6xl items-center px-6">
+        <div className="mx-auto flex h-12 max-w-6xl items-center px-4 md:h-16 md:px-6">
           <img src="/assets/brand/acelera-icon-ink.svg" alt="" className="h-7 w-7" width={28} height={28} />
           <span className="ml-2 text-sm font-semibold tracking-tight text-[var(--brand-ink)]">{siteContent.nav.brandText}</span>
         </div>
       </header>
 
-      <section className="px-6 py-12 md:py-20">
-        {/* Móvil: título → formulario → detalles, para que quien llega desde un anuncio vea
-         * el formulario sin tener que bajar tanto. Escritorio: título y detalles a la
+      <section className="px-4 pb-12 pt-5 md:px-6 md:py-20">
+        {/* Móvil: título corto → formulario → detalles. Fernando (2026-11-04): el
+         * formulario tiene que verse en la primera pantalla, así que en móvil el párrafo
+         * va abajo y el espaciado arriba es mínimo. Escritorio: título y detalles a la
          * izquierda, formulario a la derecha ocupando las dos filas. */}
-        <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[1fr_minmax(0,34rem)] md:grid-rows-[auto_1fr] md:gap-x-16 md:gap-y-0">
+        <div className="mx-auto grid max-w-6xl gap-5 md:grid-cols-[1fr_minmax(0,34rem)] md:grid-rows-[auto_1fr] md:gap-x-16 md:gap-y-0">
           <div className="md:col-start-1 md:row-start-1 md:pt-4">
-            <SectionKicker>Llamada de calibración</SectionKicker>
-            <h1 className="text-3xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
+            <div className="hidden md:block">
+              <SectionKicker>Llamada de calibración</SectionKicker>
+            </div>
+            <h1 className="text-2xl font-semibold tracking-tighter text-[var(--brand-ink)] md:text-5xl">
               {withAgenda ? siteContent.contact.heading : "Solicita tu llamada de calibración."}
             </h1>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:text-base">
+            <p className="mt-1 text-sm text-[var(--brand-muted)] md:hidden">30 minutos por videollamada, sin costo.</p>
+            <p className="mt-4 hidden max-w-lg text-sm leading-relaxed text-[var(--brand-muted)] md:block md:text-base">
               {siteContent.contact.paragraph}
             </p>
           </div>
 
-          <div className="self-start rounded-[var(--ac-radius-lg)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-6 shadow-[var(--shadow-elevation)] md:col-start-2 md:row-span-2 md:row-start-1 md:p-8">
+          <div className="self-start rounded-[var(--ac-radius-lg)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-5 shadow-[var(--shadow-elevation)] md:col-start-2 md:row-span-2 md:row-start-1 md:p-8">
             <LlamadaForm withAgenda={withAgenda} />
           </div>
 
-          <div className="md:col-start-1 md:row-start-2">
+          <div className="mt-5 md:col-start-1 md:row-start-2 md:mt-0">
+            <p className="mb-6 text-sm leading-relaxed text-[var(--brand-muted)] md:hidden">{siteContent.contact.paragraph}</p>
             <ul className="flex flex-col gap-3 md:mt-8">
               {CALL_POINTS.map((point) => (
                 <li key={point} className="flex gap-3 text-sm leading-relaxed text-[var(--brand-ink)]">

@@ -56,8 +56,8 @@ function readCookie(name: string): string | undefined {
   return match ? decodeURIComponent(match[1]) : undefined;
 }
 
-// Lo que se manda al backend. _fbp/_fbc son las cookies del Pixel (solo existen si la
-// persona aceptó cookies). Si las rechazó explícitamente, tampoco se manda el fbclid:
+// Lo que se manda al backend. _fbp/_fbc son las cookies del Pixel. Si la persona
+// rechazó las cookies en el antiguo aviso (ver analytics-loader.tsx), no se manda el fbclid:
 // solo los utm_*, que identifican la campaña y no a la persona.
 export function getAttributionPayload(): Record<string, unknown> | undefined {
   try {

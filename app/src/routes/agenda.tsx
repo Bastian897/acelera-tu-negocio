@@ -8,8 +8,7 @@ import { siteContent } from "@/lib/site-content";
 // primero y coordina la llamada por WhatsApp, para que no se llene la agenda de gente que
 // no llega. La versión con agenda directa sigue en el código (AgendaPage withAgenda),
 // sin ruta publicada. Sin menú ni chat flotante (ver ROUTES_WITHOUT_CHAT en __root.tsx) para
-// que quien llega desde un anuncio no se vaya por otro lado; el aviso de cookies sí se
-// muestra, porque sin consentimiento no carga el Pixel. Fuera del buscador (noindex):
+// que quien llega desde un anuncio no se vaya por otro lado. Fuera del buscador (noindex):
 // es una página de campaña, no contenido del sitio.
 export const Route = createFileRoute("/agenda")({
   head: () => ({

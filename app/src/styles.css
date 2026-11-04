@@ -551,14 +551,6 @@ body.acelera-site {
 .intro-skip [data-nav-logo-icon] {
   animation: none;
 }
-/* El aviso de cookies espera a que se abra la cortina (si no, aparece encima
- * del logo a mitad del viaje). */
-.intro-active .cookie-consent-overlay {
-  animation: acelera-intro-fade-in 0.4s 1.9s both;
-}
-.intro-skip .cookie-consent-overlay {
-  animation: none;
-}
 
 @keyframes acelera-intro-curtain {
   0%,

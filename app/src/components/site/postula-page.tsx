@@ -8,8 +8,9 @@ import { siteContent } from "../../lib/site-content";
 // valor de EE. UU. ("application funnel"):
 //  1. Título que habla del resultado + filtro explícito arriba ("solo para…").
 //  2. Prueba: logos de clientes reales y quiénes atienden.
-//  3. "Es para ti / no es para ti": el que no califica se va solo (y se le ofrece el
-//     diagnóstico gratis en vez de perderlo).
+//  3. "Es para ti / no es para ti": el que no califica se va solo. Se le manda al
+//     Instagram de Felipe y NO al diagnóstico, porque el diagnóstico dispara el evento
+//     Lead y ensuciaría la optimización de Meta (solo los calificados deben generarlo).
 //  4. Qué pasa después de postular, en 3 pasos: baja la ansiedad de dejar los datos.
 //  5. Postulación en 3 pasos (postula-form.tsx) y preguntas frecuentes.
 //
@@ -57,7 +58,7 @@ const FAQ = [
   },
   {
     q: "¿Qué pasa si mi empresa factura menos de $10M al mes?",
-    a: "Igual puedes postular: el equipo revisa tu caso y te escribe si hay una forma de ayudarte. También puedes empezar con nuestro diagnóstico gratuito.",
+    a: "Por ahora este proceso es solo para empresas sobre $10M al mes. Si estás bajo esa cifra, en el Instagram de Felipe compartimos gratis cómo ordenar los números y crecer.",
   },
   {
     q: "¿Qué tengo que preparar para la llamada?",
@@ -161,10 +162,15 @@ export function PostulaPage() {
               </ul>
               <p className="mt-6 text-sm leading-relaxed text-[var(--brand-muted)]">
                 ¿Recién partiendo?{" "}
-                <a href="/diagnostico" className="font-medium text-[var(--brand-primary)] underline-offset-4 hover:underline">
-                  Haz el diagnóstico gratuito
-                </a>{" "}
-                y recibe un informe de tu negocio.
+                <a
+                  href="https://instagram.com/nancupil.oficial"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-[var(--brand-primary)] underline-offset-4 hover:underline"
+                >
+                  Sigue a Felipe en Instagram
+                </a>
+                : compartimos gratis cómo ordenar los números y crecer.
               </p>
             </div>
           </div>

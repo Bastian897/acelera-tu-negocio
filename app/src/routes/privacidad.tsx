@@ -53,7 +53,7 @@ function PrivacidadPage() {
             <strong>Portal de clientes:</strong> tu correo y la información de avance que publicamos para ti.
           </li>
           <li>
-            <strong>Navegación:</strong> con tu consentimiento, cookies de analítica web y de medición de anuncios
+            <strong>Navegación:</strong> cookies de analítica web y de medición de anuncios
             (Google Analytics y Meta Pixel).
           </li>
           <li>
@@ -124,8 +124,8 @@ function PrivacidadPage() {
         <h2 className={H2}>7. Seguridad y cookies</h2>
         <p className={P}>
           Protegemos tus datos con conexiones cifradas y acceso restringido; el portal de clientes solo se abre con un
-          código enviado a tu correo. Ante una brecha que te afecte, te avisaremos como exige la ley. Las cookies de
-          analítica y de medición de anuncios solo se activan si las aceptas en el aviso del sitio; el portal de clientes usa una cookie
+          código enviado a tu correo. Ante una brecha que te afecte, te avisaremos como exige la ley. Usamos cookies de
+          analítica y de medición de anuncios, que puedes bloquear o borrar desde la configuración de tu navegador; el portal de clientes usa una cookie
           necesaria para mantener tu sesión.
         </p>
 

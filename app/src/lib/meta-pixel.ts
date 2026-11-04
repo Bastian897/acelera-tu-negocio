@@ -1,5 +1,5 @@
-// Meta Pixel (2026-10-31, preparación para Meta Ads). Igual que GA4, usa cookies, así
-// que solo se carga cuando la persona acepta el aviso (ver cookie-consent.tsx). Las
+// Meta Pixel (2026-10-31, preparación para Meta Ads). Lo carga analytics-loader.tsx al
+// entrar (el aviso de cookies se sacó el 2026-11-04). Las
 // conversiones importantes también salen desde el backend por la Conversions API
 // (acelera-backend/src/lib/meta-capi.ts) con el mismo event_id, así que Meta las ve
 // aunque el Pixel esté bloqueado, sin contarlas dos veces.

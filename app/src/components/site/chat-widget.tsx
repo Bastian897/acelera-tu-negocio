@@ -366,8 +366,7 @@ export function ChatWidget() {
   }, [availableSlots]);
 
   return (
-    // --cookie-bar-h: alto del aviso de cookies mientras está abierto (cookie-consent.tsx).
-    <div className="fixed right-6 z-50" style={{ bottom: "calc(1.5rem + var(--cookie-bar-h, 0px))" }}>
+    <div className="fixed bottom-6 right-6 z-50">
       {bubbleVisible && !open ? (
         <div className="chat-panel-in absolute bottom-[72px] right-0 w-[calc(100vw-3rem)] max-w-64">
           <div className="relative rounded-[var(--ac-radius-md)] border border-[var(--brand-border)] bg-[var(--brand-bg)] p-3 pr-7 shadow-[var(--shadow-elevation)]">
