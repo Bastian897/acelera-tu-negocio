@@ -50,6 +50,11 @@ function PrivacidadPage() {
             <strong>Chat del sitio:</strong> tu nombre y los mensajes que escribes.
           </li>
           <li>
+            <strong>Mensajes directos de Instagram:</strong> tus mensajes, tu nombre y usuario de Instagram y los datos
+            que nos entregues. Te responde un asistente automático; puedes pedir hablar con una persona o escribir
+            "stop" para que deje de responderte.
+          </li>
+          <li>
             <strong>Portal de clientes:</strong> tu correo y la información de avance que publicamos para ti.
           </li>
           <li>
@@ -80,7 +85,7 @@ function PrivacidadPage() {
         <h2 className={H2}>3. Inteligencia artificial</h2>
         <p className={P}>
           Usamos inteligencia artificial de proveedores externos para generar tu diagnóstico y responder el chat del
-          sitio. No tomamos decisiones automatizadas que produzcan efectos jurídicos sobre ti: el resultado es una
+          sitio y los mensajes de Instagram. No tomamos decisiones automatizadas que produzcan efectos jurídicos sobre ti: el resultado es una
           orientación y puedes pedir que una persona de nuestro equipo revise tu caso.
         </p>
 
